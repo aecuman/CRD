@@ -1,0 +1,224 @@
+<app-page-list-view [newButtonText]="'New Crop/Tree'" [pageTitle]="'Crops/Trees'">
+    <div tabularcontent>
+        <table class="w-full overflow-auto">
+            <thead>
+              <tr class="sticky z-10 bg-gray-100 text-left">
+                <th>Name</th>
+                <th>Botanical Name</th>
+                <th>Local name</th>
+                <th>Type</th>
+                <th>Categories</th>
+              </tr>
+            </thead>
+            <tbody>
+<tr *ngFor="let p of list;let i = index;">
+<td>{{p.commonName}}</td>
+<td>{{p.botanicalName}}</td>
+<td><span *ngFor="let t of p.translations" title="{{t.languangeName}}: {{t.translated}}">{{t.translated}} &nbsp;</span></td>
+<td>{{p.cropType}} {{p.aez?'- '+p.aez:''}}</td>
+<td><span *ngFor="let c of p.infoCategories">{{c.name}}: <span *ngFor="let ci of c.info">{{ci}}&nbsp;</span></span></td>
+</tr>
+            </tbody>
+        </table>
+    </div>
+</app-page-list-view>
+<form *ngIf="PlantForm" [formGroup]="PlantForm" class="formkit-form show space-y-5" (ngSubmit)="PlantForm.valid?SavePlant():isSubmitted=true">
+    <p> Enter new Crop/Tree details. All fields  are required. </p>
+    <hr class="my-2">
+    <div class="col-span-6 sm:col-span-4">
+        <label class="block font-medium text-sm text-gray-700" for="planttype"><span>Select Crop/Tree<span class="text-red-500">*</span></span></label>
+        <select formControlName="plantType" [ngClass]="{'is-invalid':(PlantForm.get('plantType')?.invalid||message)&&isSubmitted}" id="planttype" type="text"
+        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+    <option value="crop">Crop</option>
+    <option value="tree">Tree</option>    
+    </select>
+    <div *ngIf="PlantForm.get('plantType')?.invalid&&PlantForm.get('plantType')?.errors?.['required']" class="invalid-feedback mt-2">
+        <p class="text-sm text-red-600">Crop/Tree is required</p>
+    </div>
+</div>
+<div *ngIf="PlantForm.get('plantType')?.value=='crop'" class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="cropType"><span>Perenial/Annual<span class="text-red-500">*</span></span></label>
+    <select formControlName="cropType" [ngClass]="{'is-invalid':(PlantForm.get('cropType')?.invalid||message)&&isSubmitted}" id="cropType" type="text"
+    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+<option>Perennial</option>
+<option>Annual</option>    
+</select>
+<div *ngIf="PlantForm.get('cropType')?.invalid&&PlantForm.get('cropType')?.errors?.['required']" class="invalid-feedback mt-2">
+    <p class="text-sm text-red-600">Crop/Tree is required</p>
+</div>
+</div>
+<div *ngIf="PlantForm.get('cropType')?.value=='Annual'"  class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Annual Type</span></label>
+    <select formControlName="aez" [ngClass]="{'is-invalid':(PlantForm.get('aez')?.invalid||message)&&isSubmitted}" id="aez" type="text"
+    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+    <option>Cereals</option>
+    <option>Legumes/Oil</option>
+    <option>Roots/Tubers</option>
+    <option>Horticulture/Vegetables/Spices</option>
+    <option>Drugs</option>
+    <option>Pastures</option> 
+</select>
+<div *ngIf="PlantForm.get('aez')?.invalid&&PlantForm.get('aez')?.errors?.['required']" class="invalid-feedback mt-2">
+    <p class="text-sm text-red-600">The Annual Type is required</p>
+</div>
+</div>
+    <div class="col-span-6 sm:col-span-4">
+        <label class="block font-medium text-sm text-gray-700" for="name"><span>Common Name<span class="text-red-500">*</span></span></label>
+        <input formControlName="commonName" [ngClass]="{'is-invalid':(PlantForm.get('commonName')?.invalid||message)&&isSubmitted}" id="commonName" type="text"
+        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+    <div *ngIf="PlantForm.get('commonName')?.invalid&&PlantForm.get('commonName')?.errors?.['required']" class="invalid-feedback mt-2">
+        <p class="text-sm text-red-600">The Common Name is required</p>
+    </div>
+</div>
+<div class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Botanical Name<span class="text-red-500">*</span></span></label>
+    <input formControlName="botanicalName" [ngClass]="{'is-invalid':(PlantForm.get('botanicalName')?.invalid||message)&&isSubmitted}" id="botanicalName" type="text"
+    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+<div *ngIf="PlantForm.get('botanicalName')?.invalid&&PlantForm.get('botanicalName')?.errors?.['required']" class="invalid-feedback mt-2">
+    <p class="text-sm text-red-600">The Botanical Name is required</p>
+</div>
+</div>
+<div class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Categories</span></label>
+  <app-multi-select *ngIf="plant_category_list.length>0"
+  [placeholder]="'Select an applicable Category'"
+            [data]="plant_category_list"
+            formControlName="cats"
+            [disabled]="false"
+            [settings]="dropdownSettings"
+            (onSelect)="onItemSelect($event)"
+  >
+  </app-multi-select>
+</div>
+<div formArrayName="categoryInfos" class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Add Options</span></label>
+<table class="w-full overflow-auto">
+    <thead>
+        <tr>
+        <th>Category</th>
+        <th>Options</th> 
+        <th></th>           
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="py-2 border-0 border-b" *ngFor="let t of CategoryInfo?.controls; let i=index" [formGroupName]="i">
+             <td>
+              {{t.get('name')?.value}}
+        </td>
+             <td>
+                <div id="tags-container">
+                    <div *ngFor="let l of t.get('categoryInfo')?.value" class="tag">
+                        <span class="tag-text">{{l}}</span>
+                        <span class="tag-close">x</span>
+                    </div>
+                </div>
+                <input type="text" formControlName="info" placeholder="Enter Category Options" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                <!-- <input formControlName="in" [ngClass]="{'is-invalid':(t.get('categoryInfo')?.invalid||message)&&isSubmitted}" id="categoryInfo-{{i}}" type="text"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <div *ngIf="t.get('categoryInfo')?.invalid&&t.get('categoryInfo')?.errors?.['required']" class="invalid-feedback mt-2">
+                <p class="text-sm text-red-600">Options is required</p>
+            </div> -->
+
+             </td>
+             <td>
+                <button type="button" class="pl-5" (click)="AddOption(t)">
+                    Add Option
+                </button>
+             </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">
+                <button (click)="AddLanguange()"
+                class="ml-5 my-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5">
+                    </path>
+                </svg> &nbsp; <span>Add New</span></button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</div>
+<!-- <div *ngIf="PlantForm.get('plantType')?.value=='crop'"  class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Agricultural Economic Zone</span></label>
+    <input formControlName="aez" [ngClass]="{'is-invalid':(PlantForm.get('aez')?.invalid||message)&&isSubmitted}" id="aez" type="text"
+    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+<div *ngIf="PlantForm.get('aez')?.invalid&&PlantForm.get('aez')?.errors?.['required']" class="invalid-feedback mt-2">
+    <p class="text-sm text-red-600">The Agricultural Economic Zone is required</p>
+</div>
+</div> -->
+<div class="col-span-6 sm:col-span-4 mt-5">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Growth Stages</span></label>
+  <app-multi-select *ngIf="dropdownList.length>0"
+  [placeholder]="'Select Growth Stages'"
+            [data]="dropdownList"
+            formControlName="stages"
+            [disabled]="false"
+            [settings]="dropdownSettings"
+            (onSelect)="onItemSelect($event)"
+  >
+  </app-multi-select>
+</div>
+<div formArrayName="translations" class="col-span-6 sm:col-span-4">
+    <label class="block font-medium text-sm text-gray-700" for="name"><span>Translations</span></label>
+<table class="w-full overflow-auto">
+    <thead>
+        <tr>
+        <th>Languange</th>
+        <th>Translated Name</th> 
+        <th></th>           
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="py-2" *ngFor="let t of Translations?.controls; let i=index" [formGroupName]="i">
+             <td>
+                <select formControlName="languangeId" [ngClass]="{'is-invalid':(t.get('languangeId')?.invalid||message)&&isSubmitted}" id="languangeId-{{i}}" type="text"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <option *ngFor="let l of options_list?.languanges" [value]="l.id">{{l.name}}</option>               
+            </select>
+            <div *ngIf="t.get('languangeId')?.invalid&&t.get('languangeId')?.errors?.['required']" class="invalid-feedback mt-2">
+                <p class="text-sm text-red-600">Select the languange</p>
+            </div>
+        </td>
+             <td>
+                <input formControlName="translated" [ngClass]="{'is-invalid':(t.get('translated')?.invalid||message)&&isSubmitted}" id="translated-{{i}}" type="text"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <div *ngIf="t.get('translated')?.invalid&&t.get('translated')?.errors?.['required']" class="invalid-feedback mt-2">
+                <p class="text-sm text-red-600">The Translated Name is required</p>
+            </div>
+
+             </td>
+             <td>
+                <button class="pl-5" (click)="RemoveLanguange(i)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg></button>
+             </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">
+                <button (click)="AddLanguange()"
+                class="ml-5 my-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5">
+                    </path>
+                </svg> &nbsp; <span>Add New</span></button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</div>
+<div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+    <div class="mr-3">
+        <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+    </div>
+    <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+        > Save </button>
+</div>
+</form>
+{{PlantForm?.value|json}}

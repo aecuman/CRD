@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/CRD.API/bin/Debug/net9.0
+/CRD.Application/bin/Debug/net9.0

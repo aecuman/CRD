@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "s3W9Wd3I+bxaAplP6iCiHV+q2/+u/cOizdzwqqydb8Y=",
+  "Source": "CRD.API",
+  "BasePath": "_content/CRD.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

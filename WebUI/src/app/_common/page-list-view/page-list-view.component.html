@@ -1,0 +1,141 @@
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight" style="display: inline;"> {{pageTitle}}
+        </h2>
+        <div style="float: right;"><button
+                class="ml-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5">
+                    </path>
+                </svg> &nbsp; <span>{{newButtonText}}</span></button></div>
+    </div>
+</header>
+<!-- <main>
+    
+   
+        <div class="data-grid-scrollbar container h-[24.5rem] overflow-y-auto">
+          <table class="w-full overflow-auto">
+            <thead>
+              <tr class="sticky top-0 z-10 bg-orange-500 text-left text-white">
+                <th class="w-72 cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>API Name</h2>
+                  </div>
+                </th>
+  
+                <th class="cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex gap-2">
+                      <h2>Status</h2>                    
+                    </div>
+                    <div class="relative ml-2 focus:outline-none">
+                     
+                        <div v-if="showOptions" class="absolute top-10">
+                          <ul
+                            class="flex w-36 cursor-default flex-col items-start rounded-b border border-t-0 border-slate-300 bg-white font-normal text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                          >
+                            <li
+                              v-for="option in filterOptions"
+                              :key="option"
+                              class="w-full hover:bg-orange-100 dark:hover:bg-orange-500"
+                            >
+                              <label
+                                :for="option"
+                                class="flex w-full cursor-pointer items-center gap-2 px-6 py-2"
+                              >
+                                <input
+                                  type="checkbox"
+                                  class="size-4 accent-orange-500"
+                                  :id="option"
+                                  :value="option"
+                                  v-model="selectedOptions"
+                                />
+                                {{ 'option' }}
+                              </label>
+                            </li>
+                          </ul>
+                        </div>
+                     
+                    </div>
+                  </div>
+                </th>
+  
+                <th class="cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>Uptime (%)</h2>
+                  </div>
+                </th>
+  
+                <th class="cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>Avg Latency (ms)</h2>
+                  </div>
+                </th>
+  
+                <th class="cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>Error Rate (%)</h2>
+                  </div>
+                </th>
+  
+                <th class="cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>Requests/Min</h2>
+  
+                  </div>
+                </th>
+  
+                <th class="w-72 cursor-pointer text-nowrap p-4">
+                  <div class="flex items-center">
+                    <h2>Created By</h2>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              <tr class='bg-orange-50 dark:bg-slate-800'>
+                <td class="w-72 text-nowrap p-4">{{ 'api.apiName' }}</td>
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    
+                    <p :class="statusBadgeClasses(api.status)">
+                      {{ 'api.status' }}
+                    </p>
+                  </div>
+                </td>
+                <td class="p-4">{{ 'api.uptime' }}</td>
+                <td class="p-4">{{ 'api.avgLatency' }}</td>
+                <td class="p-4">{{ 'api.errorRate' }}</td>
+                <td class="p-4">{{ 'api.requestsPerMinute' }}</td>
+                <td class="w-72 text-nowrap p-4">
+                  <div class="flex items-center gap-2">
+                    <img
+                      :src="api.memberImage"
+                      :alt="api.memberName"
+                      class="size-8 rounded-full object-cover"
+                    />
+                    <p>{{ 'api.memberName' }}</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+  
+  
+
+      
+</main> -->
+<main>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+              
+                <ng-content select="[tabularcontent]"></ng-content>
+            </div>
+        </div>
+    </div>
+    </main>

@@ -1,0 +1,638 @@
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight"> Settings </h2>
+    </div>
+</header>
+<div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <h3 class="font-semibold text-xl text-gray-800 leading-tight"> Crops/Trees </h3>
+</div>
+
+    <main>
+        <div>
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <div>
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-1 flex justify-between">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium text-gray-900">Languange  </h3>
+                                <p class="mt-1 text-sm text-gray-600"> The languanges to which the different crops </p>
+                            </div>
+                            <div class="px-4 sm:px-0"></div>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form>
+                                <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                                    <div class="grid grid-cols-6 gap-6 w-full"><!---->
+                                        <div class="col-span-6 sm:col-span-4">
+                                            <div class="m-4 relative">
+  <!-- 
+                                                <label for="tags-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+                                                                                                   
+                                                    <div id="tags-suggestions" class="mt-2 bg-white border border-gray-300 rounded-lg shadow-md hidden">
+
+                                                    </div> -->
+                                                
+                                                <div id="tags-container">
+                                                    <div *ngFor="let l of lists?.languanges" class="tag">
+                                                        <span class="tag-text">{{l?.name}}</span>
+                                                        <span class="tag-close">x</span>
+                                                    </div>
+                                                  <!--   <div class="tag">
+                                                        <span class="tag-text">frontend</span>
+                                                        <span class="tag-close" data-tag="frontend">x</span>
+                                                    </div>
+                                                    <div class="tag">
+                                                        <span class="tag-text">design</span>
+                                                        <span class="tag-close" data-tag="design">x</span>
+                                                    </div>
+                                                    <div class="tag">
+                                                        <span class="tag-text">web development</span>
+                                                        <span class="tag-close" data-tag="web development">x</span>
+                                                    </div>
+                                                    <div class="tag">
+                                                        <span class="tag-text">frontend</span>
+                                                        <span class="tag-close" data-tag="frontend">x</span>
+                                                    </div>
+                                                    <div class="tag">
+                                                        <span class="tag-text">design</span>
+                                                        <span class="tag-close" data-tag="design">x</span>
+                                                    </div> -->
+                                                </div>
+                                                <input type="text" [(ngModel)]="option_language" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter Languange" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    Separate tags with commas. Example: programming, design, web development</p>                                                
+                                                </div>
+                                     <!--     <div class="flex mt-1 relative bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline border border-gray-300">
+                                            <div class="flex-grow-0 text-gray-700 text-center my-1 ml-1"><span
+                                                    class="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold bg-indigo-500 hover:bg-indigo-300 text-white hover:text-black cursor-pointer">
+                                                    mlll
+                                                    <button type="button"
+                                                        class="flex-shrink-0 -mr-0.5 ml-1.5 inline-flex hover:bg-indigo-400 p-1 rounded-full"><svg
+                                                            stroke="currentColor" fill="none" viewBox="0 0 8 8" class="h-2 w-2">
+                                                            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"></path>
+                                                        </svg></button></span></div>
+                                            <div class="flex-grow-0 text-gray-700 text-center my-1 ml-1"><span
+                                                    class="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold bg-indigo-500 hover:bg-indigo-300 text-white hover:text-black cursor-pointer">
+                                                    mllm
+                                                    <button type="button"
+                                                        class="flex-shrink-0 -mr-0.5 ml-1.5 inline-flex hover:bg-indigo-400 p-1 rounded-full"><svg
+                                                            stroke="currentColor" fill="none" viewBox="0 0 8 8" class="h-2 w-2">
+                                                            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"></path>
+                                                        </svg></button></span></div>
+                                            <div class="flex-grow text-gray-700 text-center"><input id="tags"
+                                                    class="w-full h-full rounded-lg py-2 pl-2 pr-4 block w-full appearance-none leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5 outline-none">
+                                            </div>
+                                        </div> -->
+                                        </div>
+                                           <!--   <div class="col-span-6 sm:col-span-4"><label
+                                                class="block font-medium text-sm text-gray-700"
+                                                for="name"><span>Name</span></label><input
+                                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                                                id="name" type="text">
+                                            <div class="mt-2" style="display: none;">
+                                                <p class="text-sm text-red-600"></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 sm:col-span-4"><label
+                                                class="block font-medium text-sm text-gray-700"
+                                                for="email"><span>Email</span></label><input
+                                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                                                id="email" type="email">
+                                            <div class="mt-2" style="display: none;">
+                                                <p class="text-sm text-red-600"></p>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                    <div class="mr-3">
+                                        <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                                    </div>
+                                    <button type="button" (click)="AddOption(option_language,'plant_languange')" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                                        > Save </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="py-8">
+                            <div class="border-t border-gray-200"></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                        <div class="md:col-span-1 flex justify-between">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium text-gray-900"> Growth Stage </h3>
+                                <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
+                                    password to stay secure. </p>
+                            </div>
+                            <div class="px-4 sm:px-0"></div>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form>
+                                <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                                    <div class="grid grid-cols-6 gap-6">
+                                    
+                                        <div class="col-span-6 sm:col-span-4">
+                                            <div class="m-4 relative">
+                                    
+                                                <div id="tags-container">
+                                                    <div *ngFor="let l of lists?.growthStages" class="tag">
+                                                        <span class="tag-text">{{l?.name}}</span>
+                                                        <span class="tag-close">x</span>
+                                                    </div>
+                                                </div>
+                                                <input type="text" [(ngModel)]="option_growth_stage" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter Growth Stages" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                    <div class="mr-3">
+                                        <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                                    </div>
+                                    <button type="button" (click)="AddOption(option_growth_stage,'plant_growthstage')" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                                        > Save </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="py-8">
+                            <div class="border-t border-gray-200"></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                        <div class="md:col-span-1 flex justify-between">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium text-gray-900"> Crop Category </h3>
+                                <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
+                                    password to stay secure. </p>
+                            </div>
+                            <div class="px-4 sm:px-0"></div>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form>
+                                <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                                    <div class="grid grid-cols-6 gap-6">
+                                    
+                                        <div class="col-span-6 sm:col-span-4">
+                                            <div class="m-4 relative">
+                                    
+                                                <div id="tags-container">
+                                                    <div *ngFor="let l of lists?.plantCategories" class="tag">
+                                                        <span class="tag-text">{{l?.name}}</span>
+                                                        <span class="tag-close">x</span>
+                                                    </div>
+                                                </div>
+                                                <input type="text" [(ngModel)]="option_crop_category" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter Crop Categories" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    A crop category is a custom way to group i.e by variety, timber size, or timber strength</p>                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                    <div class="mr-3">
+                                        <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                                    </div>
+                                    <button type="button" (click)="AddOption(option_crop_category,'plant_category')" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                                        > Save </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="py-8">
+                            <div class="border-t border-gray-200"></div>
+                        </div>
+                    </div>
+                   
+                </div>
+                
+                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <h3 class="font-semibold text-xl text-gray-800 leading-tight"> Structures</h3>
+                    </div>
+                    <div>
+                        <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                            <div class="md:col-span-1 flex justify-between">
+                                <div class="px-4 sm:px-0">
+                                    <h3 class="text-lg font-medium text-gray-900"> Types of Structures </h3>
+                                    <!-- <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
+                                        password to stay secure. </p> -->
+                                </div>
+                                <div class="px-4 sm:px-0"></div>
+                            </div>
+                            <div class="mt-5 md:mt-0 md:col-span-2">
+                                <form>
+                                    <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                                        <div class="grid grid-cols-6 gap-6">
+                                        
+                                            <div class="col-span-6 sm:col-span-4">
+                                                <div class="m-4 relative">
+                                        
+                                                    <div id="tags-container">
+                                                        <!-- <div *ngFor="let l of lists?.structureTypes" class="tag">
+                                                            <span class="tag-text">{{l?.name}}</span>
+                                                            <span class="tag-close">x</span>
+                                                        </div> -->
+                                                    </div>
+                                                    <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                    <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        Define types of structure types</p>                                                
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                        <div class="mr-3">
+                                            <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                                        </div>
+                                        <button type="button" (click)="AddOption(option_structure_type,'structure_type')" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                                            > Save </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div class="py-8">
+                                <div class="border-t border-gray-200"></div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div>
+                        <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                            <div class="md:col-span-1 flex justify-between">
+                                <div class="px-4 sm:px-0">
+                                    <h3 class="text-lg font-medium text-gray-900">Structures Categories</h3>
+                                    <!-- <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
+                                        password to stay secure. </p> -->
+                                </div>
+                                <div class="px-4 sm:px-0"></div>
+                            </div>
+                            <div class="mt-5 md:mt-0 md:col-span-2">
+                                <form>
+                                    <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                                        <div class="grid grid-cols-6 gap-6">
+                                        
+                                            <div class="col-span-6">
+                                                <div class="m-4 relative">
+                                             <!--        <table id="tree-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Structure</th>
+                                                                <th>Description</th>
+                                                                <th>Options</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table> -->
+                                           <table class="w-full">
+                                            <thead>
+                                                <tr>
+                                                    <th>Structure</th>
+                                                    <th>Description/Options</th>
+                                                    <!-- <th>Options</th> -->
+                                                </tr>
+                                            </thead>
+                                        <!--     <tbody>
+                                                <tr *ngFor="let c of lists?.structureCategoryOptions;let ci = index;">
+                                                    <td>{{c.name}}</td>
+                                                    <td>
+                                                        <table class="w-full">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="w-1/4">Description</th>
+                                                                    <th>Options</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <ng-container *ngFor="let cd of c.structureCategories;let cdi=index;">
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{cd.name}}
+                                                                            <button type="button" *ngIf="struct_desc_editor[ci][cdi]!==true" class="tag ml-2" (click)="StructureDescriptionForm?ShowAlert('You can only add one at a time'):struct_desc_editor[ci][cdi]=true;InitStructureDescription('','');">+
+                                                                                    
+                                                                            </button>
+                                                                            <input type="text" *ngIf="struct_desc_editor[ci][cdi]==true" [(ngModel)]="option_category_form_description_option_edit" [ngModelOptions]="{standalone: true}" placeholder="Enter Category Description" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mr-5">
+                                                                            <button (click)="SaveDescription(c.id,option_category_form_description_option_edit)" *ngIf="struct_desc_editor[ci][cdi]==true" type="button" class="text-sm mt-2 px-2 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-white" (click)="struct_desc_editor[ci][cdi]=true">Save Description
+                                                                                
+                                                                            </button>
+                                                                            <button *ngIf="struct_desc_editor[ci][cdi]==true;" type="button" class="tag text-sm ml-2 mt-2" (click)="struct_desc_editor[ci][cdi]=false;ResetForms()">Cancel
+                                                                                
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <div *ngFor="let cdo of cd.options;let ti=index;" class="tag space-x-2 mt-2">
+                                                                                    <span class="tag-text">{{cdo.name}}</span>
+                                                                                </div>
+                                                                                <button type="button" *ngIf="struct_editor[ci][cdi]!==true" class="tag ml-2" (click)="StructureDescriptionOptionForm?ShowAlert('You can only add one at a time'):struct_editor[ci][cdi]=true;InitStructureDescriptionOption('','');">+
+                                                                                    
+                                                                                </button>
+                                                                                <input type="text" *ngIf="struct_editor[ci][cdi]==true" [(ngModel)]="option_category_form_description_edit" [ngModelOptions]="{standalone: true}" placeholder="Enter Category Options" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mr-5">
+                                                                                <button (click)="SaveOption(cd.id,option_category_form_description_edit)" *ngIf="struct_editor[ci][cdi]==true" type="button" class="text-sm mt-2 px-2 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-white" (click)="struct_editor[ci][cdi]=true">Save Option
+                                                                                    
+                                                                                </button>
+                                                                                <button *ngIf="struct_editor[ci][cdi]==true;" type="button" class="tag text-sm ml-2 mt-2" (click)="struct_editor[ci][cdi]=false;ResetForms()">Cancel
+                                                                                    
+                                                                                </button>
+                                                                            </div>
+                                                                            
+                                                                    </tr>
+                                                                    
+                                                                   
+                                                                </ng-container>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                       
+                                            <tbody *ngIf="false">
+                                                <ng-container *ngFor="let c of lists?.structureCategoryOptions">
+                                                <tr *ngFor="let cd of c.structureCategories;let i = index;">
+                                                    <ng-container *ngIf="i === 0">
+                                                    <td class="p-2.5 border border-black" [rowSpan]="GetL1RS(c)">
+                                                        {{c.name}}
+                                                    </td>
+                                                    </ng-container>
+                                                    <td class="p-2.5 border border-black" [rowSpan]="GetLevel2RowSpan(cd)">
+                                                        <span *ngFor="let cd of c.structureCategories">
+                                                            {{cd.name}}
+                                                            
+                                                        </span>                                                       
+                                                    </td>  
+                                                    <td class="p-2.5 border border-black" *ngIf="cd.options">
+                                                        {{cd.options.length>0?cd.options[0].name:''}}
+                                                       
+                                                    </td>                                     
+                                                </tr>
+                                                <tr *ngFor="let child of c.structureCategories">
+                                                    <ng-container *ngFor="let leaf of child.options; let leafIndex = index">
+                                                      <ng-container *ngIf="leafIndex > 0">
+                                                        <tr>
+                                                          <td class="p-2.5 border-t-0 border-l-0 border border-black">{{ leaf.name }}</td>
+                                                        </tr>
+                                                      </ng-container>
+                                                    </ng-container>
+                                                  </tr>
+                                                </ng-container>
+                                                
+                                            </tbody> -->
+                                        </table>
+                                       
+                                        <div class="col-span-6 sm:col-span-4 space-y-5 mt-5" *ngIf="StructureCategoryForm" [formGroup]="StructureCategoryForm">
+                                            <h3 class="text-lg font-medium text-gray-900">New Structure Category</h3>
+                                            <div>
+                                                <label class="block font-medium text-sm text-gray-700 mt-5" for="name"><span>Name of Structure</span></label>
+                                                <input type="text" [ngClass]="{'is-invalid':StructureCategoryForm.get('name')?.invalid}" formControlName="name" placeholder="Enter a structure category"
+                                                    class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                   
+                                            </div>
+                                            <div formArrayName="options">
+                                                <label class="block font-medium text-sm text-gray-700 my-5" for="name"><span>Description of Category</span></label>
+                                                <div class="border border-gray-200 p-4 m-2" *ngFor="let t of StructureCategoryFormDescription?.controls; let i=index;let last=last;" [formGroupName]="i">
+                                                    <div>
+                                                        <label class="block font-medium text-sm text-gray-700" for="name"><span>Description</span></label>
+                                                        <input type="text" formControlName="name" [ngClass]="{'is-invalid':t.get('name')?.invalid}" placeholder="Enter the structure description"
+                                                            class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"> 
+                                                    </div>
+                                                
+                                                    <div>
+                                                        <label class="block font-medium text-sm text-gray-700 mt-5" for="name"><span>Options for the Description above</span></label>
+                                                        <div *ngIf="t.get('options')?.value?.length>0" id="tags-container">
+                                                            <div *ngFor="let l of t.get('options')?.value;let ti=index;" class="tag">
+                                                                <span class="tag-text">{{l}}</span>
+                                                                <span class="tag-close">x</span>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <input type="text" *ngIf="last" [(ngModel)]="option_category_form_description" [ngModelOptions]="{standalone: true}" placeholder="Enter Category Options" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                        <button *ngIf="last" [disabled]="!option_category_form_description" class="disabled:text-gray-300 text-blue-500" (click)="PushOption(i,option_category_form_description)">
+                                                           
+                                                             Add Option</button>
+                                                        <!-- <div *ngFor="let t of StructureCategoryFormDescriptionOptions(i)?.controls; let io=index" [formGroupName]="io">
+                                                        <input type="text" formControlName="name" placeholder="Enter the description options"
+                                                            class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                    </div> -->
+                                                    </div>
+                                                    <button *ngIf="last" (click)="AddNewDescription()" class="flex ml-auto" style="color: blue;">
+                                                           
+                                                        Add New Description</button>
+                                              <!--   <div class="hidden sm:block">
+                                            <div class="py-4">
+                                                <div class="border-t border-gray-200"></div>
+                                            </div>
+                                        </div> -->
+                                        
+
+                                            </div>
+                                        </div>
+                                       
+                                        </div>
+                                     <!--    {{StructureCategoryForm?.value|json}} -->
+                                                 <!-- <div id="tags-container">
+                                                        <div *ngFor="let l of lists?.structureTypes" class="tag">
+                                                            <span class="tag-text">{{l?.name}}</span>
+                                                            <span class="tag-close">x</span>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                                                    <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        Define types of structure types</p> -->                                                
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                        <div class="mr-3">
+                                            <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                                        </div>
+                                        <button type="button" (click)="StructureCategoryForm?.valid?SaveCategory():false" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+                                            > Save </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div class="py-8">
+                                <div class="border-t border-gray-200"></div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                <div>
+                    <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                        <div class="md:col-span-1 flex justify-between">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium text-gray-900"> Two Factor Authentication </h3>
+                                <p class="mt-1 text-sm text-gray-600"> Add additional security to your account using two
+                                    factor authentication. </p>
+                            </div>
+                            <div class="px-4 sm:px-0"></div>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+                                <h3 class="text-lg font-medium text-gray-900"> You have not enabled two factor
+                                    authentication. </h3>
+                                <div class="mt-3 max-w-xl text-sm text-gray-600">
+                                    <p> When two factor authentication is enabled, you will be prompted for a secure,
+                                        random token during authentication. You may retrieve this token from your
+                                        phone's Google Authenticator application. </p>
+                                </div><!---->
+                                <div class="mt-5">
+                                    <div><span><span><button type="button"
+                                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
+                                                    Enable </button></span></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <div class="py-8">
+                            <div class="border-t border-gray-200"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                    <div class="md:col-span-1 flex justify-between">
+                        <div class="px-4 sm:px-0">
+                            <h3 class="text-lg font-medium text-gray-900"> Browser Sessions </h3>
+                            <p class="mt-1 text-sm text-gray-600"> Manage and log out your active sessions on other
+                                browsers and devices. </p>
+                        </div>
+                        <div class="px-4 sm:px-0"></div>
+                    </div>
+                    <div class="mt-5 md:mt-0 md:col-span-2">
+                        <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+                            <div class="max-w-xl text-sm text-gray-600"> If necessary, you may log out of all of your
+                                other browser sessions across all of your devices. Some of your recent sessions are
+                                listed below; however, this list may not be exhaustive. If you feel your account has
+                                been compromised, you should also update your password. </div><!---->
+                            <div class="flex items-center mt-5"><button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
+                                    Log Out Other Browser Sessions </button>
+                                <div class="ml-3">
+                                    <div class="text-sm text-gray-600" style="display: none;"> Done. </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden sm:block">
+                    <div class="py-8">
+                        <div class="border-t border-gray-200"></div>
+                    </div>
+                </div>
+                <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                    <div class="md:col-span-1 flex justify-between">
+                        <div class="px-4 sm:px-0">
+                            <h3 class="text-lg font-medium text-gray-900"> Delete Account </h3>
+                            <p class="mt-1 text-sm text-gray-600"> Permanently delete your account. </p>
+                        </div>
+                        <div class="px-4 sm:px-0"></div>
+                    </div>
+                    <div class="mt-5 md:mt-0 md:col-span-2">
+                        <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+                            <div class="max-w-xl text-sm text-gray-600"> Once your account is deleted, all of its
+                                resources and data will be permanently deleted. Before deleting your account, please
+                                download any data or information that you wish to retain. </div>
+                            <div class="mt-5"><button type="button"
+                                    class="inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
+                                    Delete Account </button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h2 class="text-2xl font-semibold mb-4">Structure Category Configuration</h2>
+      
+        <!-- Category Form -->
+        <form [formGroup]="categoryForm" (ngSubmit)="submitForm()" class="mb-6 p-4 border rounded-lg bg-gray-50">
+          <label class="block mb-2 text-gray-700">Category Name:</label>
+          <input 
+            type="text" 
+            formControlName="name" 
+            class="w-full p-2 border rounded mb-2" 
+            placeholder="Enter category name" 
+          />
+          <div *ngIf="submitted && categoryForm.get('name')?.errors" class="text-red-500 text-sm">
+            <span *ngIf="categoryForm.get('name')?.errors?.['required']">Category name is required.</span>
+            <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Must be at least 3 characters.</span>
+          </div>
+      
+          <h3 class="font-semibold text-lg mt-4">Attributes</h3>
+          <table class="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="border p-2">Attribute Name</th>
+                <th class="border p-2">Options</th>
+                <th class="border p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="attributes">
+              <tr *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i">
+                <td class="border p-2">
+                  <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Attribute Name" required />
+                  <div *ngIf="submitted && attribute.get('name')?.errors" class="text-red-500 text-sm">
+                    <span *ngIf="attribute.get('name')?.errors?.['required']">Required.</span>
+                    <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters.</span>
+                  </div>
+                </td>
+                <td  class="border p-2" formArrayName="options">
+                  <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center space-x-2 mb-2">
+                    
+                    <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Option" required />
+                    <button type="button" (click)="removeOption(i, j)" class="bg-red-500 text-white px-2 py-1 rounded">X</button>
+                  </div>
+                  <button type="button" (click)="addOption(i)" class="bg-blue-500 text-white px-2 py-1 rounded">+ Option</button>
+                </td>
+                <td class="border p-2">
+                  <button type="button" (click)="removeAttribute(i)" class="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      
+          <button type="button" (click)="addAttribute()" class="mt-2 bg-green-500 text-white px-3 py-1 rounded">+ Attribute</button>
+      
+          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Save</button>
+        </form>
+      
+        {{categoryForm.value|json}}
+        <!-- Existing Categories List -->
+        <h3 class="font-semibold text-lg mb-2">Existing Categories</h3>
+        <ul class="space-y-2">
+          <li *ngFor="let category of categories; let i = index" class="p-4 border rounded-lg">
+            <div class="flex justify-between items-center">
+              <span class="font-bold">{{ category.name }}</span>
+              <div>
+                <button (click)="editCategory(i)" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+                <button (click)="deleteCategory(category.id!)" class="ml-2 bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+              </div>
+            </div>
+      
+            <!-- Display Attributes -->
+            <ul class="ml-4 mt-2 text-sm">
+              <li *ngFor="let attr of category.attributes">
+                <strong>{{ attr.name }}:</strong>
+                <span *ngFor="let opt of attr.options" class="ml-2"> {{ opt.name }} </span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      
+      

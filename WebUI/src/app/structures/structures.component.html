@@ -1,0 +1,105 @@
+<div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h3 class="font-semibold text-lg mb-2">Structures Repository</h3>
+    <table class="w-full border-collapse border border-gray-300 mt-4">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border p-2 cursor-pointer" (click)="sort('name')">Structure Name</th>
+          <th class="border p-2 cursor-pointer" (click)="sort('structureType.name')">Structure Type</th>
+          <th class="border p-2 cursor-pointer" (click)="sort('category.name')">Category</th>
+          <th class="border p-2 cursor-pointer" (click)="sort('category.attributes')">Attributes</th>
+          <th class="border p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let structure of structures">
+          <td class="border p-2">{{ structure.name }}</td>
+          <td class="border p-2">{{ structure.structureType?.name }}</td>
+          <td class="border p-2">{{ structure.category?.name }}</td>
+          <td class="border p-2">
+            <ul class="ml-4 mt-2 text-sm">
+                <li *ngFor="let attr of structure.attributeSelections">
+                  <strong>{{ attr.attributeName }}:</strong>
+                  <span *ngFor="let opt of attr.selectedOptions" class="ml-2"> {{ opt.name }} </span>
+                </li>
+              </ul>
+          </td>
+          <td class="border p-2">
+            <button (click)="editStructure(structure)" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+            <button (click)="deleteStructure(structure.id!)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    <div class="mt-4">
+      <button *ngFor="let page of [].constructor(Math.ceil(totalRecords / pageSize)); let i = index"
+        (click)="changePage(i+1)"
+        class="mx-1 px-3 py-1 border rounded">{{ i+1 }}</button>
+    </div>
+    
+    
+
+    <h2 class="text-2xl font-semibold mb-4">Structures Form</h2>
+  
+    <!-- Structure Form -->
+    <form [formGroup]="structureForm" (ngSubmit)="submitForm()" class="mb-6 p-4 border rounded-lg bg-gray-50">
+      <label class="block mb-2 text-gray-700">Structure Name:</label>
+      <input type="text" formControlName="name" class="w-full p-2 border rounded mb-2" placeholder="Enter structure name" />
+
+      <label class="block mb-2 text-gray-700">Structure Type:</label>
+    <select formControlName="structureTypeId" class="w-full p-2 border rounded" required>
+      <option *ngFor="let type of structureTypes" [value]="type.id">{{ type.name }}</option>
+    </select>
+  
+      <label class="block mb-2 text-gray-700">Category:</label>
+      <select formControlName="categoryId" (change)="onCategoryChange()" class="w-full p-2 border rounded">
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+  
+      <div *ngIf="selectedCategory">
+        <h3 class="font-semibold text-lg mt-4">Attributes</h3>
+        <table class="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Attribute Name</th>
+              <th class="border p-2">Options</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="attributeSelections">
+            <tr *ngFor="let attributeControl of attributeSelections.controls; let i = index" [formGroupName]="i">
+              <td class="border p-2">
+                {{ selectedCategory.attributes?selectedCategory.attributes[i].name:'' }}
+              </td>
+              <td class="border p-2">
+                <select multiple [formControlName]="'optionIds'" class="w-full p-2 border rounded">
+                  <option *ngFor="let option of (selectedCategory.attributes?selectedCategory.attributes[i].options:[])" [value]="option.id">
+                    {{ option.name }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Add Structure</button>
+    </form>
+    <!-- Existing Structures List -->
+<!--     <h3 class="font-semibold text-lg mb-2">Existing Structures</h3>
+    <ul class="space-y-2">
+      <li *ngFor="let structure of structures" class="p-4 border rounded-lg">
+        <div class="flex justify-between items-center">
+          <span class="font-bold">{{ structure.name }}</span>
+        </div>
+  
+        <ul class="ml-4 mt-2 text-sm">
+          <li *ngFor="let attr of structure.attributeSelections">
+            <strong>{{ attr.attributeName }}:</strong>
+            <span *ngFor="let opt of attr.selectedOptions" class="ml-2"> {{ opt.name }} </span>
+          </li>
+        </ul>
+      </li>
+    </ul> -->
+   </div>
+      

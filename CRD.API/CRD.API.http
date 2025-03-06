@@ -1,0 +1,6 @@
+@CRD.API_HostAddress = http://localhost:5224
+
+GET {{CRD.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

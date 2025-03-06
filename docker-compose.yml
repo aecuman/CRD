@@ -1,0 +1,6 @@
+services:
+  crd.api:
+    image: ${DOCKER_REGISTRY-}crdapi
+    build:
+      context: .
+      dockerfile: CRD.API/Dockerfile

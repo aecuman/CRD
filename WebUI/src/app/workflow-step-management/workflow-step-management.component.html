@@ -1,0 +1,28 @@
+<div class="mb-4">
+    <h2 class="text-xl font-semibold">Manage Steps & Substeps</h2>
+    <form [formGroup]="stepForm" (ngSubmit)="addStep()">
+      <input type="text" formControlName="name" placeholder="Step Name" class="border p-2 rounded w-full" />
+      <button type="submit" class="mt-2 px-4 py-2 bg-green-500 text-white rounded">Add Step</button>
+    </form>
+    
+  
+    
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold">Steps & Substeps</h3>
+      <ul>
+        <li *ngFor="let step of workflowSteps" class="p-2 border rounded mt-2">
+          {{ step.name }}
+          <form [formGroup]="subStepForm" (ngSubmit)="addSubStep(step.id)">
+            <input type="hidden" formControlName="stepId" [value]="step.id" />
+            <input type="text" formControlName="name" placeholder="SubStep Name" class="border p-2 rounded w-full" />
+            <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Add SubStep</button>
+          </form>
+          <ul class="ml-4">
+            <li *ngFor="let subStep of step.subSteps" class="p-2 border rounded mt-2">
+              {{ subStep.name }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
