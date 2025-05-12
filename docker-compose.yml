@@ -1,6 +1,32 @@
 services:
-  crd.api:
+ crd.api:
     image: ${DOCKER_REGISTRY-}crdapi
     build:
       context: .
       dockerfile: CRD.API/Dockerfile
+ mongo:
+    container_name: crd
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+    volumes:
+      - mongo-data:/data/db
+ mssql:
+    container_name: crd-mssql-db
+    image: mcr.microsoft.com/mssql/server:latest
+    restart: always
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Str0p@ssword"
+    volumes:
+      - mssql-data:/var/opt/mssql
+volumes:
+    mssql-data:
+    mongo-data:
