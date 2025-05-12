@@ -1,6 +1,6 @@
 services:
  crd.redah.api:
-    image: ${DOCKER_REGISTRY-}crdapi
+    image: crd.redah.api:latest
     build:
       context: .
       dockerfile: CRD.API/Dockerfile
