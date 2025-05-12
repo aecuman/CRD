@@ -1,5 +1,5 @@
 services:
- crd.api:
+ crd.redah.api:
     image: ${DOCKER_REGISTRY-}crdapi
     build:
       context: .
