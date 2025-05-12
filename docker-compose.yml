@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: CRD.API/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+
  mongo:
     container_name: crd-mongo-db
     image: mongo
