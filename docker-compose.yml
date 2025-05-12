@@ -1,8 +1,8 @@
 services:
- crd.redah.api:
-    image: crd.redah.api:latest
+ crd.api:
+    image: ${DOCKER_REGISTRY-}crdapi
     build:
-      context: ./CRD.API
+      context: .
       dockerfile: CRD.API/Dockerfile
  mongo:
     container_name: crd-mongo-db
