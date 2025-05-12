@@ -2,7 +2,7 @@ services:
  crd.redah.api:
     image: crd.redah.api:latest
     build:
-      context: .
+      context: ./CRD.API
       dockerfile: CRD.API/Dockerfile
  mongo:
     container_name: crd-mongo-db
