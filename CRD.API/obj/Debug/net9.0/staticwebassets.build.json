@@ -1,12 +1,743 @@
 {
   "Version": 1,
-  "Hash": "s3W9Wd3I+bxaAplP6iCiHV+q2/+u/cOizdzwqqydb8Y=",
+  "Hash": "guLSGKmJpkDwym7OVHv0J1vPpCk1CKMf6n5h5pNeoVo=",
   "Source": "CRD.API",
   "BasePath": "_content/CRD.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "CRD.API\\wwwroot",
+      "Source": "CRD.API",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/Appendices Covae Uganda Limited#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "sc7f2yuyem",
+      "Integrity": "/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/declaration (1)#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2s28bms6p4",
+      "Integrity": "EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\declaration (1).pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/declaration (2)#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "fqtq9s1ur4",
+      "Integrity": "B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\declaration (2).pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/dummy (1)#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "gqginsl9o9",
+      "Integrity": "yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\dummy (1).pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/Namyingo 2024#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "y60zm9pth6",
+      "Integrity": "ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "znuioge2dn",
+      "Integrity": "QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "SourceId": "CRD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "BasePath": "_content/CRD.API",
+      "RelativePath": "uploads/Substeps/dummy (1)#[.{fingerprint}]?.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "gqginsl9o9",
+      "Integrity": "yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Substeps\\dummy (1).pdf"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/districtrates/Appendices Covae Uganda Limited.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "32102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 06 Mar 2025 16:53:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/Appendices Covae Uganda Limited.sc7f2yuyem.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "32102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 06 Mar 2025 16:53:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "sc7f2yuyem"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/Appendices Covae Uganda Limited.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/declaration (1).2s28bms6p4.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155821"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 09 Mar 2025 21:46:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2s28bms6p4"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/declaration (1).pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/declaration (1).pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155821"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 09 Mar 2025 21:46:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/declaration (2).fqtq9s1ur4.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155838"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 09 Mar 2025 21:57:30 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "fqtq9s1ur4"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/declaration (2).pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/declaration (2).pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "155838"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 09 Mar 2025 21:57:30 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/dummy (1).gqginsl9o9.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "75107"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 09 May 2025 14:59:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "gqginsl9o9"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/dummy (1).pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/dummy (1).pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "75107"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 09 May 2025 14:59:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/Namyingo 2024.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7277860"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 21 Apr 2025 16:54:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/Namyingo 2024.y60zm9pth6.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7277860"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 21 Apr 2025 16:54:56 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "y60zm9pth6"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/Namyingo 2024.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "25464"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 06 Mar 2025 17:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.znuioge2dn.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "25464"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 06 Mar 2025 17:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "znuioge2dn"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Substeps/dummy (1).gqginsl9o9.pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "75107"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 07 May 2025 23:53:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "gqginsl9o9"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Substeps/dummy (1).pdf"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Substeps/dummy (1).pdf",
+      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "75107"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 07 May 2025 23:53:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk="
+        }
+      ]
+    }
+  ]
 }

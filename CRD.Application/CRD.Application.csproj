@@ -9,21 +9,19 @@
   <ItemGroup>
     <Folder Include="Languanges\Commands\" />
     <Folder Include="Languanges\Queries\" />
-    <Folder Include="Rates\Commands\" />
-    <Folder Include="Rates\Queries\" />
     <Folder Include="Reviews\Commands\" />
     <Folder Include="Reviews\Queries\" />
     <Folder Include="Roles\Commands\" />
     <Folder Include="Roles\Queries\" />
     <Folder Include="Stages\Commands\" />
     <Folder Include="Stages\Queries\" />
-    <Folder Include="Users\Commands\" />
-    <Folder Include="Users\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.4.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 

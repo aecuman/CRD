@@ -1,0 +1,192 @@
+<div *ngIf="show&&rate" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div *ngIf="saving" class="absolute inset-0 bg-white bg-opacity-80 z-50 flex items-center justify-center rounded-lg">
+  <svg class="animate-spin h-20 w-20 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+       viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10"
+            stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8v2a6 6 0 00-6 6H4z"></path>
+  </svg>
+  </div>
+    <div *ngIf="!saving" class="bg-white rounded-lg max-w-4xl w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+  
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">
+          {{ isPlantRate ? 'Crop/Tree' : 'Structure' }} Rate Moderation | Year: {{ DistrictRateDto?.year }}/{{ (DistrictRateDto?.year??0)+1 }} | District: {{ DistrictRateDto?.districtName }}<br>
+         <!--  <p class="text-sm text-gray-500 italic">
+            Moderating {{ currentModerationIndex + 1 }} of {{ orderedRates.length }}
+          </p> -->
+        
+        </h2>
+        
+        <button (click)="close()" class="text-gray-500 hover:text-red-600">✕</button>
+      </div>
+  
+      <div class="mb-4 p-6 border-l-4 border-blue-500 bg-white rounded-lg shadow-lg">
+        <h2 *ngIf="isPlantRate" class="text-2xl font-bold text-blue-700">
+            {{ rate.groupedPlantId ? rate.groupName : rate.plantName }}
+        </h2>
+        <h2 *ngIf="!isPlantRate" class="text-2xl font-bold text-blue-700">
+            {{rate.structureName}} {{rate.structure.category.name}}
+        </h2>
+    
+        <table class="table-auto border border-gray-300 w-full text-sm">
+            <thead class="bg-blue-100 sticky top-0 z-10">
+                <tr>
+                    <th class="border p-3 w-1/6 font-semibold text-gray-700">Unit</th>
+                    <th class="border p-3 w-1/6 font-semibold text-gray-700">{{isPlantRate?'Growth Stage':'Description'}}</th>
+                    <th class="border p-3 w-1/6 font-semibold text-gray-700">Current Rate</th>
+                    <th class="border p-3 text-left w-1/5 font-semibold text-gray-700">New Rate</th>
+                    <th class="border p-3 text-center w-1/5 font-semibold text-gray-700">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hover:bg-gray-100 text-center">
+                    <td class="border p-3 font-medium text-gray-800">{{ rate.unit }}</td>
+                    <td *ngIf="isPlantRate" class="border p-3 capitalize font-medium text-gray-800">
+                        {{ rate.groupedPlantId ? getGroupStageName(rate.growthStage ?? 0) : getStageName(rate.growthStage ?? 0) }}
+                        <span class="text-green-600">{{ rate.quality || 'Good' }}</span>
+                    </td>
+                    <td *ngIf="!isPlantRate"  class="border p-3 text-left capitalize font-medium text-gray-800">
+                        <div class="text-gray-600">
+                            <span *ngIf="rate.structure?.category">
+                              Category: {{ rate.structure.category.name }}
+                            </span><br />
+                        
+                            <span *ngIf="rate.structure?.structureType">
+                              Type: {{ rate.structure.structureType.name }}
+                            </span><br />
+                        
+                            <div *ngIf="rate.structure?.attributeSelections?.length > 0" class="mt-1">
+                              <div *ngFor="let attr of rate.structure.attributeSelections">
+                                {{ attr.attributeName }}:
+                                <span class="italic text-gray-700">
+                                  {{ GetAttributeNames(attr.selectedOptions) }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                    </td>
+                    <td class="border p-3 relative font-medium text-gray-800">
+                        <span *ngIf="rate.rate" class="text-green-700">UGX {{ rate.rate | number:'1.0-0' }}</span>
+                        <span *ngIf="!rate.rate" class="text-red-600">— {{rate.discretionInfo}}</span>
+                        <span *ngIf="rate.assumptions" class="italic text-gray-500">Assumptions: {{ rate.assumptions }}</span>
+                    </td>
+                    <td class="border p-3 relative font-medium text-gray-800">
+                        {{ rate.newRate ? ('UGX ' + (rate.newRate | number:'1.0-0')) : '—' }}
+                    </td>
+                    <td class="border p-3 relative font-bold text-blue-600">{{ rate.status }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  
+      <!-- Comparison Block -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-gray-700">Comparable Rates</h3>
+        <table class="table-auto w-full text-sm border text-center">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-2">District</th>
+              <th class="border p-2">Rate</th>
+              <th class="border p-2">Assumptions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="comparisonRates.length > 0; else noComparisonRates">
+            <ng-container *ngFor="let c of comparisonRates; let i = index">
+              <tr [ngClass]="{ 'bg-gray-50': i % 2 === 0 }">
+                <td class="border p-2">{{ c.districtName }} {{c.year}}/{{c.year+1}}</td>
+                <td class="border p-2">UGX {{ c.rate | number:'1.0-0' }}</td>
+                <td class="border p-2">{{ c.assumptions || '—' }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+            <ng-template #noComparisonRates>
+              <tr>
+                <td colspan="3" class="text-center text-gray-500 p-4">No comparable rates available.</td>
+              </tr>
+            </ng-template>
+            
+        </table>
+      </div>
+  
+ 
+  
+      <!-- Inputs -->
+     <!-- Moderation Form -->
+     <div class="space-y-3">
+        <h3 class="font-semibold text-gray-700">Select an action:</h3>
+        <!-- Status Selection -->
+        <div class="flex flex-row gap-2 mb-4">
+            <button *ngFor="let status of moderationStatuses"
+                    type="button"
+                    (click)="selectStatus(status)"
+                    [disabled]="!canSelectStatus(status)"
+                    class="group relative flex items-center gap-2 px-3 py-2 border rounded text-sm transition-all w-full"
+                    [ngClass]="{
+                      'bg-blue-600 text-white border-blue-600': (command.status) === $any(status),
+                      'bg-gray-50 text-gray-700 border-blue-600 hover:bg-gray-100': command.status !== $any(status),
+                      'cursor-not-allowed opacity-50': !canSelectStatus(status)
+                    }">
+          
+              <!-- Checkmark for selected -->
+              <svg *ngIf="command.status === $any(status)"
+                   xmlns="http://www.w3.org/2000/svg"
+                   class="w-4 h-4 text-white"
+                   fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+          
+              <!-- Button Label -->
+              <span>{{ statusActions[status] }}</span>
+          
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block text-xs text-white bg-black bg-opacity-80 px-2 py-1 rounded shadow top-full mt-1 z-50 w-max max-w-[220px]">
+                {{ getTooltip(status) }}
+              </span>
+            </button>
+          </div>
+          
+<!-- No Rate Toggle -->
+<div *ngIf="command.status ===3" class="flex items-center gap-2 mb-2">
+    <input type="checkbox" [(ngModel)]="command.noRate" (change)="onToggleNoRate()" id="noRateChk" class="w-4 h-4" />
+    <label for="noRateChk" class="text-sm text-gray-700">No Rate — use discretionary info</label>
+  </div>
+  
+  <!-- Rate Input -->
+  <div class="mb-3" *ngIf="!command.noRate && command.status ===3">
+    <label class="block text-sm font-medium mb-1">New Rate</label>
+    <input type="text"
+           [(ngModel)]="command.newRate"
+           class="w-full border rounded px-2 py-1"
+           currencyMask [options]="{ prefix: 'UGX ', precision: 0, align: 'left' }"
+           placeholder="Enter revised rate" />
+  </div>
+  
+  <!-- Discretionary Info -->
+  <div *ngIf="command.noRate" class="mb-3">
+    <label class="block text-sm font-medium mb-1">Discretionary Info</label>
+    <textarea [(ngModel)]="command.newDiscretionInfo"
+              class="w-full border rounded px-2 py-1"
+              placeholder="Explain how rate can be estimated or why none provided"></textarea>
+  </div>
+  
+        <textarea *ngIf="command.status !==4" [(ngModel)]="command.moderationNotes"
+                  class="w-full border rounded px-2 py-1"
+                  placeholder="Moderation Notes"></textarea>
+  
+        <textarea *ngIf="command.status === 4" [(ngModel)]="command.deferredReason"
+               class="w-full border rounded px-2 py-1"
+               placeholder="Deferred Reason"></textarea>
+      </div>    
+     
+      <!-- Buttons -->
+      <div class="mt-6 flex justify-between">
+        <button *ngIf="!editMode" (click)="handleSave()" class="bg-green-600 text-white px-4 py-2 rounded">Save & Close</button>
+        <button *ngIf="!editMode" (click)="handleSave(true)" class="bg-blue-600 text-white px-4 py-2 rounded">Save & Next</button>
+        <button *ngIf="editMode" (click)="handleSave()" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
+      </div>
+   </div>
+    </div>
+
+  

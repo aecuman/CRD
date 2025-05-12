@@ -75,8 +75,8 @@ namespace CRD.Application.Structures.Commands
                 CategoryId = request.Structure.CategoryId
             };
 
-            _structureRepo.Add(structure);
-            await _structureRepo.SaveChangesAsync();
+            _structureRepo.AddWithoutSaving(structure);
+            await _structureRepo.SaveAsync();
 
             // Store Attribute Selections
             foreach (var attrSelectionDto in request.Structure.AttributeSelections)
@@ -94,7 +94,7 @@ namespace CRD.Application.Structures.Commands
                 };
 
                 _structureAttributeSelectionRepo.AddWithoutSaving(attributeSelection);
-                await _structureAttributeSelectionRepo.SaveChangesAsync();
+                await _structureAttributeSelectionRepo.SaveAsync();
 
                 // Store Option Selections
                 foreach (var optionId in attrSelectionDto.OptionIds)
@@ -111,11 +111,12 @@ namespace CRD.Application.Structures.Commands
                         OptionId = optionId
                     };
 
-                    _structureOptionSelectionRepo.Add(optionSelection);
+                    _structureOptionSelectionRepo.AddWithoutSaving(optionSelection);
+                  await  _structureOptionSelectionRepo.SaveAsync();
                 }
             }
 
-            await _structureRepo.SaveChangesAsync();
+            await _structureRepo.SaveAsync();
             return structure.Id;
             /*var _description = new List<StructureDescription>();
             var i = 0;

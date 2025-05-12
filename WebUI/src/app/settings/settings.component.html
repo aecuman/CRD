@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight"> Settings </h2>
     </div>
-</header>
+</header> 
 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <h3 class="font-semibold text-xl text-gray-800 leading-tight"> Crops/Trees </h3>
 </div>
@@ -141,7 +141,7 @@
                                                 <div id="tags-container">
                                                     <div *ngFor="let l of lists?.growthStages" class="tag">
                                                         <span class="tag-text">{{l?.name}}</span>
-                                                        <span class="tag-close">x</span>
+                                                        <span class="tag-close" (click)="deleteGrowthStageOption(l)">x</span>
                                                     </div>
                                                 </div>
                                                 <input type="text" [(ngModel)]="option_growth_stage" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter Growth Stages" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
@@ -214,7 +214,7 @@
                     </div>
                    
                 </div>
-                
+                <!--
                  <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         <h3 class="font-semibold text-xl text-gray-800 leading-tight"> Structures</h3>
                     </div>
@@ -223,8 +223,6 @@
                             <div class="md:col-span-1 flex justify-between">
                                 <div class="px-4 sm:px-0">
                                     <h3 class="text-lg font-medium text-gray-900"> Types of Structures </h3>
-                                    <!-- <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
-                                        password to stay secure. </p> -->
                                 </div>
                                 <div class="px-4 sm:px-0"></div>
                             </div>
@@ -237,10 +235,6 @@
                                                 <div class="m-4 relative">
                                         
                                                     <div id="tags-container">
-                                                        <!-- <div *ngFor="let l of lists?.structureTypes" class="tag">
-                                                            <span class="tag-text">{{l?.name}}</span>
-                                                            <span class="tag-close">x</span>
-                                                        </div> -->
                                                     </div>
                                                     <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
                                                     <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -272,8 +266,6 @@
                             <div class="md:col-span-1 flex justify-between">
                                 <div class="px-4 sm:px-0">
                                     <h3 class="text-lg font-medium text-gray-900">Structures Categories</h3>
-                                    <!-- <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
-                                        password to stay secure. </p> -->
                                 </div>
                                 <div class="px-4 sm:px-0"></div>
                             </div>
@@ -284,111 +276,15 @@
                                         
                                             <div class="col-span-6">
                                                 <div class="m-4 relative">
-                                             <!--        <table id="tree-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Structure</th>
-                                                                <th>Description</th>
-                                                                <th>Options</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table> -->
+                                           
                                            <table class="w-full">
                                             <thead>
                                                 <tr>
                                                     <th>Structure</th>
                                                     <th>Description/Options</th>
-                                                    <!-- <th>Options</th> -->
                                                 </tr>
                                             </thead>
-                                        <!--     <tbody>
-                                                <tr *ngFor="let c of lists?.structureCategoryOptions;let ci = index;">
-                                                    <td>{{c.name}}</td>
-                                                    <td>
-                                                        <table class="w-full">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="w-1/4">Description</th>
-                                                                    <th>Options</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <ng-container *ngFor="let cd of c.structureCategories;let cdi=index;">
-                                                                    <tr>
-                                                                        <td>
-                                                                            {{cd.name}}
-                                                                            <button type="button" *ngIf="struct_desc_editor[ci][cdi]!==true" class="tag ml-2" (click)="StructureDescriptionForm?ShowAlert('You can only add one at a time'):struct_desc_editor[ci][cdi]=true;InitStructureDescription('','');">+
-                                                                                    
-                                                                            </button>
-                                                                            <input type="text" *ngIf="struct_desc_editor[ci][cdi]==true" [(ngModel)]="option_category_form_description_option_edit" [ngModelOptions]="{standalone: true}" placeholder="Enter Category Description" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mr-5">
-                                                                            <button (click)="SaveDescription(c.id,option_category_form_description_option_edit)" *ngIf="struct_desc_editor[ci][cdi]==true" type="button" class="text-sm mt-2 px-2 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-white" (click)="struct_desc_editor[ci][cdi]=true">Save Description
-                                                                                
-                                                                            </button>
-                                                                            <button *ngIf="struct_desc_editor[ci][cdi]==true;" type="button" class="tag text-sm ml-2 mt-2" (click)="struct_desc_editor[ci][cdi]=false;ResetForms()">Cancel
-                                                                                
-                                                                            </button>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div>
-                                                                                <div *ngFor="let cdo of cd.options;let ti=index;" class="tag space-x-2 mt-2">
-                                                                                    <span class="tag-text">{{cdo.name}}</span>
-                                                                                </div>
-                                                                                <button type="button" *ngIf="struct_editor[ci][cdi]!==true" class="tag ml-2" (click)="StructureDescriptionOptionForm?ShowAlert('You can only add one at a time'):struct_editor[ci][cdi]=true;InitStructureDescriptionOption('','');">+
-                                                                                    
-                                                                                </button>
-                                                                                <input type="text" *ngIf="struct_editor[ci][cdi]==true" [(ngModel)]="option_category_form_description_edit" [ngModelOptions]="{standalone: true}" placeholder="Enter Category Options" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mr-5">
-                                                                                <button (click)="SaveOption(cd.id,option_category_form_description_edit)" *ngIf="struct_editor[ci][cdi]==true" type="button" class="text-sm mt-2 px-2 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-white" (click)="struct_editor[ci][cdi]=true">Save Option
-                                                                                    
-                                                                                </button>
-                                                                                <button *ngIf="struct_editor[ci][cdi]==true;" type="button" class="tag text-sm ml-2 mt-2" (click)="struct_editor[ci][cdi]=false;ResetForms()">Cancel
-                                                                                    
-                                                                                </button>
-                                                                            </div>
-                                                                            
-                                                                    </tr>
-                                                                    
-                                                                   
-                                                                </ng-container>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                       
-                                            <tbody *ngIf="false">
-                                                <ng-container *ngFor="let c of lists?.structureCategoryOptions">
-                                                <tr *ngFor="let cd of c.structureCategories;let i = index;">
-                                                    <ng-container *ngIf="i === 0">
-                                                    <td class="p-2.5 border border-black" [rowSpan]="GetL1RS(c)">
-                                                        {{c.name}}
-                                                    </td>
-                                                    </ng-container>
-                                                    <td class="p-2.5 border border-black" [rowSpan]="GetLevel2RowSpan(cd)">
-                                                        <span *ngFor="let cd of c.structureCategories">
-                                                            {{cd.name}}
-                                                            
-                                                        </span>                                                       
-                                                    </td>  
-                                                    <td class="p-2.5 border border-black" *ngIf="cd.options">
-                                                        {{cd.options.length>0?cd.options[0].name:''}}
-                                                       
-                                                    </td>                                     
-                                                </tr>
-                                                <tr *ngFor="let child of c.structureCategories">
-                                                    <ng-container *ngFor="let leaf of child.options; let leafIndex = index">
-                                                      <ng-container *ngIf="leafIndex > 0">
-                                                        <tr>
-                                                          <td class="p-2.5 border-t-0 border-l-0 border border-black">{{ leaf.name }}</td>
-                                                        </tr>
-                                                      </ng-container>
-                                                    </ng-container>
-                                                  </tr>
-                                                </ng-container>
-                                                
-                                            </tbody> -->
-                                        </table>
+                                         </table>
                                        
                                         <div class="col-span-6 sm:col-span-4 space-y-5 mt-5" *ngIf="StructureCategoryForm" [formGroup]="StructureCategoryForm">
                                             <h3 class="text-lg font-medium text-gray-900">New Structure Category</h3>
@@ -420,35 +316,19 @@
                                                         <button *ngIf="last" [disabled]="!option_category_form_description" class="disabled:text-gray-300 text-blue-500" (click)="PushOption(i,option_category_form_description)">
                                                            
                                                              Add Option</button>
-                                                        <!-- <div *ngFor="let t of StructureCategoryFormDescriptionOptions(i)?.controls; let io=index" [formGroupName]="io">
-                                                        <input type="text" formControlName="name" placeholder="Enter the description options"
-                                                            class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
-                                                    </div> -->
+                                                       
                                                     </div>
                                                     <button *ngIf="last" (click)="AddNewDescription()" class="flex ml-auto" style="color: blue;">
                                                            
                                                         Add New Description</button>
-                                              <!--   <div class="hidden sm:block">
-                                            <div class="py-4">
-                                                <div class="border-t border-gray-200"></div>
-                                            </div>
-                                        </div> -->
+                                             
                                         
 
                                             </div>
                                         </div>
                                        
                                         </div>
-                                     <!--    {{StructureCategoryForm?.value|json}} -->
-                                                 <!-- <div id="tags-container">
-                                                        <div *ngFor="let l of lists?.structureTypes" class="tag">
-                                                            <span class="tag-text">{{l?.name}}</span>
-                                                            <span class="tag-close">x</span>
-                                                        </div>
-                                                    </div>
-                                                    <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
-                                                    <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                        Define types of structure types</p> -->                                                
+                                                                                   
                                                     
                                                 </div>
                                             </div>
@@ -489,7 +369,7 @@
                                     <p> When two factor authentication is enabled, you will be prompted for a secure,
                                         random token during authentication. You may retrieve this token from your
                                         phone's Google Authenticator application. </p>
-                                </div><!---->
+                                </div>
                                 <div class="mt-5">
                                     <div><span><span><button type="button"
                                                     class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
@@ -518,7 +398,7 @@
                             <div class="max-w-xl text-sm text-gray-600"> If necessary, you may log out of all of your
                                 other browser sessions across all of your devices. Some of your recent sessions are
                                 listed below; however, this list may not be exhaustive. If you feel your account has
-                                been compromised, you should also update your password. </div><!---->
+                                been compromised, you should also update your password. </div>
                             <div class="flex items-center mt-5"><button type="submit"
                                     class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
                                     Log Out Other Browser Sessions </button>
@@ -552,66 +432,11 @@
                                     Delete Account </button></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+                </div> -->
+            <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
         <h2 class="text-2xl font-semibold mb-4">Structure Category Configuration</h2>
       
-        <!-- Category Form -->
-        <form [formGroup]="categoryForm" (ngSubmit)="submitForm()" class="mb-6 p-4 border rounded-lg bg-gray-50">
-          <label class="block mb-2 text-gray-700">Category Name:</label>
-          <input 
-            type="text" 
-            formControlName="name" 
-            class="w-full p-2 border rounded mb-2" 
-            placeholder="Enter category name" 
-          />
-          <div *ngIf="submitted && categoryForm.get('name')?.errors" class="text-red-500 text-sm">
-            <span *ngIf="categoryForm.get('name')?.errors?.['required']">Category name is required.</span>
-            <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Must be at least 3 characters.</span>
-          </div>
-      
-          <h3 class="font-semibold text-lg mt-4">Attributes</h3>
-          <table class="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr class="bg-gray-200">
-                <th class="border p-2">Attribute Name</th>
-                <th class="border p-2">Options</th>
-                <th class="border p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="attributes">
-              <tr *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i">
-                <td class="border p-2">
-                  <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Attribute Name" required />
-                  <div *ngIf="submitted && attribute.get('name')?.errors" class="text-red-500 text-sm">
-                    <span *ngIf="attribute.get('name')?.errors?.['required']">Required.</span>
-                    <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters.</span>
-                  </div>
-                </td>
-                <td  class="border p-2" formArrayName="options">
-                  <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center space-x-2 mb-2">
-                    
-                    <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Option" required />
-                    <button type="button" (click)="removeOption(i, j)" class="bg-red-500 text-white px-2 py-1 rounded">X</button>
-                  </div>
-                  <button type="button" (click)="addOption(i)" class="bg-blue-500 text-white px-2 py-1 rounded">+ Option</button>
-                </td>
-                <td class="border p-2">
-                  <button type="button" (click)="removeAttribute(i)" class="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-      
-          <button type="button" (click)="addAttribute()" class="mt-2 bg-green-500 text-white px-3 py-1 rounded">+ Attribute</button>
-      
-          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Save</button>
-        </form>
-      
-        {{categoryForm.value|json}}
+
         <!-- Existing Categories List -->
         <h3 class="font-semibold text-lg mb-2">Existing Categories</h3>
         <ul class="space-y-2">
@@ -633,6 +458,66 @@
             </ul>
           </li>
         </ul>
+                <!-- Category Form -->
+                <form [formGroup]="categoryForm" (ngSubmit)="categoryForm.valid? submitForm():false" class="mb-6 p-4 border rounded-lg bg-gray-50">
+                    <label class="block mb-2 text-gray-700">Category Name:</label>
+                    <input 
+                      type="text" 
+                      formControlName="name" 
+                      class="w-full p-2 border rounded mb-2" 
+                      placeholder="Enter category name" 
+                    />
+                    <div *ngIf="submitted && categoryForm.get('name')?.errors" class="text-red-500 text-sm">
+                      <span *ngIf="categoryForm.get('name')?.errors?.['required']">Category name is required.</span>
+                      <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Must be at least 3 characters.</span>
+                    </div>
+                
+                    <h3 class="font-semibold text-lg mt-4">Attributes</h3>
+                    <table class="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr class="bg-gray-200">
+                          <th class="border p-2">Attribute Name</th>
+                          <th class="border p-2">Options</th>
+                          <th class="border p-2">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="attributes">
+                        <tr *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i">
+                          <td class="border p-2">
+                            <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Attribute Name" required />
+                            <div *ngIf="submitted && attribute.get('name')?.errors" class="text-red-500 text-sm">
+                              <span *ngIf="attribute.get('name')?.errors?.['required']">Required.</span>
+                              <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters.</span>
+                            </div>
+                          </td>
+                          <td  class="border p-2" formArrayName="options">
+                            <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center space-x-2 mb-2">
+                              
+                              <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Option" required />
+                              <button type="button" (click)="removeOption(i, j)" class="bg-red-500 text-white px-2 py-1 rounded">X</button>
+                            </div>
+                            <button type="button" (click)="addOption(i)" class="bg-blue-500 text-white px-2 py-1 rounded">+ Option</button>
+                          </td>
+                          <td class="border p-2">
+                            <button type="button" (click)="removeAttribute(i)" class="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                
+                    <div class="flex flex-col">
+                       <button type="button" (click)="addAttribute()" class="mt-2 bg-green-500 text-white px-3 py-1 rounded">+ Attribute</button>
+                
+                    <button [disabled]="!categoryForm?.valid" type="submit" class="mt-4 bg-green-500 disabled:opacity-75 text-white px-4 py-2 rounded">Save</button>    
+                    </div>
+                 
+                  </form>
+                
       </div>
+            </div>
+       
+        </div>
+    </main>
+    
       
       

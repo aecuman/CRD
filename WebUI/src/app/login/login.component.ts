@@ -18,6 +18,7 @@ export class LoginComponent {
   LoginForm!: FormGroup;
   message: any;
   returnUrl: any;
+  errorMessage: any;
 
   /**
    *
@@ -46,19 +47,23 @@ login() {
     this.isSubmitted = true;
     this.api.login({email:this.f['email']?.value,password:this.f['password'].value}).subscribe({
       next:(value:LoginDto)=> {
-        console.log(value)
-       console.log(this.returnUrl);       
+       this.authService.saveSession(value?.token??'',value.user);
               this.authService.LoggedInUser(value);
                this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || "/"
        this.router.navigate([this.returnUrl]) 
       },
-      error:(e?:any)=> {
-        console.log(e)
-        this.message = e?.message;
-        
+      error:(error?:any)=> {
+       console.log(error);
         this.isLoading = false;
-        if(e?.status===402){
-          //this.authService.redirectToLockscreen(this.f['username'].value, this.f['password'].value,e)
+        if (error.requiresReset) {
+          this.router.navigate(['/reset-password'], {
+            queryParams: { 
+              email: this.LoginForm.value.email ,
+              token: error.token
+            }
+          });
+        } else {
+          this.errorMessage = error.message || 'Invalid login';
         }
       }
     

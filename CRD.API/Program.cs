@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using CRD.API.Services;
+using CRD.Application.Common;
+using CRD.Infrastructure.Identity;
+using CRD.Persistence.Mongo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,25 +16,33 @@ var builder = WebApplication.CreateBuilder(args);
 /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));*/
 
-
+ 
 // add in services section
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddPersistence(builder.Configuration);
+ builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
+builder.Services.AddSingleton<IPublishedRateMongoService, PublishedRateMongoService>();
+
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>();
+//builder.Services.AddIdentityApiEndpoints<ApplicationUser>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName); // Uses full namespace to avoid conflicts
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "CorsPolicy",
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:53874")
+                          policy.WithOrigins("http://localhost:53874", "https://cr-db-642aa.web.app","http://localhost:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
@@ -41,6 +52,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
     await SeedData(app);
+if (args.Length == 1 && args[0].ToLower() == "seedworkflow")
+    await SeedWorkFlow(app);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -54,7 +67,7 @@ app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<ApplicationUser>();
+//app.MapIdentityApi<ApplicationUser>();
 
 
 app.MapControllers();
@@ -74,6 +87,17 @@ async Task SeedData(IHost app)
     {
         var service = scope.ServiceProvider.GetService<SeedUsers>();
         await service.SeedDefaultUserAsync();
+        
     }
 }
+async Task SeedWorkFlow(IHost app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<WorkflowSeeder>();
+        await service.SeedDefaultWorkflowAsync();
+
+    }
+}   
 

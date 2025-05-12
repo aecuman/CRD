@@ -60,9 +60,6 @@ namespace CRD.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CropId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("DistrictRateId")
                         .HasColumnType("int");
 
@@ -74,7 +71,7 @@ namespace CRD.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RefId")
+                    b.Property<int?>("PlantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -83,13 +80,11 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CropId");
-
                     b.HasIndex("DistrictRateId");
 
-                    b.HasIndex("RefId");
+                    b.HasIndex("PlantId");
 
-                    b.ToTable("CRDFile");
+                    b.ToTable("CRDFiles");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.Category", b =>
@@ -132,14 +127,14 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CropId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("TreeId");
 
                     b.ToTable("CategoryInfo");
                 });
 
-            modelBuilder.Entity("CRD.Domain.Entities.Crop", b =>
+            modelBuilder.Entity("CRD.Domain.Entities.CompensationRateModeration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,37 +142,51 @@ namespace CRD.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Aez")
+                    b.Property<string>("DeferredReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiscretionInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeferred")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModerationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModerationNotes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BotanicalName")
+                    b.Property<string>("Moderator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("Categories")
-                        .IsRequired()
+                    b.Property<string>("NewDiscretionInfo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CommonName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("NewRate")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CropType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("OldRate")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.PrimitiveCollection<string>("GrowthStages")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PlantRateId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Info")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StructureRateId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Crops");
+                    b.HasIndex("PlantRateId");
+
+                    b.HasIndex("StructureRateId");
+
+                    b.ToTable("CompensationRateModerations");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.District", b =>
@@ -205,11 +214,28 @@ namespace CRD.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DistrictId")
-                        .IsRequired()
+                    b.PrimitiveCollection<string>("ComparableDistrictRatesIds")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DistrictRateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.PrimitiveCollection<string>("UploadIds")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -218,7 +244,66 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DistrictId");
+
+                    b.HasIndex("DistrictRateId");
+
                     b.ToTable("DistrictRates");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.GroupedPlantItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CropId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupedPlantId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TreeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CropId");
+
+                    b.HasIndex("GroupedPlantId");
+
+                    b.HasIndex("TreeId");
+
+                    b.ToTable("GroupedPlantItems");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.GroupedPlants", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.PrimitiveCollection<string>("GrowthStages")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GroupedPlants");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.GrowthStage", b =>
@@ -253,6 +338,169 @@ namespace CRD.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Languanges");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.Plant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BotanicalName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("Categories")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.PrimitiveCollection<string>("GrowthStages")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Info")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlantType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plant");
+
+                    b.HasDiscriminator().HasValue("Plant");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.PlantRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Assumptions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryInfoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryInfoOption")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeferredReviewDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeferredReviewReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiscretionInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DistrictRateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GroupName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("GroupedPlantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GrowthStageId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReviewDeferred")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PlantId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlantId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PlantType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Quality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Rate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("Unit")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryInfoId");
+
+                    b.HasIndex("DistrictRateId");
+
+                    b.HasIndex("GroupedPlantId");
+
+                    b.HasIndex("PlantId");
+
+                    b.HasIndex("PlantId1");
+
+                    b.ToTable("PlantRates");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.PlantRateGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PlantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlantRateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantId");
+
+                    b.HasIndex("PlantRateId");
+
+                    b.ToTable("PlantRateGroups");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.Structure", b =>
@@ -389,6 +637,53 @@ namespace CRD.Persistence.Migrations
                     b.ToTable("StructureOptionSelections");
                 });
 
+            modelBuilder.Entity("CRD.Domain.Entities.StructureRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Assumptions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeferredReviewDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeferredReviewReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiscretionInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DistrictRateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsReviewDeferred")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("Rate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StructureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Unit")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictRateId");
+
+                    b.HasIndex("StructureId");
+
+                    b.ToTable("StructureRates");
+                });
+
             modelBuilder.Entity("CRD.Domain.Entities.StructureType", b =>
                 {
                     b.Property<int>("Id")
@@ -429,48 +724,9 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CropId");
-
                     b.HasIndex("TreeId");
 
                     b.ToTable("Translations");
-                });
-
-            modelBuilder.Entity("CRD.Domain.Entities.Tree", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BotanicalName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("Categories")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CommonName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("GrowthStages")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Info")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("Othernames")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Trees");
                 });
 
             modelBuilder.Entity("CRD.Domain.Identity.ApplicationRole", b =>
@@ -493,17 +749,12 @@ namespace CRD.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("WorkflowStepId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.HasIndex("WorkflowStepId");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -533,6 +784,12 @@ namespace CRD.Persistence.Migrations
                     b.Property<string>("Firstname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastPasswordChangedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
@@ -603,6 +860,12 @@ namespace CRD.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DistrictWorkflowStepId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DistrictWorkflowSubStepId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -613,17 +876,11 @@ namespace CRD.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("WorkflowStepId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WorkflowSubStepId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowStepId");
+                    b.HasIndex("DistrictWorkflowStepId");
 
-                    b.HasIndex("WorkflowSubStepId");
+                    b.HasIndex("DistrictWorkflowSubStepId");
 
                     b.ToTable("Comments");
                 });
@@ -642,10 +899,22 @@ namespace CRD.Persistence.Migrations
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DistrictRateId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ValidFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ValidTo")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("WorkflowId")
@@ -655,9 +924,87 @@ namespace CRD.Persistence.Migrations
 
                     b.HasIndex("DistrictId");
 
+                    b.HasIndex("DistrictRateId");
+
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("DistrictWorkflow");
+                    b.ToTable("DistrictWorkflows");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowStep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DistrictWorkflowId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkflowStepId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictWorkflowId");
+
+                    b.HasIndex("WorkflowStepId");
+
+                    b.ToTable("DistrictWorkflowSteps");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowSubStep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DistrictWorkflowStepId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkflowSubStepId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictWorkflowStepId");
+
+                    b.HasIndex("WorkflowSubStepId");
+
+                    b.ToTable("DistrictWorkflowSubSteps");
                 });
 
             modelBuilder.Entity("CRD.Domain.Process.Document", b =>
@@ -670,6 +1017,12 @@ namespace CRD.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DistrictWorkflowStepId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DistrictWorkflowSubStepId")
+                        .HasColumnType("int");
 
                     b.Property<string>("FileName")
                         .IsRequired()
@@ -685,17 +1038,11 @@ namespace CRD.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("WorkflowStepId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkflowSubStepId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowStepId");
+                    b.HasIndex("DistrictWorkflowStepId");
 
-                    b.HasIndex("WorkflowSubStepId");
+                    b.HasIndex("DistrictWorkflowSubStepId");
 
                     b.ToTable("Documents");
                 });
@@ -727,7 +1074,7 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workflow");
+                    b.ToTable("Workflows");
                 });
 
             modelBuilder.Entity("CRD.Domain.Process.WorkflowStep", b =>
@@ -738,18 +1085,12 @@ namespace CRD.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<string>("AssignedToRoles")
+                    b.Property<string>("AssignedToRoles")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DistrictId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -767,18 +1108,10 @@ namespace CRD.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ValidFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ValidTo")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("WorkflowId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DistrictId");
 
                     b.HasIndex("WorkflowId");
 
@@ -793,15 +1126,12 @@ namespace CRD.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<string>("AssignedToRoles")
+                    b.Property<string>("AssignedToRoles")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -936,34 +1266,166 @@ namespace CRD.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CRD.Domain.Entities.Crop", b =>
+                {
+                    b.HasBaseType("CRD.Domain.Entities.Plant");
+
+                    b.Property<string>("Aez")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CropType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Crop");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.Tree", b =>
+                {
+                    b.HasBaseType("CRD.Domain.Entities.Plant");
+
+                    b.PrimitiveCollection<string>("Othernames")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Tree");
+                });
+
             modelBuilder.Entity("CRD.Domain.Entities.CRDFile", b =>
                 {
-                    b.HasOne("CRD.Domain.Entities.Crop", null)
-                        .WithMany("Images")
-                        .HasForeignKey("CropId");
-
                     b.HasOne("CRD.Domain.Entities.DistrictRate", null)
                         .WithMany("Uploads")
                         .HasForeignKey("DistrictRateId");
 
-                    b.HasOne("CRD.Domain.Entities.Tree", null)
+                    b.HasOne("CRD.Domain.Entities.Plant", null)
                         .WithMany("Images")
-                        .HasForeignKey("RefId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PlantId");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.CategoryInfo", b =>
                 {
-                    b.HasOne("CRD.Domain.Entities.Crop", null)
-                        .WithMany("CategoryInform")
-                        .HasForeignKey("CropId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("CRD.Domain.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("CRD.Domain.Entities.Tree", null)
+                    b.HasOne("CRD.Domain.Entities.Plant", null)
                         .WithMany("CategoryInform")
                         .HasForeignKey("TreeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.CompensationRateModeration", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.PlantRate", "PlantRate")
+                        .WithMany("ModerationHistory")
+                        .HasForeignKey("PlantRateId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CRD.Domain.Entities.StructureRate", "StructureRate")
+                        .WithMany("ModerationHistory")
+                        .HasForeignKey("StructureRateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("PlantRate");
+
+                    b.Navigation("StructureRate");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.DistrictRate", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Entities.DistrictRate", null)
+                        .WithMany("ComparableStrictRates")
+                        .HasForeignKey("DistrictRateId");
+
+                    b.Navigation("District");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.GroupedPlantItem", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.Crop", "Crop")
+                        .WithMany("GroupedPlantItems")
+                        .HasForeignKey("CropId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRD.Domain.Entities.GroupedPlants", "GroupedPlant")
+                        .WithMany("GroupedPlantItems")
+                        .HasForeignKey("GroupedPlantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Entities.Tree", "Tree")
+                        .WithMany("GroupedPlantItems")
+                        .HasForeignKey("TreeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Crop");
+
+                    b.Navigation("GroupedPlant");
+
+                    b.Navigation("Tree");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.PlantRate", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.CategoryInfo", "CategoryInfo")
+                        .WithMany()
+                        .HasForeignKey("CategoryInfoId");
+
+                    b.HasOne("CRD.Domain.Entities.DistrictRate", "DistrictRate")
+                        .WithMany("PlantRates")
+                        .HasForeignKey("DistrictRateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Entities.GroupedPlants", "GroupedPlants")
+                        .WithMany()
+                        .HasForeignKey("GroupedPlantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRD.Domain.Entities.Plant", "Plant")
+                        .WithMany()
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("CRD.Domain.Entities.Plant", null)
+                        .WithMany("PlantRates")
+                        .HasForeignKey("PlantId1");
+
+                    b.Navigation("CategoryInfo");
+
+                    b.Navigation("DistrictRate");
+
+                    b.Navigation("GroupedPlants");
+
+                    b.Navigation("Plant");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.PlantRateGroup", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.Plant", "Plant")
+                        .WithMany()
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Entities.PlantRate", "PlantRate")
+                        .WithMany("PlantRateGroups")
+                        .HasForeignKey("PlantRateId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Plant");
+
+                    b.Navigation("PlantRate");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.Structure", b =>
@@ -1007,7 +1469,7 @@ namespace CRD.Persistence.Migrations
                     b.HasOne("CRD.Domain.Entities.Structure", "Structure")
                         .WithMany("AttributeSelections")
                         .HasForeignKey("StructureId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Attribute");
@@ -1031,7 +1493,7 @@ namespace CRD.Persistence.Migrations
                     b.HasOne("CRD.Domain.Entities.StructureAttributeSelection", "AttributeSelection")
                         .WithMany("OptionSelections")
                         .HasForeignKey("AttributeSelectionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CRD.Domain.Entities.StructureOption", "Option")
@@ -1045,41 +1507,48 @@ namespace CRD.Persistence.Migrations
                     b.Navigation("Option");
                 });
 
+            modelBuilder.Entity("CRD.Domain.Entities.StructureRate", b =>
+                {
+                    b.HasOne("CRD.Domain.Entities.DistrictRate", "DistrictRate")
+                        .WithMany("StructureRates")
+                        .HasForeignKey("DistrictRateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Entities.Structure", "Structure")
+                        .WithMany()
+                        .HasForeignKey("StructureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DistrictRate");
+
+                    b.Navigation("Structure");
+                });
+
             modelBuilder.Entity("CRD.Domain.Entities.Translation", b =>
                 {
-                    b.HasOne("CRD.Domain.Entities.Crop", null)
-                        .WithMany("Translations")
-                        .HasForeignKey("CropId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("CRD.Domain.Entities.Tree", null)
+                    b.HasOne("CRD.Domain.Entities.Plant", null)
                         .WithMany("Translations")
                         .HasForeignKey("TreeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("CRD.Domain.Identity.ApplicationRole", b =>
-                {
-                    b.HasOne("CRD.Domain.Process.WorkflowStep", null)
-                        .WithMany("AllowedUsers")
-                        .HasForeignKey("WorkflowStepId");
-                });
-
             modelBuilder.Entity("CRD.Domain.Process.Comment", b =>
                 {
-                    b.HasOne("CRD.Domain.Process.WorkflowStep", "WorkflowStep")
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflowStep", "DistrictWorkflowStep")
                         .WithMany("Comments")
-                        .HasForeignKey("WorkflowStepId")
+                        .HasForeignKey("DistrictWorkflowStepId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CRD.Domain.Process.WorkflowSubStep", "WorkflowSubStep")
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflowSubStep", "DistrictWorkflowSubStep")
                         .WithMany("Comments")
-                        .HasForeignKey("WorkflowSubStepId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DistrictWorkflowSubStepId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("WorkflowStep");
+                    b.Navigation("DistrictWorkflowStep");
 
-                    b.Navigation("WorkflowSubStep");
+                    b.Navigation("DistrictWorkflowSubStep");
                 });
 
             modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflow", b =>
@@ -1090,6 +1559,11 @@ namespace CRD.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CRD.Domain.Entities.DistrictRate", "DistrictRate")
+                        .WithMany()
+                        .HasForeignKey("DistrictRateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("CRD.Domain.Process.Workflow", "Workflow")
                         .WithMany("DistrictWorkflows")
                         .HasForeignKey("WorkflowId")
@@ -1098,41 +1572,73 @@ namespace CRD.Persistence.Migrations
 
                     b.Navigation("District");
 
+                    b.Navigation("DistrictRate");
+
                     b.Navigation("Workflow");
                 });
 
-            modelBuilder.Entity("CRD.Domain.Process.Document", b =>
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowStep", b =>
                 {
-                    b.HasOne("CRD.Domain.Process.WorkflowStep", "WorkflowStep")
-                        .WithMany("Documents")
-                        .HasForeignKey("WorkflowStepId");
-
-                    b.HasOne("CRD.Domain.Process.WorkflowSubStep", "WorkflowSubStep")
-                        .WithMany("Documents")
-                        .HasForeignKey("WorkflowSubStepId")
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflow", "DistrictWorkflow")
+                        .WithMany("DistrictSteps")
+                        .HasForeignKey("DistrictWorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CRD.Domain.Process.WorkflowStep", "WorkflowStep")
+                        .WithMany()
+                        .HasForeignKey("WorkflowStepId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DistrictWorkflow");
+
                     b.Navigation("WorkflowStep");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowSubStep", b =>
+                {
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflowStep", "DistrictWorkflowStep")
+                        .WithMany("DistrictSubSteps")
+                        .HasForeignKey("DistrictWorkflowStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRD.Domain.Process.WorkflowSubStep", "WorkflowSubStep")
+                        .WithMany()
+                        .HasForeignKey("WorkflowSubStepId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DistrictWorkflowStep");
 
                     b.Navigation("WorkflowSubStep");
                 });
 
+            modelBuilder.Entity("CRD.Domain.Process.Document", b =>
+                {
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflowStep", "DistrictWorkflowStep")
+                        .WithMany("Documents")
+                        .HasForeignKey("DistrictWorkflowStepId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CRD.Domain.Process.DistrictWorkflowSubStep", "DistrictWorkflowSubStep")
+                        .WithMany("Documents")
+                        .HasForeignKey("DistrictWorkflowSubStepId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("DistrictWorkflowStep");
+
+                    b.Navigation("DistrictWorkflowSubStep");
+                });
+
             modelBuilder.Entity("CRD.Domain.Process.WorkflowStep", b =>
                 {
-                    b.HasOne("CRD.Domain.Process.DistrictWorkflow", "District")
-                        .WithMany()
-                        .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CRD.Domain.Process.Workflow", "Workflow")
                         .WithMany("Steps")
                         .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("District");
 
                     b.Navigation("Workflow");
                 });
@@ -1207,18 +1713,38 @@ namespace CRD.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CRD.Domain.Entities.Crop", b =>
+            modelBuilder.Entity("CRD.Domain.Entities.DistrictRate", b =>
+                {
+                    b.Navigation("ComparableStrictRates");
+
+                    b.Navigation("PlantRates");
+
+                    b.Navigation("StructureRates");
+
+                    b.Navigation("Uploads");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.GroupedPlants", b =>
+                {
+                    b.Navigation("GroupedPlantItems");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Entities.Plant", b =>
                 {
                     b.Navigation("CategoryInform");
 
                     b.Navigation("Images");
 
+                    b.Navigation("PlantRates");
+
                     b.Navigation("Translations");
                 });
 
-            modelBuilder.Entity("CRD.Domain.Entities.DistrictRate", b =>
+            modelBuilder.Entity("CRD.Domain.Entities.PlantRate", b =>
                 {
-                    b.Navigation("Uploads");
+                    b.Navigation("ModerationHistory");
+
+                    b.Navigation("PlantRateGroups");
                 });
 
             modelBuilder.Entity("CRD.Domain.Entities.Structure", b =>
@@ -1241,13 +1767,9 @@ namespace CRD.Persistence.Migrations
                     b.Navigation("Attributes");
                 });
 
-            modelBuilder.Entity("CRD.Domain.Entities.Tree", b =>
+            modelBuilder.Entity("CRD.Domain.Entities.StructureRate", b =>
                 {
-                    b.Navigation("CategoryInform");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("Translations");
+                    b.Navigation("ModerationHistory");
                 });
 
             modelBuilder.Entity("CRD.Domain.Identity.ApplicationRole", b =>
@@ -1260,6 +1782,27 @@ namespace CRD.Persistence.Migrations
                     b.Navigation("Roles");
                 });
 
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflow", b =>
+                {
+                    b.Navigation("DistrictSteps");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowStep", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("DistrictSubSteps");
+
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("CRD.Domain.Process.DistrictWorkflowSubStep", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Documents");
+                });
+
             modelBuilder.Entity("CRD.Domain.Process.Workflow", b =>
                 {
                     b.Navigation("DistrictWorkflows");
@@ -1269,20 +1812,17 @@ namespace CRD.Persistence.Migrations
 
             modelBuilder.Entity("CRD.Domain.Process.WorkflowStep", b =>
                 {
-                    b.Navigation("AllowedUsers");
-
-                    b.Navigation("Comments");
-
-                    b.Navigation("Documents");
-
                     b.Navigation("SubSteps");
                 });
 
-            modelBuilder.Entity("CRD.Domain.Process.WorkflowSubStep", b =>
+            modelBuilder.Entity("CRD.Domain.Entities.Crop", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("GroupedPlantItems");
+                });
 
-                    b.Navigation("Documents");
+            modelBuilder.Entity("CRD.Domain.Entities.Tree", b =>
+                {
+                    b.Navigation("GroupedPlantItems");
                 });
 #pragma warning restore 612, 618
         }

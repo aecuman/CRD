@@ -3,6 +3,7 @@ using CRD.Application.Common.Exceptions;
 using CRD.Application.Plants.Commands;
 using CRD.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,19 +22,32 @@ namespace CRD.Application.Structures.Commands
     {
         private readonly ILogger<DeleteStructureCommandHandler> _logger;
         private readonly IRepository<Structure> _structureRepo;
+        private readonly IRepository<StructureOptionSelection> _structureOptionSelectionsRepo;
 
-        public DeleteStructureCommandHandler(ILogger<DeleteStructureCommandHandler> logger, IRepository<Structure> structureRepo)
+        public DeleteStructureCommandHandler(ILogger<DeleteStructureCommandHandler> logger, IRepository<Structure> structureRepo, IRepository<StructureOptionSelection> structureOptionSelectionsRepo)
         {
             _logger = logger;
             _structureRepo = structureRepo;
+            _structureOptionSelectionsRepo = structureOptionSelectionsRepo;
         }
         public async Task<bool> Handle(DeleteStructureCommand request, CancellationToken cancellationToken)
         {
             if (request == null) throw new NullReferenceException();
            
-                var entity = await _structureRepo.GetByIdAsync(request.Id);
+                var entity = await _structureRepo.GetAll().AsQueryable()
+        .Include(s => s.AttributeSelections)
+            .ThenInclude(a => a.OptionSelections)
+        .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
-                if (entity == null)
+            if (entity == null) return false;
+
+            // 1. Delete options first (because no cascade)
+            foreach (var attr in entity.AttributeSelections)
+            {
+                _structureOptionSelectionsRepo.RemoveRange(attr.OptionSelections.ToList());
+            }
+
+            if (entity == null)
                 {
                     throw new NotFoundException(nameof(Crop), request.Id);
                 }

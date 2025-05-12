@@ -22,8 +22,11 @@ namespace CRD.Persistence
 
             services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager().AddDefaultTokenProviders();
+            services.AddScoped<SignInManager<ApplicationUser>>();
+            services.AddDataProtection();
+
             /*services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,7 +45,9 @@ namespace CRD.Persistence
             ClockSkew = TimeSpan.Zero // remove delay of token when expire
         };
     });*/
+
             services.AddTransient<SeedUsers>();
+            services.AddTransient<WorkflowSeeder>();
             services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
             //.AddDefaultTokenProviders();
 

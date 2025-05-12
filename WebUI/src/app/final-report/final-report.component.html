@@ -1,0 +1,166 @@
+<div id="moderationReport" class="text-sm text-gray-900 leading-relaxed">
+    <!-- 🔹 Cover Page -->
+    <div class="text-center mb-16">
+      <img src="assets/logo.png" alt="Ministry Logo" style="height: 100px; margin: 0 auto;" />
+      <h2 class="text-xl font-semibold mt-6 mb-2">{{title}} District Compensation Rates</h2>
+      <p><strong>District:</strong> {{ report?.districtName }}</p>
+      <p><strong>Year:</strong> {{ report?.year }} / {{ report?.year + 1 }}</p>
+      <p *ngIf="title!=='Approved'"><strong>Generated on:</strong> {{ today | date: 'longDate' }}</p>
+    </div>
+  
+    <!-- 🔹 Summary Statistics
+    <div class="mb-12 page-break">
+      <h3 class="text-lg font-semibold mb-2">1. Summary Statistics</h3>
+      <table class="w-full border border-gray-300 text-sm">
+        <thead class="bg-gray-100 font-semibold">
+          <tr>
+            <th class="border p-2">Type</th>
+            <th class="border p-2">Total</th>
+            <th class="border p-2">Approved</th>
+            <th class="border p-2">Revised</th>
+            <th class="border p-2">Deferred</th>
+            <th class="border p-2">Unmoderated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border p-2">Plant Rates</td>
+            <td class="border p-2">{{ summary.plant.total }}</td>
+            <td class="border p-2 text-green-700">{{ summary.plant.approved }}</td>
+            <td class="border p-2 text-blue-700">{{ summary.plant.revised }}</td>
+            <td class="border p-2 text-orange-500">{{ summary.plant.deferred }}</td>
+            <td class="border p-2 text-gray-500">{{ summary.plant.unmoderated }}</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Structure Rates</td>
+            <td class="border p-2">{{ summary.structure.total }}</td>
+            <td class="border p-2 text-green-700">{{ summary.structure.approved }}</td>
+            <td class="border p-2 text-blue-700">{{ summary.structure.revised }}</td>
+            <td class="border p-2 text-orange-500">{{ summary.structure.deferred }}</td>
+            <td class="border p-2 text-gray-500">{{ summary.structure.unmoderated }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+   -->
+    <!-- 🔹 Crop/Tree Rates -->
+    <div class="mb-12 page-break">
+      <h3 class="text-lg font-semibold mb-2">2. Crop/Tree Compensation Rates</h3>
+      <table data-sheet-name="Plant Rates" class="w-full border border-gray-300 text-sm" border="1">
+        <thead class="bg-gray-100 font-semibold">
+          <tr>
+            <th class="border p-2">Crop/Tree</th>
+            <th class="border p-2">Unit</th>
+            <th class="border p-2">Growth Stage</th>
+            <th class="border p-2">Rate (UGX)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rate of groupedPlantRates;let i = index"      [class.page-break-before]="rate.showPlant && i !== 0">
+            <td *ngIf="rate.showPlant" class="border p-2" [attr.rowspan]="rate.plantRowspan">
+                {{ rate.groupedPlantId ? rate.groupName : rate.plantName }}
+              </td>
+              <td *ngIf="rate.showUnit"  class="border p-2 align-top" [attr.rowspan]="rate.unitRowspan">{{ rate.unit }}</td>
+              <td class="border p-2 capitalize">
+                {{ rate.groupedPlantId ? getGroupStageName(rate.growthStage ?? 0) : getStageName(rate.growthStage ?? 0) }}
+                <span *ngIf="hasNonGoodQuality(rate.groupedPlantId ? rate.groupName : rate.plantName)">
+               {{ rate.quality }}
+               </span>
+              </td>
+              <td class="border p-2 text-right">
+                {{ rate.latestModeration?.newRate ? ('UGX ' + (rate.latestModeration?.newRate | number:'1.0-0')) : '—' }}
+              </td>
+          </tr>
+          <tr class="invisible-padding-row">
+            <td colspan="4" style="height: 1rem; visibility: hidden;"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- 🔹 Structure Rates -->
+    <div class="mb-12 page-break">
+      <h3 class="text-lg font-semibold mb-2">3. Structure Compensation Rates</h3>
+      <table data-sheet-name="Structure Rates" class="w-full border border-gray-300 text-sm" border="1">
+        <thead class="bg-gray-100 font-semibold">
+          <tr>
+            <!-- <th class="border p-2">Structure</th> -->
+            <th class="border p-2">Type</th>
+            <th class="border p-2">Description</th>
+            <th class="border p-2">Unit</th>
+            <th class="border p-2">Rate (UGX)</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tbody>
+                <ng-container *ngFor="let group of groupedStructureRates">
+                  <!-- Group Header -->
+                  <tr class="bg-gray-200 font-semibold text-gray-700 border-y">
+                    <td colspan="6" class="px-4 py-2">
+                      {{ group.categoryName }}
+                    </td>
+                  </tr>
+              
+                  <tr *ngFor="let rate of group.items; let i = index">
+                    <!-- Structure Name -->
+                    <td class="border p-2">{{ rate.structureName }}</td>
+              
+                    <!-- Unit -->
+                    <td class="border p-2">
+                        <ng-container>{{ rate.unit }}</ng-container>
+  
+                    </td>
+              
+                    <!-- Rate + Discretionary Info -->
+                    <td class="border p-2">
+                      <div class="relative">
+              
+                        <ng-container>
+                            <div class="flex justify-between items-center space-x-2">
+                          <div *ngIf="rate.rate; else noRateBlock">{{ 'UGX ' + (rate.rate | number: '1.0-0') }}</div>
+                          <div class="flex gap-2 items-center">
+                             <!-- <button *ngIf="editIndex !== rate.id" class="text-blue-600 hover:underline" (click)="rate.rate==null?editStructureRate(rate):editIndex = rate.id">Edit</button>
+             <button class="text-red-600 hover:underline" (click)="confirmDelete(rate)">Delete</button>  -->
+                          </div>
+            
+                          </div>
+                          <ng-template #noRateBlock>
+                            <span class="italic text-gray-500">N/A</span><br />
+                            <span class="text-xs text-gray-700">{{ rate.discretionInfo }}</span>
+                          </ng-template>
+                          <p *ngIf="rate.assumptions" class="text-xs text-gray-500 italic">
+                            {{ rate.assumptions}}
+                        </p>
+                        </ng-container>
+                      </div>
+                    </td>
+                            <!-- Moderation Values -->
+          <td class="border p-2">
+              {{rate.originalRate ? ('UGX ' + (rate.latestModeration?.newRate | number: '1.0-0')) : '—' }}
+             <!--  {{ rate.latestModeration?.oldRate ? ('UGX ' + (rate.latestModeration.oldRate | number: '1.0-0')) : '—' }} -->
+            </td>
+    
+            
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- 🔹 Signature Section -->
+    <div *ngIf="title!=='Approved'" class="mt-16 page-break">
+      <h4 class="text-lg font-semibold mb-6">4. Signatures</h4>
+      <div class="flex justify-between text-sm">
+        <div>
+          <p class="mb-6"><strong>Approved by:</strong></p>
+          <p class="mb-2">______________________________</p>
+          <p>Name & Title</p>
+        </div>
+        <div>
+          <p class="mb-6"><strong>Reviewed by:</strong></p>
+          <p class="mb-2">______________________________</p>
+          <p>Name & Title</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

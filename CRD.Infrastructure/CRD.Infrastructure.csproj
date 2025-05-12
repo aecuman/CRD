@@ -19,4 +19,7 @@
     <ProjectReference Include="..\CRD.Application\CRD.Application.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Include="EmailTemplates\*.html" />
+	</ItemGroup>
 </Project>

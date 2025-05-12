@@ -1,0 +1,449 @@
+<!-- Modal wrapper -->
+<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start pt-20">
+    <div class="bg-white rounded shadow-lg w-full max-w-4xl p-6 overflow-y-auto max-h-[90vh]">
+<div *ngIf="plants.length>0" class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">{{currentDistrict.districtName}} District Compensation Rates {{currentDistrict.year}} </h2>
+  
+    <div class="mb-4 p-4 border-b border-gray-200 bg-gray-50 rounded shadow-sm">
+      <ng-container *ngIf="isGrouped; else individualHeader">
+        <div class="flex flex-col">
+          <h2 class="text-xl font-semibold text-blue-700 mb-2">Group: {{ groupName }}</h2>
+          <div *ngIf="(groupedPlantIds??[]).length > 0" class="flex flex-wrap gap-2">
+            <span *ngFor="let pid of groupedPlantIds">
+              <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full shadow-sm">
+                {{ getPlantNameById(pid) }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    
+      <ng-template #individualHeader>
+        <h2 class="text-xl font-semibold text-gray-700">
+          {{ currentPlant?.commonName }} 
+          <span class="text-sm italic text-gray-500 ml-2">({{ currentPlant?.botanicalName }})</span>
+          <!-- Progress display -->
+<!-- <div class="flex items-center justify-between mb-4 text-sm text-gray-700">
+  <span>
+    Step {{ activeTabIndex + 1 }} of {{ selectedCategoryInfos.length }}:
+    <strong>{{ activeTabCategoryInfo?.info }}</strong>
+  </span>
+
+  <div class="flex-1 mx-4 h-2 bg-gray-200 rounded">
+    <div class="h-full bg-green-500 rounded transition-all duration-300"
+         [style.width.%]="((activeTabIndex + 1) / selectedCategoryInfos.length) * 100"></div>
+  </div>
+</div> -->
+        </h2>
+      </ng-template>
+    </div>
+    <!-- Step 1: Configuration -->
+    <form *ngIf="!isConfigured" [formGroup]="plantRateForm">
+       <!-- Categories (only if plant has them) -->
+  <div *ngIf="currentPlant?.categories?.length??0>0">
+    <h3 class="mt-3 text-lg font-medium">Categories:</h3>
+    <div class="flex flex-col" *ngFor="let cat of currentPlant?.infoCategories">
+      <h4 class="text-md font-semibold">{{ cat.name }}</h4>
+      <span *ngFor="let c of cat.info;let ic =index">      
+             <input type="checkbox"
+             (change)="toggleCategoryInfo(cat.categoryId??0,c,cat?.id??0,ic)"
+             [checked]="isCategoryInfoSelected(cat.categoryId??0,ic)"
+             class="mr-2" />
+      <label>{{ c }}</label>
+    </span>
+    </div>
+  </div>
+
+      <h3 class="mt-3 text-lg font-medium">Growth Stages:</h3>
+      <ng-container *ngIf="isGrouped; else plantStages">
+        <div *ngFor="let stage of currentGroupedPlant?.growthStages">
+          <input *ngIf="stage&&growth_list?.length" type="checkbox" 
+          (change)="toggleGrowthStage(stage)" 
+          [checked]="isGrowthStageSelected(stage)"
+          class="mr-2" /> {{   getGroupStageName( stage)| titlecase }}
+        </div>
+      </ng-container>
+      <ng-template #plantStages>
+        <div *ngFor="let stage of plants[currentPlantIndex]?.growthStages">
+        <input *ngIf="stage" type="checkbox" (change)="toggleGrowthStage(stage.growthStageId)" class="mr-2" /> {{ stage.name | titlecase }}
+      </div>
+        </ng-template>
+
+  
+      <h3 class="mt-3 text-lg font-medium">Units:</h3>
+      
+      <div *ngFor="let unit of units">
+        <!-- <input type="checkbox" (change)="toggleUnit(unit)" class="mr-2" /> {{ unit }} -->
+        <input type="checkbox" 
+        class="mr-2"
+        [checked]="isUnitSelected(unit.value)"
+        (change)="toggleUnit($event,unit)">
+        <label>{{ unit.key }}</label>
+      </div>
+      <!-- Quality Levels -->
+  <h3 class="mt-3 text-lg font-medium">Quality:</h3>
+<!-- Good: always checked and disabled -->
+<div>
+  <input type="checkbox" checked disabled class="mr-2" />
+  <label>Good (default)</label>
+</div>
+
+<!-- Optional: Medium & Poor -->
+<div *ngFor="let q of ['Medium', 'Poor']">
+  <input type="checkbox"
+         [value]="q"
+         (change)="toggleQuality(q)"
+         [checked]="selectedQualities.value.includes(q)"
+         class="mr-2" />
+  <label>{{ q }}</label>
+</div>
+  
+      <button type="button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" (click)="generateMatrix()">
+        Generate Matrix
+      </button>
+    </form>
+      <!-- Step 2: Display Matrix and Enter Rates-->
+<!-- Category Tabs (if plant has categories)
+<div *ngIf="selectedCategories.length > 0&&false" class="mb-4 flex gap-2 border-b border-gray-300">
+  <button *ngFor="let cid of selectedCategories.value"
+          type="button"
+          (click)="activeCategoryId = cid"
+          [class.bg-blue-600]="activeCategoryId === cid"
+          [class.text-white]="activeCategoryId === cid"
+          class="px-4 py-2 rounded-t font-medium border border-gray-300 hover:bg-blue-100 text-gray-700">
+    {{ getCategoryNameById(cid) }}
+  </button>
+</div> -->
+<!-- Tabs -->
+<div *ngIf="isConfigured&&selectedCategoryInfos.length > 0" class="mb-4 flex gap-2 border-b border-gray-300">
+  <ng-container *ngFor="let entry of selectedCategoryInfos.value">
+    <button type="button"
+            (click)="setActiveInfoTab(entry)"
+            [class.bg-blue-600]="activeCategoryInfo?.categoryInfoId === entry.categoryInfoId"
+            [class.text-white]="activeCategoryInfo?.categoryInfoId === entry.categoryInfoId"
+            class="px-4 py-2 rounded-t font-medium border border-gray-300 hover:bg-blue-100 text-gray-700 w-full">
+      {{ entry.info }}
+      <span class="text-sm"
+            [ngClass]="{
+              'text-green-600': isTabValid(entry.categoryInfoIndex),
+              'text-red-600': !isTabValid(entry.categoryInfoIndex)
+            }">
+        {{ isTabValid(entry.categoryInfoId) ? '✔️' : '❌' }}
+      </span>
+    </button>
+  </ng-container>
+</div>
+
+  <table *ngIf="isConfigured && groupedMatrix.length" class="w-full border border-gray-300 rounded shadow">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr [attr.colspan]="getColspan()" class="border-b">
+        <th class="p-2 text-left w-1/2">Growth Stage</th>
+        <th class="p-2 text-left w-1/4">Rate</th>
+        <th class="p-2 text-left">No Rate</th>
+        <th class="p-2 text-left">Assumptions</th> 
+        <!-- <th class="p-2 text-left"></th> -->
+      </tr>
+    </thead>
+ 
+    <tbody>
+      <!-- Group by Unit -->
+      <ng-container *ngFor="let group of groupedMatrix">
+        <!-- Group Header Row -->
+        <tr class="bg-blue-100 text-blue-800 font-semibold border-y border-blue-200">
+          <td [attr.colspan]="getColspan()" class="px-4 py-2">
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-blue-800">{{ group.unit }}</span>
+              <div class="flex gap-4 items-center">
+                <button (click)="toggleUnitCollapse(group.unit)" class="text-sm text-blue-600 underline">
+                  {{ collapsedUnits[group.unit] ? 'Expand' : 'Collapse' }}
+                </button>
+                <button (click)="saveGroup(group.unit)"
+                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-sm rounded">
+                  Save Group
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Group Rows (conditionally expanded) -->
+        <ng-container *ngIf="!collapsedUnits[group.unit]">
+          <ng-container *ngFor="let row of getActiveCategory(group.rows); let i = index; trackBy: trackByIndex">
+          
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-2 align-top">
+                <!-- Growth Stage Label -->
+                <div class="font-medium text-gray-800 mb-1">
+                  {{isGrouped? getGroupStageName(row.growthStageId) :getStageName(row.growthStageId) | titlecase }} 
+                  <span *ngIf="hasAdditionalQualities" [ngClass]="{
+                    'text-green-600': row.quality === 'Good',
+                    'text-yellow-600': row.quality === 'Medium',
+                    'text-red-600': row.quality === 'Poor'
+                  }">{{ row.quality }}</span>
+                  
+                </div>
+                <!-- Individual Plant Fallback -->
+                <div *ngIf="!isGrouped && currentPlant" class="text-gray-500 text-sm mt-1">
+                  <span *ngIf="activeCategoryInfo?.info">{{(activeCategoryInfo?.info+' ')||''}}</span>{{ currentPlant.commonName || currentPlant.botanicalName }}
+                  <span class="italic text-xs text-gray-400">({{ currentPlant.plantType }})</span>
+                </div>
+              </td>
+
+              <!-- Rate -->
+              <td class="p-2">
+                <input *ngIf="!row.noRate"
+                       type="text"
+                       [(ngModel)]="row.rate"
+                       class="w-full border-gray-300 rounded p-1 text-center"
+                       currencyMask
+                       [options]="currencyOptions"
+                       placeholder="Rate" />
+                <span *ngIf="row.noRate" class="text-gray-400 italic">N/A</span>
+              </td>
+
+              <!-- No Rate -->
+              <td class="p-2 text-center">
+                <input type="checkbox"
+                       [(ngModel)]="row.noRate"
+                       (change)="handleNoRateToggle(i, $event)"
+                       class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+
+              <!-- Assumptions toggle -->
+              <td class="p-2 text-center">
+                <input type="checkbox"
+                       [(ngModel)]="row.showAssumptions"
+                       (change)="toggleAssumptions(i, $event)"
+                       class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+              <!-- <td class="p-2 text-center">
+                <button (click)="DeleteRate(row.id??0)"
+                        class="text-red-600 hover:text-red-800">
+                  Remove
+                </button>
+                </td> -->
+            </tr>
+
+            <!-- Assumptions -->
+            <tr *ngIf="row.showAssumptions">
+              <td [attr.colspan]="getColspan()" class="bg-gray-50 p-4 border-b border-gray-300">
+                <label class="font-semibold text-gray-700 block mb-1">Assumptions:</label>
+                <textarea type="text"
+                       [(ngModel)]="row.assumptions"
+                       class="border border-gray-300 rounded w-full p-2"
+                       placeholder="Enter assumptions here" ></textarea>
+              </td>
+            </tr>
+
+            <!-- Discretionary Info -->
+            <tr *ngIf="row.noRate">
+              <td [attr.colspan]="getColspan()" class="bg-gray-50 p-4 border-b border-gray-300">
+                <label class="font-semibold text-gray-700 block mb-1">Discretionary Info:</label>
+                <textarea type="text"
+                       [(ngModel)]="row.discretionInfo"
+                       class="border border-gray-300 rounded w-full p-2"
+                       placeholder="Enter Discretionary Information here" ></textarea>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+  <div class="flex justify-end items-center gap-4 mt-4">
+    <button class="px-4 py-2 bg-blue-200 rounded text-sm" 
+            [disabled]="activeTabIndex === 0"
+            (click)="previousTab()">← Previous</button>
+  
+    <button class="px-4 py-2 bg-green-600 text-white rounded text-sm disabled:opacity-50"
+            [disabled]="!isCurrentTabValid()"
+            (click)="nextTab()">Next →</button>
+  </div>
+   
+    <tbody *ngIf="(selectedCategoryInfos.length)>0&& false">
+      <ng-container *ngFor="let group of getCategoryInfoGroups()">
+          <ng-container *ngFor="let row of group.rows; let i = index; trackBy: trackByIndex">
+            <tr class="border-b hover:bg-gray-50">
+              <!-- Growth Stage -->
+              <td class="p-2">{{ isGrouped ? getGroupStageName(row.growthStageId) : getStageName(row.growthStageId) | titlecase }}</td>
+  
+              <!-- Unit -->
+              <td class="p-2">{{ row.unitName }}</td>
+  
+              <!-- Rate -->
+              <td class="p-2">
+                <input *ngIf="!row.noRate"
+                       type="text"
+                       [(ngModel)]="row.rate"
+                       class="w-full border-gray-300 rounded p-1 text-center"
+                       currencyMask
+                       [options]="currencyOptions"
+                       placeholder="Rate" />
+                <span *ngIf="row.noRate" class="text-gray-400 italic">N/A</span>
+              </td>
+  
+              <!-- No Rate -->
+              <td class="p-2 text-center">
+                <input type="checkbox"
+                       [(ngModel)]="row.noRate"
+                       (change)="handleNoRateToggle(i, $event)"
+                       class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+  
+              <!-- Assumptions toggle -->
+              <td class="p-2 text-center">
+                <input type="checkbox"
+                       [(ngModel)]="row.showAssumptions"
+                       (change)="toggleAssumptions(i, $event)"
+                       class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+            </tr>
+  
+            <!-- Assumptions -->
+            <tr *ngIf="row.showAssumptions">
+              <td [attr.colspan]="6" class="bg-gray-50 p-4 border-b border-gray-300">
+                <label class="font-semibold text-gray-700 block mb-1">Assumptions:</label>
+                <textarea [(ngModel)]="row.assumptions"
+                          class="border border-gray-300 rounded w-full p-2"
+                          placeholder="Enter assumptions here"></textarea>
+              </td>
+            </tr>
+  
+            <!-- Discretionary Info -->
+            <tr *ngIf="row.noRate">
+              <td [attr.colspan]="6" class="bg-gray-50 p-4 border-b border-gray-300">
+                <label class="font-semibold text-gray-700 block mb-1">Discretionary Info:</label>
+                <textarea [(ngModel)]="row.discretionInfo"
+                          class="border border-gray-300 rounded w-full p-2"
+                          placeholder="Enter Discretionary Information here"></textarea>
+              </td>
+            </tr>
+  
+          </ng-container>
+      </ng-container>
+    </tbody>
+  
+  <table *ngIf="isConfigured && matrixRows.length&&false" class="mt-6 w-full border">
+    <thead>
+      <tr>
+      <!--   <th>Plant</th> -->
+        <th>Growth Stage</th>
+        <th *ngIf="currentPlant?.categories?.length">Category</th>
+        <th>Unit</th>
+        <th class="w-1/2">Rate</th>
+        <th>No Rate</th>
+        <th>Assumptions</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let row of matrixRows; let i = index">
+     
+        <tr>
+         <!--  <td>{{ row.groupName || row.plantId }}</td> -->
+          <td>{{ getStageName(row.growthStageId)|titlecase }} {{currentPlant?.commonName?currentPlant?.commonName:currentPlant?.botanicalName}}</td>
+          <td *ngIf="row.categoryId">{{ row.categoryId || 'N/A' }}</td>
+          <td>{{ row.unit }}</td>
+  
+          <!-- Rate Input -->
+          <td>
+            <input  *ngIf="!row.noRate"
+              type="number" 
+              [(ngModel)]="row.rate" 
+              class="w-1/2 border" 
+              placeholder="Enter rate" 
+            /> {{row.noRate?'N/A' :''}}
+          </td>
+  
+          <!-- No Rate Checkbox -->
+          <td>
+            <input
+              type="checkbox" 
+              [(ngModel)]="row.noRate" 
+              (change)="handleNoRateToggle(i,$event)" 
+            /> No Rate
+          </td>
+  
+          <!-- Assumptions Checkbox -->
+          <td>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="row.showAssumptions" 
+              (change)="toggleAssumptions(i,$event)" 
+            /> Assumptions
+          </td>
+        </tr>
+  
+        <!-- Additional Row for Assumptions -->
+        <tr *ngIf="row.showAssumptions">
+          <td colspan="7" class="bg-gray-100">
+            <div class="flex flex-col gap-2 p-4">
+              <label for="assumptions-{{i}}" class="font-bold">Assumptions:</label>
+              <input 
+                id="assumptions-{{i}}" 
+                type="text" 
+                [(ngModel)]="row.assumptions" 
+                class="border w-full" 
+                placeholder="Enter assumptions here"
+              />
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="row.noRate">
+            <td colspan="7" class="bg-gray-100">
+              <div class="flex flex-col gap-2 p-4">
+                <label for="assumptions-{{i}}" class="font-bold">Descretionary Info:</label>
+                <input 
+                  id="descretion-{{i}}" 
+                  type="text" 
+                  [(ngModel)]="row.discretionInfo" 
+                  class="border w-full" 
+                  placeholder="Enter Descretionary Information here"
+                />
+              </div>
+            </td>
+          </tr>
+      
+    </tbody>
+  </table>
+  
+  </div>
+  <div class="mt-6 flex justify-end gap-4">
+    <button [disabled]="isSaving" (click)="close.emit()" class="text-gray-700 border px-4 py-2 rounded">Cancel</button>
+    <button [disabled]="isSaving" (click)="SaveMatrix()" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+  </div>
+</div>
+</div>        
+
+
+<!-- Current Plant Display 
+    <div class="flex flex-row items-center mt- w-full justify-between">
+        <button 
+          (click)="prevPlant()" 
+          [disabled]="currentPlantIndex === 0" 
+          class="bg-gray-500 text-white px-4 py-2 rounded">
+          Previous
+        </button>
+      
+        <div class="text-center my-2">
+          <h3 class="text-lg font-bold">{{ plants[currentPlantIndex].commonName }}</h3>
+          <p class="text-sm text-gray-600 italic">{{ plants[currentPlantIndex].botanicalName }}</p>
+        </div>
+      
+        <button 
+          (click)="nextPlant()" 
+          [disabled]="currentPlantIndex === plants.length - 1" 
+          class="bg-gray-500 text-white px-4 py-2 rounded">
+          Next
+        </button>
+      </div>
+
+        <table *ngIf="isConfigured && matrixRows.length" class="mt-6 w-full border">
+    <tr><th>Plant</th><th>Growth Stage</th><th>Category</th><th>Unit</th><th>Rate</th><th>Assumptions</th><th>Discretion</th></tr>
+    <tr *ngFor="let row of matrixRows">
+      <td>{{ row.groupName || row.plantId }}</td><td>{{ row.growthStageId }}</td><td>{{ row.categoryId || 'N/A' }}</td><td>{{ row.unit }}</td>
+      <td><input type="number" [(ngModel)]="row.rate" class="w-20 border" /></td>
+      <td><input type="text" [(ngModel)]="row.assumptions" class="border" /></td>
+      <td><input type="text" [(ngModel)]="row.discretionInfo" class="border" /></td>
+    </tr>
+  </table> 
+  -->

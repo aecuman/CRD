@@ -1,4 +1,4 @@
-import { Component, HostListener, forwardRef, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from "@angular/core";
+import { Component, HostListener, forwardRef, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges, OnChanges } from "@angular/core";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { IDropdownSettings, ListItem } from "./../../app.model";
 import { ListFilterPipe } from "./../../app.pipe";
@@ -18,7 +18,7 @@ const noop = () => {};
   providers: [DROPDOWN_CONTROL_VALUE_ACCESSOR,ListFilterPipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MultiSelectComponent implements ControlValueAccessor {
+export class MultiSelectComponent implements ControlValueAccessor,OnChanges {
   public _settings?: IDropdownSettings;
   public _data: Array<ListItem> = [];
   public selectedItems: Array<ListItem> = [];
@@ -143,7 +143,8 @@ export class MultiSelectComponent implements ControlValueAccessor {
   }
 
   writeValue(value: any) {
-    if (value !== undefined && value !== null && value.length > 0) {
+   // console.log('writeValue triggered with:', value);
+    if (Array.isArray(value) && value.length > 0) {
       if (this._settings?.singleSelection) {
         try {
           if (value.length >= 1) {
@@ -349,6 +350,11 @@ export class MultiSelectComponent implements ControlValueAccessor {
       fields.push(prop);
     }
     return fields;
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] || changes['settings']) {
+      this.writeValue(this.selectedItems);
+    }
   }
 
 }

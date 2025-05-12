@@ -50,9 +50,29 @@
     font-weight: bold;
     color: #999;
     font-size: 0.8rem;
+    transition: color 0.2s;
+    transform: scale(0.8);
+}
+.tag-close:hover {
+    color: #333;
 }
 
 #tags-suggestions {
     max-height: 8rem;
     overflow-y: auto;
 }
+@media print {
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+  
+    body {
+      -webkit-print-color-adjust: exact;
+    }
+  
+    table {
+      page-break-inside: avoid;
+    }
+  }
+  

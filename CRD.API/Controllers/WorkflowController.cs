@@ -28,14 +28,14 @@ namespace CRD.API.Controllers
             var result = await Mediator.Send(new GetDistrictStatusesQuery());
             return Ok(result);
         }
-
+        /*
         [HttpPost("add-comment")]
         public async Task<IActionResult> AddComment([FromBody] AddCommentCommand command)
         {
             var result = await Mediator.Send(command);
             return result == null ? NotFound() : Ok(result);
         }
-
+        */
         [HttpPost("create-workflow")]
         public async Task<IActionResult> CreateWorkflow([FromBody] CreateWorkflowCommand command)
         {

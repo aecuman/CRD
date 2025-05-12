@@ -2,6 +2,7 @@
 using CRD.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
@@ -13,6 +14,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CRD.Infrastructure.Identity
 {
@@ -21,16 +23,20 @@ namespace CRD.Infrastructure.Identity
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
         /*private readonly IEmailService _emailService;
         private readonly ITokenService _tokenService;*/
 
-        public IdentityService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        public IdentityService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IEmailSender emailSender, IConfiguration configuration)
         {
 
             //  _context.cu = httpAccessor.HttpContext?.User.FindFirst(OpenIdConnectConstants.Claims.Subject)?.Value?.Trim();
             //  _context.CurrentUserId = httpAccessor.HttpContext?.User.FindFirst(ClaimConstants.Subject)?.Value?.Trim();
             _userManager = userManager;
             _roleManager = roleManager;
+            _emailSender = emailSender;
+            _configuration = configuration;
             //_emailService = emailService;
             //_tokenService = tokenService;
             //_context = context;
@@ -105,11 +111,21 @@ namespace CRD.Infrastructure.Identity
 
             try
             {
-              
-                result = await this._userManager.AddToRolesAsync(user, roles.Distinct());
+                if (roles!= null && roles.Count() > 0)
+                {
+                    foreach (var role in roles)
+                    {
+                        if (!await _roleManager.RoleExistsAsync(role))
+                            await _roleManager.CreateAsync(new ApplicationRole() { Name = role });
+                        await _userManager.AddToRoleAsync(newUser, role);
+                    }
+                }
+
+              await  _emailSender.SendNewUserEmail(user.Email, user.Fullname, password, _configuration["FrontendUrl"]);
+                // result = await this._userManager.AddToRolesAsync(user, roles.Distinct());
 
                 //await _userManager.AddPasswordAsync(user, pwd);
-                var email = "<p>Email: " + user.Email + "</p>" + "<p>Password: " + password + " </ p > ";
+                //var email = "<p>Email: " + user.Email + "</p>" + "<p>Password: " + password + " </ p > ";
                 // _emailService.Send(user.Email, "DBA Account", email);
 
                 // await _userManager.SetTwoFactorEnabledAsync(user,true);
@@ -226,9 +242,9 @@ namespace CRD.Infrastructure.Identity
             return await _userManager.FindByEmailAsync(email);
         }
 
-        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
+        public async Task<ApplicationUser> GetUserByIdAsync(int userId)
         {
-            return await _userManager.FindByIdAsync(userId);
+            return await _userManager.Users.FirstOrDefaultAsync(u=>u.Id==userId);
         }
 
         public async Task<ApplicationUser> GetUserByUserNameAsync(string userName)
@@ -241,9 +257,9 @@ namespace CRD.Infrastructure.Identity
             return await _userManager.GetRolesAsync(user);
         }
 
-        /*public async Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
+        /**/public async Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
         {
-            IQueryable<ApplicationUser> usersQuery = _context.Users
+            IQueryable<ApplicationUser> usersQuery = _userManager.Users
                            .Include(u => u.Roles)
                            .OrderBy(u => u.UserName);
 
@@ -257,13 +273,13 @@ namespace CRD.Infrastructure.Identity
 
             var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
 
-            var roles = await _context.Roles
+            var roles = await _roleManager.Roles
                 .Where(r => userRoleIds.Contains(r.Id))
                 .ToArrayAsync();
             return users
                 .Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray()))
                 .ToList();
-        }*/
+        }
 
         public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesByUserTypeAsync(int page, int pageSize, string userTypeId)
         {
@@ -279,6 +295,65 @@ namespace CRD.Infrastructure.Identity
                 return (false, result.Errors.Select(e => e.Description).ToArray());
 
             return (true, new string[] { });
+        }
+        public async Task<IdentityResult> ResetPasswordAsync(string email,string token, string newPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return null;
+
+            var decodedToken = WebUtility.UrlDecode(token); //Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
+
+
+
+
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
+            if (result.Succeeded)
+            {
+                var newtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = WebUtility.UrlEncode(token); //Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+
+                var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={encodedToken}&email={email}";
+                await _emailSender.SendPasswordUpdatedEmailAsync(user.Email, user.Fullname, resetLink);
+            user.LastPasswordChangedAt = DateTime.Now;
+            
+            await _userManager.UpdateAsync(user);
+            }
+            {
+
+            }
+            return result;
+        }
+        public async Task<(bool, string)> CheckIfPasswordIsTemporaryAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            /* bool isTempPassword = await _userManager.CheckPasswordAsync(user, password); // Check if using temp password
+             if (isTempPassword)
+             {
+                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                 var encodedToken = WebUtility.UrlEncode(token);
+                 return (isTempPassword,encodedToken);
+             }*/
+            if (user == null)
+                return (false, string.Empty); // User not found
+
+            bool isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
+            if (!isPasswordValid)
+                return (false, string.Empty); // Wrong password
+
+            // Check if this is the first login (null or default DateTime)
+            bool isFirstLogin = user.LastPasswordChangedAt == null || user.LastPasswordChangedAt == default;
+
+            if (isFirstLogin)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = WebUtility.UrlEncode(token);
+
+                return (true, encodedToken); // Force password change
+            }
+            return (false, string.Empty); // Check temp password prefix
+
+
         }
 
         /*public async Task<bool> TestCanDeleteRoleAsync(string roleId)

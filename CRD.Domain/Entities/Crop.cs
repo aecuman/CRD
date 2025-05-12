@@ -9,9 +9,9 @@ namespace CRD.Domain.Entities
     public class Crop : Plant
     {
        
-        public string CropType { get; set; }
+        public string? CropType { get; set; }
         //AEZ Agroeconomic Zone
-        public string Aez { get; set; }
+        public string? Aez { get; set; }
     }
     public enum CropType
     {

@@ -19,10 +19,14 @@ namespace CRD.Application.StructureCategories.Commands
     public class StructureAttributeDto
     {
         public string Name { get; set; }
-        public List<string> Options { get; set; } = new List<string>();
+        public List<StructureOptionDto> Options { get; set; } = new List<StructureOptionDto>();
+    }
+    public class StructureOptionDto
+    {
+        public string Name { get; set; }
     }
 
-    public class CreateStructureCategoryCommandHandler : IRequestHandler<CreateStructureCategoryCommand, int>
+        public class CreateStructureCategoryCommandHandler : IRequestHandler<CreateStructureCategoryCommand, int>
     {
         private readonly IRepository<StructureCategory> _repository;
         private readonly IRepository<StructureAttribute> _repoStructureAttribute;
@@ -43,8 +47,8 @@ namespace CRD.Application.StructureCategories.Commands
                 Name = request.Name
             };
 
-            _repository.Add(category);
-            await _repository.SaveChangesAsync();
+            _repository.AddWithoutSaving(category);
+            await _repository.SaveAsync();
 
             foreach (var attr in request.Attributes)
             {
@@ -55,19 +59,19 @@ namespace CRD.Application.StructureCategories.Commands
                 };
 
                 _repoStructureAttribute.AddWithoutSaving(attribute);
-                await _repoStructureAttribute.SaveChangesAsync();
+                await _repoStructureAttribute.SaveAsync();
 
                 foreach (var optionName in attr.Options)
                 {
                     var option = new StructureOption
                     {
-                        Name = optionName,
+                        Name = optionName.Name,
                         AttributeId = attribute.Id
                     };
 
                     _repoStructureOption.AddWithoutSaving(option);
                 }
-                await _repository.SaveChangesAsync();
+                await _repository.SaveAsync();
             }
 
             return category.Id;

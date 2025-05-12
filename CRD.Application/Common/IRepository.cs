@@ -18,8 +18,8 @@ namespace CRD.Application.Common
         bool Remove(int id);
         void Add(in T sender);
         void AddWithoutSaving(in T sender);
-        void AddMany(IEnumerable<T> entities);
-        void Update(in T sender);
+        Task<int> AddMany(IEnumerable<T> entities);
+        Task Update(T sender);
         int Save();
         Task<int> SaveChangesAsync();
         Task<int> SaveAsync();
@@ -27,5 +27,9 @@ namespace CRD.Application.Common
         public Task<T> SelectAsync(Expression<Func<T, bool>> predicate);
         IQueryable<T> GetAllIncludes(Expression<Func<T, object>>[] children);
         IQueryable<T> IncludeMultiple(IQueryable<T> query, params Expression<Func<T, object>>[] includes);
+        Task<int> AddManyAsync(IEnumerable<T> entities);
+        bool RemoveRange(List<T> entities);
+        // Execute transaction
+        Task ExecuteInTransactionAsync(Func<Task> operation);
     }
 }

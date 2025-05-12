@@ -85,7 +85,7 @@ namespace CRD.Application.Plants.Queries
             var _translations = new List<TranslationViewModel>();
             translations.ForEach(x =>
             {
-                _translations.Add(new TranslationViewModel() { languangeId=x.Id,LanguangeName=_languangeRepo.GetById(x.LanguageId).Name,Translated=x.Translated });
+                _translations.Add(new TranslationViewModel() {TranslationId=x.Id, languangeId=x.LanguageId,LanguangeName=_languangeRepo.GetById(x.LanguageId).Name,Translated=x.Translated });
             });
             return _translations;
         }
@@ -114,7 +114,8 @@ namespace CRD.Application.Plants.Queries
             var _categories = new List<CategoryInfoViewModel>();
             categories.ForEach(x =>
             {
-                _categories.Add(new CategoryInfoViewModel() { Id = x.Id, CategoryId = x.CategoryId, Name = _categoryRepo.GetById(x.Id).Name, Info = x.Info });
+                var info = _categoryInfoRepo.GetById(x.Id);
+                _categories.Add(new CategoryInfoViewModel() { Id = x.Id, CategoryId = x.CategoryId, Info= x.Info, Name = _categoryRepo.GetById(x.CategoryId).Name });
             });
             return _categories;
         }
@@ -133,10 +134,10 @@ namespace CRD.Application.Plants.Queries
         public string CommonName { get; set; }
         public string BotanicalName { get; set; }
         public string CropType { get; set; }
-        public List<TranslationViewModel> Translations { get; set; }
-        public List<GrowthStageViewModel> GrowthStages { get; set; }
-        public List<CategoryViewModel> Categories { get; set; }
-        public List<CategoryInfoViewModel> InfoCategories { get; set; }
+        public List<TranslationViewModel> Translations { get; set; } = new List<TranslationViewModel>();
+        public List<GrowthStageViewModel> GrowthStages { get; set; } = new List<GrowthStageViewModel>();
+        public List<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
+        public List<CategoryInfoViewModel> InfoCategories { get; set; }= new List<CategoryInfoViewModel>();
         public List<string> Othernames { get; set; }
         public string Info { get; set; }
         public string Aez { get; set; }
@@ -145,6 +146,7 @@ namespace CRD.Application.Plants.Queries
     public class TranslationViewModel
     {
         public int languangeId { get; set; }
+        public int TranslationId { get; set; }
         public string LanguangeName { get; set; }
         public string Translated {  get; set; }
     }

@@ -1,0 +1,292 @@
+<div *ngIf="status && status.length > 0"
+    class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+     <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+     Timeline — {{ status[0].districtName }} District 
+     <span class="text-gray-400 text-sm font-light">
+       {{ status[0].validFrom | date: 'Y' }}/{{ status[0].validTo | date: 'Y' }}
+     </span>
+   </h2>  
+ <div class="flex gap-x-6 h-[80vh]">
+ <!-- Left: Main Timeline Content -->
+ 
+
+<div class="flex-grow overflow-y-auto pr-4">
+  <div *ngFor="let workflow of status">
+    <div class="space-y-10">
+      <div *ngFor="let step of workflow.steps; let i = index" class="relative">
+        <!-- Step Indicator -->
+        <div class="flex items-start space-x-4">
+          <div class="flex flex-col items-center">
+            <div
+              class="w-5 h-5 rounded-full z-10"
+              [ngClass]="{
+                'bg-green-500': step.isCompleted,
+                'bg-yellow-400': isCurrentStep(workflow, i),
+                'bg-gray-300': !step.isCompleted && !isCurrentStep(workflow, i)
+              }">
+            </div>
+            <div class="h-full w-px bg-gray-300"></div>
+          </div>
+  
+          <!-- Step Content -->
+          <div class="flex-1 bg-white p-4 rounded border border-gray-200 shadow-sm">
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="text-lg font-semibold text-gray-800">{{ step.stepName }}</h3>
+             <!-- Revert Step -->
+<div class="flex items-center space-x-4">
+    <span class="text-sm font-medium"
+          [ngClass]="{
+            'text-green-600': step.isCompleted,
+            'text-yellow-600': isCurrentStep(workflow, i),
+            'text-gray-400': !step.isCompleted && !isCurrentStep(workflow, i)
+          }">
+      {{ step.isCompleted ? '✔ Completed' : isCurrentStep(workflow, i) ? '🟡 Current Step' : 'Pending' }}
+    </span>
+  
+    <button *ngIf="step.isCompleted"
+            class="text-xs text-red-600 hover:underline"
+            (click)="revertStep(step.stepId??0)">
+      🔁 Revert Step
+    </button>
+  </div>
+  
+            </div>
+  
+            <!-- Substeps -->
+            <ul class="space-y-4 mt-3">
+              <li *ngFor="let sub of step.subSteps" class="bg-gray-50 p-3 rounded border">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                  <div class="text-sm font-medium text-gray-700">
+                    {{ sub.subStepName }} - 
+                    <span class="text-xs text-gray-500 mt-1">
+                    {{ sub.assignedToRole?.join(', ') }}
+                    </span>
+                      
+                    <span class="ml-2 text-xs"
+                          [ngClass]="{
+                            'text-green-600': sub.isCompleted,
+                            'text-yellow-600': isCurrentSubStep(step, sub),
+                            'text-gray-400': !sub.isCompleted && !isCurrentSubStep(step, sub)
+                          }">
+                      {{ sub.isCompleted ? '✔ Done' : (isCurrentSubStep(step, sub)&&isCurrentStep(workflow, i)) ? '🟡 Current' : 'Pending' }}
+                    </span>
+                  </div>
+  
+                  <div class="mt-1 md:mt-0 md:ml-4 flex gap-2 items-center">
+                    <button *ngIf="isCurrentSubStep(step, sub) && isCurrentStep(workflow, i)"
+                            class="text-xs text-blue-600 hover:underline"
+                            (click)="markSubStepComplete(sub.subStepId ?? 0)">
+                      ✅ Mark Complete
+                    </button>
+                  
+                    <!-- Revert Substep -->
+                    <button *ngIf="sub.isCompleted"
+                            class="text-xs text-red-600 hover:underline"
+                            (click)="revertSubStep(sub.subStepId ?? 0)">
+                      🔁 Revert
+                    </button>
+                  </div>
+                  
+                  
+                </div>
+  <div *ngIf="sub.documents?.length" class="mt-2 text-xs text-gray-700">
+                    <div *ngFor="let doc of sub.documents">
+                      📎 <a [href]="doc.filePath" target="_blank">{{ doc.fileName }}</a>
+                    </div>
+                  </div>
+
+  
+                <!-- Display previous comments -->
+                <div *ngIf="sub.comments?.length" class="mt-2">
+                  <div *ngFor="let c of sub.comments"
+                       class="text-xs text-gray-700 border-l-2 pl-3 border-green-400 mb-1">
+                    <strong>{{ c.createdBy }}:</strong> {{ c.text }}
+                    <span class="text-gray-400 ml-1">({{ c.createdOn | date:'short' }})</span>
+                  </div>
+                </div>
+                               <!-- Substep Comments -->
+<div *ngIf="isCurrentSubStep(step, sub) && isCurrentStep(workflow, i)" class="mt-4 p-4 bg-gray-100 rounded-lg">
+  
+    <!-- File Upload Section -->
+    <div class="mt-3" *ngIf="isCurrentSubStep(step, sub)">
+      <label class="text-sm font-medium text-gray-600 block mb-2">Attach Document:</label>
+      
+      <div class="flex items-center gap-3">
+        <input type="file" (change)="onFileSelected($event, sub.subStepId ?? 0)" class="text-sm border rounded p-2" />
+        <button class="px-4 py-2 text-xs text-white bg-purple-600 rounded hover:bg-purple-700"
+                [disabled]="!selectedFiles[sub.subStepId ?? 0]"
+                (click)="uploadFile(sub.subStepId ?? 0)">
+          Upload
+        </button>
+      </div>
+  
+      <div *ngIf="uploadStatus[sub.subStepId ?? 0]" class="text-xs text-green-600 mt-2">
+        {{ uploadStatus[sub.subStepId ?? 0] }}
+      </div>
+    </div>
+  
+    <!-- Comment Input -->
+    <div class="mt-4">
+      <input [(ngModel)]="sub.commentText"
+             placeholder="Comment on current substep..."
+             class="w-full border border-gray-300 p-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+    </div>
+  
+    <!-- Submit Button -->
+    <button class="mt-3 px-4 py-2 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700"
+            (click)="addCommentToSubStep(sub, sub.commentText ?? '')">
+      Submit Comment
+    </button>
+    
+  </div>
+              </li>
+            </ul>
+  
+            <!-- Step Completion Button -->
+            <div class="mt-4">
+              <button *ngIf="isCurrentStep(workflow, i) && allSubStepsComplete(step)"
+                      class="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                      (click)="completeStep(step.stepId??0)">
+                ✅ Complete Step
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div> <!-- Right: Actions Panel -->
+  <div class="w-72 shrink-0 border-l border-gray-200 pl-4">
+    <div class="sticky top-6">
+        <!-- CRD Upload Summary -->
+<div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
+    <p class="text-sm font-medium text-gray-700 mb-2">DLB Submission</p>
+  
+    <ng-container *ngIf="districtRate?.uploads?.length > 0; else noUploads">
+      <ul class="list-disc list-inside space-y-1 text-sm text-gray-800">
+        <li *ngFor="let file of districtRate.uploads">
+          <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+            {{ file.name }}
+          </a>
+         <!--  <span class="ml-2 text-xs text-gray-500">({{ file.fileClass }})</span> -->
+        </li>
+      </ul>
+    </ng-container>
+  
+    <ng-template #noUploads>
+      <p class="text-xs italic text-gray-400">No supporting files uploaded at creation.</p>
+    </ng-template>
+  </div>
+  
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Actions & Info</h3>
+
+      <!-- Workflow Summary -->
+      <div class="mb-6">
+
+        <p class="text-sm text-gray-600 mt-3"><strong>Progress:</strong></p>
+        <div class="w-full bg-gray-200 rounded-full h-3 mt-1">
+          <div class="bg-blue-600 h-3 rounded-full"
+               [style.width.%]="getProgressPercent(status[0])">
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">{{ getProgressPercent(status[0]) }}% complete</p>
+      </div>
+
+  
+    <!-- Section 1: Data -->
+    <div [class.opacity-100]="currentStepIndex < 1" [class.opacity-40]="currentStepIndex >= 1" class="mb-6 transition-opacity">
+      <p class="text-sm font-semibold text-gray-700 mb-2">📦 Data</p>
+      <button [routerLink]="['/portal/rates/vegetation/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 1">➕ Add Crops/Trees</button>
+      <button [routerLink]="['/portal/rates/structures/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 1">➕ Add Structures</button>
+    </div>
+  
+    <!-- Section 2: Moderation -->
+    <div
+    [class.opacity-100]="currentStepIndex >= 1 && currentStepIndex < 4"
+    [class.opacity-40]="currentStepIndex < 1 || currentStepIndex >= 4"
+    class="mb-6 transition-opacity space-y-4 flex flex-col"
+  >
+    <!-- Section Header -->
+    <p class="text-sm font-semibold text-gray-700">🧮 Moderation</p>
+  
+    <!-- Configuration Button + Comparables Summary -->
+    <div class="bg-gray-50 border border-gray-200 rounded-md p-4">
+      <div class="flex justify-between items-center">
+        <span class="text-sm font-medium text-gray-700">⚙️ Configure Comparables</span>
+        <button
+          (click)="showModal = true"
+          class="text-blue-600 hover:underline text-sm"
+          [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+        >
+          Edit
+        </button>
+      </div>
+  
+      <div class="mt-2 ml-2 text-sm text-gray-600">
+        <ng-container *ngIf="districtRate?.comparableDistrictRates?.length > 0; else noComparables">
+          <ul class="list-disc list-inside">
+            <li *ngFor="let c of districtRate.comparableDistrictRates">
+              {{ c.districtName }} ({{ c.year }})
+            </li>
+          </ul>
+        </ng-container>
+  
+        <ng-template #noComparables>
+          <p class="text-xs italic text-gray-400">No comparables configured yet.</p>
+        </ng-template>
+      </div>
+    </div>
+  
+    <!-- Action Buttons -->
+    <div class="gap-3">
+      <button
+        [routerLink]="['/portal/rates/moderation/vegetation/', districtRateId]"
+        class="btn-action w-full sm:w-auto"
+        [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+      >
+        🌾 Moderate Crops/Trees
+      </button>
+  
+      <button
+        [routerLink]="['/portal/rates/moderation/structures/', districtRateId]"
+        class="btn-action w-full sm:w-auto"
+        [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+      >
+        🏗 Moderate Structures
+      </button>
+    </div>
+  </div>
+  
+  
+<!-- Section 3: Reports -->
+<div [class.opacity-100]="reportsSectionEnabled"
+     [class.opacity-40]="!reportsSectionEnabled"
+     class="mb-6 transition-opacity">
+  <p class="text-sm font-semibold text-gray-700 mb-2">📑 Reports</p>
+  <button class="btn-action" [routerLink]="['/portal/rates/moderation/report/',districtRateId]" [disabled]="!reportsSectionEnabled">📘 Moderation Report</button>
+  <!-- <button class="btn-action" (click)="ViewReport()" [disabled]="!reportsSectionEnabled">📊 Adjusted Draft Rates</button> -->
+</div>
+
+  </div>
+  
+      <!-- Download Links -->
+      <div class="mb-6">
+        <p class="text-sm font-semibold text-gray-700 mb-2">Attachments</p>
+        <div *ngFor="let doc of getAllUploadedDocs(status[0])" class="text-xs text-blue-600 mb-1 truncate">
+          📎 <a [href]="doc.filePath" target="_blank" class="hover:underline">{{ doc.fileName }}</a>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+<app-district-rate-compare-modal
+*ngIf="districtRateId && showModal"
+  [isOpen]="showModal"
+  [currentDistrictRateId]="districtRateId"
+  (close)="showModal = false"
+  [preselectedIds]="preselectedRates"
+  (selectedComparableRates)="handleComparables($event)">
+</app-district-rate-compare-modal>
+

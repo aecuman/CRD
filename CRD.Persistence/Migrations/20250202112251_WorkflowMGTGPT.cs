@@ -22,11 +22,11 @@ namespace CRD.Persistence.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_StructureOptionSelections_StructureAttributeSelectionId",
                 table: "StructureOptionSelections");
-
+            /*
             migrationBuilder.DropColumn(
                 name: "StructureAttributeSelectionId",
                 table: "StructureOptionSelections");
-
+            */
             migrationBuilder.AddColumn<int>(
                 name: "DistrictRateId",
                 table: "CRDFile",
@@ -331,12 +331,12 @@ namespace CRD.Persistence.Migrations
                 principalTable: "Structures",
                 principalColumn: "Id");
 
-           /* migrationBuilder.AddForeignKey(
+           /**/ migrationBuilder.AddForeignKey(
                 name: "FK_StructureOptionSelections_StructureAttributeSelections_AttributeSelectionId",
                 table: "StructureOptionSelections",
                 column: "AttributeSelectionId",
                 principalTable: "StructureAttributeSelections",
-                principalColumn: "Id");*/
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
@@ -354,10 +354,10 @@ namespace CRD.Persistence.Migrations
                 name: "FK_StructureAttributeSelections_Structures_StructureId",
                 table: "StructureAttributeSelections");
 
-            migrationBuilder.DropForeignKey(
+           /**/ migrationBuilder.DropForeignKey(
                 name: "FK_StructureOptionSelections_StructureAttributeSelections_AttributeSelectionId",
                 table: "StructureOptionSelections");
-
+           
             migrationBuilder.DropTable(
                 name: "AuditLogs");
 
@@ -424,12 +424,12 @@ namespace CRD.Persistence.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.AddForeignKey(
+           /* migrationBuilder.AddForeignKey(
                 name: "FK_StructureOptionSelections_StructureAttributeSelections_StructureAttributeSelectionId",
                 table: "StructureOptionSelections",
                 column: "StructureAttributeSelectionId",
                 principalTable: "StructureAttributeSelections",
-                principalColumn: "Id");
+                principalColumn: "Id");*/
         }
     }
 }

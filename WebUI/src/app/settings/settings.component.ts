@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { APIService, CreateOptionCommand, OptionsListViewModel,/*, StructureCategoryListViewModel, StructureDescriptionNameListViewModel, StructureDescriptionOptionListViewModel*/ 
+import { APIService, CreateOptionCommand, DeleteOptionCommand, OptionsListViewModel,OptionViewModel,/*, StructureCategoryListViewModel, StructureDescriptionNameListViewModel, StructureDescriptionOptionListViewModel*/ 
 StructureCategoryViewModel} from '../api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StructureCategory } from '../app.model';
@@ -286,6 +286,20 @@ this.api.optionsPOST(command).subscribe({
     });
   }
 
+  deleteGrowthStageOption(option: OptionViewModel): void {
+    if (confirm(`Are you sure you want to delete the Growth Stage "${option.name}"?`)) {
+    let cmd: DeleteOptionCommand = { id: option.id, option: 'plant_growthstage' };
+this.api.deleteSettingOption(cmd).subscribe({
+      next: () => {
+        this.api.optionsGET().subscribe({
+          next: (value: OptionsListViewModel) => {
+            this.lists = value;
+          },
+        });
+      }
+    });
+  }
+  }
   resetForm(): void {
     this.submitted = false;
     this.categoryForm.reset({ id:null,name: '' });

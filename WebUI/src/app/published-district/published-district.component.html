@@ -1,0 +1,39 @@
+<div class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white rounded shadow-lg w-[90%] max-w-[1000px] p-6 relative max-h-[90vh] overflow-y-auto">
+        <div class="flex flex-row">
+                    <div class="flex justify-start mt-6">
+            <button class="border px-4 py-2 rounded flex flex-row" (click)="location.back()">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"></path>
+                </svg>
+                Back
+            </button>
+            </div>
+
+  <div  class="flex flex-row justify-end gap-4 mt-6 ml-auto">
+            <button class="bg-green-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('pdf')">Download PDF</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('excel')">Download Excel</button>
+            <button class="bg-gray-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('print')">Print</button>
+            
+          </div>
+        </div>
+ 
+      <div *ngIf="loading" class="flex justify-center my-6">
+        <div class="animate-spin h-10 w-10 rounded-full border-4 border-blue-600 border-t-transparent"></div>
+      </div>
+  
+      <ng-container *ngIf="!loading">
+        <div id="moderationReport">
+          <app-final-report
+          [title]="'Approved'"
+            [report]="report"
+            [groupedPlantRates]="PlantData"
+            [groupedStructureRates]="structureRatesFlat"
+            
+          ></app-final-report>
+          
+         <!---->  
+          </div>
+        </ng-container>
+      </div>
+    </div>

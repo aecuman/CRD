@@ -1,6 +1,7 @@
 ﻿using CRD.Application.Common;
 using CRD.Application.Options.Commands;
 using CRD.Application.Options.Queries;
+using CRD.Application.Plants.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,15 @@ namespace CRD.API.Controllers
             catch (Exception ex) {
             return BadRequest(ex.Message);
             }
+        }
+        [HttpDelete(Name = "DeleteSettingOption")]
+        public async Task<ActionResult<bool>> Delete(DeleteOptionCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (!result)
+                return NotFound();
+
+            return Ok(result);
         }
     }
 }

@@ -1,0 +1,347 @@
+<div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg h-[90vh] flex flex-col">
+    <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">
+      {{ currentDistrict.districtName }} District Compensation Rates {{ currentDistrict.year }}
+    </h2>
+  
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-3 gap-6 flex-grow overflow-hidden">
+  
+      <!-- LEFT COLUMN: Plant/Group Tabs & List -->
+  
+      <div class="col-span-1 flex flex-col overflow-hidden rounded">
+        <div class="mb-3">
+          <input
+            type="text"
+            [(ngModel)]="plantSearch"
+            placeholder="Search {{activeTab=='groups'?'grouped':''}} vegetation..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <!-- Tabs -->
+        <div class="flex border-b mb-0 sticky top-0 bg-white z-10">
+          <button class="flex-1 py-2 text-sm font-semibold border-b-2"
+                  [class.border-blue-600]="activeTab === 'plants'"
+                  (click)="activeTab = 'plants'">
+            All Vegetation
+          </button>
+          <button class="flex-1 py-2 text-sm font-semibold border-b-2"
+                  [class.border-blue-600]="activeTab === 'groups'"
+                  (click)="activeTab = 'groups'">
+            Grouped Vegetation
+          </button>
+        </div>
+  
+        <!-- Scrollable List -->
+        <div class="flex-grow overflow-y-auto">
+  
+          <!-- All Plants Tab -->
+          <ul *ngIf="activeTab === 'plants'" class="divide-y">
+            <li *ngFor="let plant of plants| filterByName:plantSearch; let ip = index;" class="p-3 flex justify-between items-center">
+              <div>
+                <div class="font-medium">{{ plant.commonName }}</div>
+                <div class="text-sm text-gray-500 italic">{{ plant.botanicalName }}</div>
+                      <!-- 🌿 Category Info Badges -->
+      <div *ngIf="plant.infoCategories?.length" class="mt-1 flex flex-wrap gap-1">
+        <span *ngFor="let cat of plant.infoCategories">
+          <ng-container *ngFor="let info of cat.info;let ci = index">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+              {{ info }}
+              <ng-container *ngIf="hasRateForCategoryInfoOption(plant, cat.categoryId,cat.id ,ci)">✔️</ng-container>
+            </span>
+          </ng-container>
+        </span>
+      </div>
+              </div>
+              <div class="flex gap-2 items-center">
+                <span class="px-2 py-1 text-xs rounded"
+                      [ngClass]="plantHasRates(plant.id) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                  {{ plantHasRates(plant.id) ? 'Rate' : 'Missing' }}
+                </span>
+                <button (click)="openMatrixModal('plant', plant, ip)"
+                        class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                  {{ plantHasRates(plant.id) ? 'Edit' : 'Add Rates' }}
+                </button>
+              </div>
+            </li>
+          </ul>
+  
+          <!-- Grouped Plants Tab -->
+          <ul *ngIf="activeTab === 'groups'" class="divide-y">         
+            <li *ngFor="let group of groupedPlants| filterByName:plantSearch; let gi = index" class="p-3 flex justify-between items-center">
+              <div>
+                <div class="font-semibold">{{ group.name }}</div>
+                <div class="text-xs text-gray-500 italic">{{ group.description }}</div>
+              </div>
+              <div class="flex gap-2 items-center">
+                <span class="px-2 py-1 text-xs rounded"
+                      [ngClass]="groupHasRates(group.id ?? 0) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                  {{ groupHasRates(group.id ?? 0) ? 'Rated' : 'Missing' }}
+                </span>
+                <button (click)="openMatrixModal('group', group, gi)"
+                        class="text-sm bg-indigo-500 text-white px-3 py-1 rounded">
+                  {{ groupHasRates(group.id ?? 0) ? 'Edit' : 'Add Rate' }}
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+  
+      <!-- RIGHT COLUMN: Rates Table -->
+      <div class="col-span-2 flex flex-col overflow-hidden border rounded">
+        <h3 class="text-lg font-semibold mb-2 sticky top-0 bg-white z-10 px-4 py-2 border-b">Submitted Rates</h3>
+        <div class="mb-3 px-1">
+          <input
+            type="text"
+            [(ngModel)]="rateSearch"
+            placeholder="Search rates by Name"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+        <div class="overflow-y-auto flex-grow">
+       
+          <table class="table-auto border border-gray-300 w-full text-sm">
+            <thead class="bg-gray-100 sticky top-0 z-10">
+              <tr>
+                <th class="border p-2 w-1/4">Plant Name</th>
+                <th class="border p-2 w-1/6">Unit</th>
+                <th class="border p-2 w-1/4">Growth Stage</th>
+                <th class="border p-2 w-1/4">Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rate of tableData| filterRateTable:rateSearch; let i = index;">
+                <td *ngIf="rate.showPlant" class="border p-2 align-top" [attr.rowspan]="rate.plantRowspan">
+                  {{ rate.groupedPlantId ? rate.groupName : rate.plantName }}
+                </td>
+                <td *ngIf="rate.showUnit" class="border p-2 align-top" [attr.rowspan]="rate.unitRowspan">
+                  {{ rate.unit }}
+                </td>
+                <td class="border p-2 capitalize">
+                 {{ rate.groupedPlantId ? getGroupStageName(rate.growthStage ?? 0) : getStageName(rate.plantId ?? 0, rate.growthStage ?? 0) }}
+                 <span *ngIf="hasNonGoodQuality(rate.groupedPlantId ? rate.groupName : rate.plantName)">
+                {{ rate.quality }}
+                </span>
+                </td>
+                <td class="border p-2 relative">
+                  <div class="flex justify-between items-center space-x-2">
+                    <div class="relative flex items-center w-full">
+                      <input *ngIf="editIndex === i"
+                             [(ngModel)]="rate.rate"
+                             class="border p-2 rounded w-full text-left pr-10 focus:ring-2 focus:ring-blue-500"
+                             currencyMask [options]="{ prefix: 'UGX ', precision: 0, align: 'left' }" />
+                      <span *ngIf="editIndex !== i" class="text-left font-medium">
+                        {{ rate.rate ? ('UGX ' + (rate.rate | number:'1.0-0')) : '—' }}
+                      </span>
+                      <svg *ngIf="editIndex === i" (click)="editIndex=null"
+                           class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 hover:fill-red-500 transition-transform duration-200"
+                           width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 6L18 18M18 6L6 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <button *ngIf="editIndex !== i"
+                            class="text-sm text-blue-600 hover:underline"
+                            (click)="editRate(i)">Edit</button>
+                    <button *ngIf="editIndex === i"
+                            class="text-sm text-green-600 hover:underline"
+                            (click)="saveRate(rate, i)">Save</button>
+                    <button *ngIf="editIndex !== i" (click)="DeleteRate(rate.id??0)"
+                            class="text-red-600 hover:text-red-800">
+                      Remove
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 
+  <div *ngIf="plants.length>0" class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">{{currentDistrict.districtName}} District Compensation Rates {{currentDistrict.year}} </h2>
+  
+  </div>
+  <div class="grid grid-cols-3 gap-6">
+    <div class="grid-cols-1">
+          <div class="flex border-b mb-3">
+            <button class="flex-1 py-2 text-sm font-semibold border-b-2"
+                    [class.border-blue-600]="activeTab === 'plants'"
+                    (click)="activeTab = 'plants'">
+              All Vegetation
+            </button>
+            <button class="flex-1 py-2 text-sm font-semibold border-b-2"
+                    [class.border-blue-600]="activeTab === 'groups'"
+                    (click)="activeTab = 'groups'">
+              Grouped Vegetation
+            </button>
+          </div>
+     
+      <ul *ngIf="activeTab === 'plants'" class="divide-y border rounded">
+        <li *ngFor="let plant of plants;let ip =index;" class="p-3 flex justify-between items-center">
+          <div>
+            <div class="font-medium">{{ plant.commonName }}</div>
+            <div class="text-sm text-gray-500 italic">{{ plant.botanicalName }}</div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <span
+              class="px-2 py-1 text-xs rounded"
+              [ngClass]="plantHasRates(plant.id) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+              {{ plantHasRates(plant.id) ? 'Rate' : 'Missing' }}
+            </span>
+            <button (click)="openMatrixModal('plant',plant,ip)"
+                    class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+              {{ plantHasRates(plant.id) ? 'Edit' : 'Add Rates' }}
+            </button>
+          </div>
+        </li>
+      </ul>
+  
+      <ul *ngIf="activeTab === 'groups'" class="divide-y border rounded">
+        <li *ngFor="let group of groupedPlants;let gi = index" class="p-3 flex justify-between items-center">
+          <div>
+            <div class="font-semibold">{{ group.name }}</div>
+            <div class="text-xs text-gray-500 italic">{{ group.description }}</div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <span
+              class="px-2 py-1 text-xs rounded"
+              [ngClass]="groupHasRates(group.id??0) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+              {{ groupHasRates(group.id??0) ? 'Rated' : 'Missing' }}
+            </span>
+                    <button class="text-sm bg-indigo-500 text-white px-3 py-1 rounded"
+                  (click)="openMatrixModal('group',group,gi)">
+                  {{ groupHasRates(group.id??0) ? 'Edit' : 'Add Rate' }}
+            
+          </button>
+          </div>
+  
+        </li>
+      </ul>
+    </div>
+  
+    <div class="col-span-2">
+      <h3 class="text-lg font-semibold mb-2">Saved Rates</h3>
+      <table class="table-auto border border-gray-300 w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="border p-2 w-1/4">Plant Name</th>
+            <th class="border p-2 w-1/4">Unit</th>
+            <th class="border p-2 w-1/6">Growth Stage</th>
+            <th class="border p-2 w-1/4">Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rate of tableData;let i = index;">
+            <td *ngIf="rate.showPlant" class="border p-2 align-top" [attr.rowspan]="rate.plantRowspan">
+              {{rate.groupedPlantId ? rate.groupName : rate.plantName }}
+            </td>
+            <td *ngIf="rate.showUnit" class="border p-2 align-top" [attr.rowspan]="rate.unitRowspan">
+              {{ rate.unit }}
+            </td>
+            <td class="border p-2 capitalize">
+              {{rate.groupedPlantId ? getGroupStageName(rate.growthStage??0) :getStageName(rate.plantId ?? 0, rate.growthStage ?? 0) }}
+            </td>
+            <td class="border p-2 relative">
+              <div class="flex justify-between items-center space-x-2">
+                <div class="relative flex items-center w-full">
+                  <input *ngIf="editIndex === i"
+                         [(ngModel)]="rate.rate"
+                         class="border p-2 rounded w-full text-left pr-10 focus:ring-2 focus:ring-blue-500"
+                         currencyMask
+                         [options]="{ prefix: 'UGX ', precision: 0, align: 'left' }" />
+                
+                  <span *ngIf="editIndex !== i" class="text-left font-medium">
+                    {{ rate.rate ? ('UGX ' + (rate.rate | number:'1.0-0')) : '—' }}
+                  </span>
+                
+          
+                  <svg *ngIf="editIndex === i" (click)="editIndex=null"
+                       class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 hover:fill-red-500 transition-transform duration-200"
+                       width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 6L18 18M18 6L6 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              <button *ngIf="editIndex !== i"
+                      class="text-sm text-blue-600 hover:underline"
+                      (click)="editRate(i)">Edit</button>
+    
+              <button *ngIf="editIndex === i"
+                      class="text-sm text-green-600 hover:underline"
+                      (click)="saveRate(rate, i)">Save</button>
+              </div>
+            </td>
+           
+  
+          </tr>
+      
+  
+        </tbody>
+      </table>
+    </div>
+  </div>
+   -->
+  
+  <app-plant-rate-matrix
+  *ngIf="showMatrixModal"
+  [currentPlantIndex]="selcetdPlantIndex"
+  [currentPlant]="selectedPlant"
+    [plants]="plants"
+    [currentDistrict]="currentDistrict"
+  
+    [isGrouped]="isGroupedMatrix"
+    [groupName]="groupName"
+    [groupId]="groupId"
+    [groupedPlantIds]="groupedPlantIds"
+    [currentGroupedPlant]="selectedGroupedPlant"
+  
+    [growth_list]="growth_list"
+  
+    [existingRates]="existingMatrixRates"
+  
+    (close)="showMatrixModal = false"
+    (save)="handleMatrixSave($event)">
+  
+  </app-plant-rate-matrix>
+  
+  
+    <table *ngIf="false" class="w-full border border-gray-300 rounded mb-4">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-left">Plant</th>
+        <th class="p-2 text-left">Growth Stage</th>
+        <th class="p-2 text-left">Unit</th>
+        <th class="p-2 text-left">Rate</th>
+        <th class="p-2 text-left">Assumptions</th>
+        <th class="p-2 text-left">Discretion</th>
+        <th class="p-2 text-left">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rate of plant_district_rates">
+        <td class="p-2">{{ rate.plantName }}</td>
+        <td class="p-2">{{ rate.growthStage }}</td>
+        <td class="p-2">{{ rate.unit }}</td>
+        <td class="p-2">{{ rate.rate ? ('UGX ' + rate.rate | number:'1.0-0') : '—' }}</td>
+        <td class="p-2">{{ rate.assumptions || '—' }}</td>
+        <td class="p-2">{{ rate.discretionInfo || '—' }}</td>
+        <td class="p-2">{{ rate.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+      
+          <!--  <tr *ngFor="let rate of groupedRates | keyvalue;">
+            <td class="p-2">{{ $any(rate.value).plantName }}</td>
+            <td class="p-2 capitalize">{{ getStageName($any(rate.value).plantId ?? 0, $any(rate.value).growthStage ?? 0) }}</td>
+            <td class="p-2">{{ $any(rate.value).unit }}</td>
+            <td class="p-2">{{ $any(rate.value).totalRate ? ('UGX ' + ($any(rate.value).totalRate | number:'1.0-0')) : '—' }}</td>
+            <td class="p-2">{{$any(rate.value).status }}</td>
+      
+           <td class="p-2">{{ rate?.plantName }}</td>
+            <td class="p-2 capitalize">{{ getStageName(rate.plantId??0,rate.growthStage??0) }}</td>
+            <td class="p-2">{{ rate.unit }}</td>
+            <td class="p-2">{{ rate.rate ? ('UGX ' + (rate.rate | number:'1.0-0')) : '—' }}</td>
+            <td class="p-2">{{ rate.status }}</td>
+          </tr> -->

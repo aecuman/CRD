@@ -23,3 +23,29 @@ export class ListFilterPipe implements PipeTransform {
         }
     }
 }
+
+@Pipe({ name: 'filterByName' })
+export class FilterByNamePipe implements PipeTransform {
+  transform(items: any[], search: string): any[] {
+    if (!items || !search) return items;
+    const lower = search.toLowerCase();
+    return items.filter(i =>
+      (i.commonName?.toLowerCase().includes(lower) ||
+        i.botanicalName?.toLowerCase().includes(lower) ||
+        i.name?.toLowerCase().includes(lower)) ||
+        i?.translations?.some((t:any) => t.translated?.toLowerCase().includes(lower))// for groups
+    );
+  }
+}
+
+@Pipe({ name: 'filterRateTable' })
+export class FilterRateTablePipe implements PipeTransform {
+  transform(items: any[], search: string): any[] {
+    if (!items || !search) return items;
+    const lower = search.toLowerCase();
+    return items.filter(r =>
+      (r.plantName?.toLowerCase().includes(lower) ||
+        r.groupName?.toLowerCase().includes(lower))
+    );
+  }
+}

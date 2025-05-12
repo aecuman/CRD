@@ -21,15 +21,15 @@ namespace CRD.Application.Plants.Commands
             Othernames = new List<string>();
         }
         public string PlantType { get; set; }
-        public string CommonName { get; set; }
+        public string? CommonName { get; set; }
         public string BotanicalName { get; set; }
-        public string CropType { get; set; }
+        public string? CropType { get; set; }
         public List<TranslationDto> Translations { get; set; }
         public List<int> GrowthStages { get; set; }
         public List<int> Categories { get; set; }
         public List<string>? Othernames { get; set; }
-        public string Aez { get; set; }
-        public string Info { get; set; }
+        public string? Aez { get; set; }
+        public string? Info { get; set; }
         public List<PlantFileDto> Images { get; set; } = new List<PlantFileDto>();
         public List<CategoryInfoDto> CategoryInfos { get; set; } = new List<CategoryInfoDto>();
 
@@ -37,6 +37,7 @@ namespace CRD.Application.Plants.Commands
 
     public class TranslationDto
     {
+        public int? Id { get; set; }
         public int LanguangeId { get; set; }
         public string Translated { get; set; }
     }
@@ -66,26 +67,20 @@ namespace CRD.Application.Plants.Commands
             public async Task<int> Handle(CreateCropCommand request, CancellationToken cancellationToken)
             {
                 if (request == null) throw new NullReferenceException();
-                var _translation = new List<Translation>();
-                request.Translations.ForEach(t =>
-                {
-                    _translation.Add(new Translation() { LanguageId = t.LanguangeId, Translated = t.Translated });
-                });
-                _translationRepo.AddMany(_translation);
-                var _cats = new List<CategoryInfo>();
-                foreach (var item in request.CategoryInfos)
-                {
-                    _cats.Add(new CategoryInfo() { CategoryId = item.CategoryId, Info = item.CategoryInfo });
-                }
-                /*var files = new List<CRDFile>();
-                foreach (var f in request.Images) {
-                    files.Add(new CRDFile() { Name = f.Name, Url=f.Url, FileClass=nameof(Crop), });
-                */
+                // Create translations and add them to the repository
+                var _translation = request.Translations
+                    .Select(t => new Translation { LanguageId = t.LanguangeId, Translated = t.Translated })
+                    .ToList();
+                await _translationRepo.AddMany(_translation);
+
+                // Create category information
+                var _cats = request.CategoryInfos
+                    .Select(item => new CategoryInfo { CategoryId = item.CategoryId, Info = item.CategoryInfo })
+                    .ToList();
 
                 if (request.PlantType == "crop")
                 {
-
-                    _cropRepo.Add(new Crop()
+                    _cropRepo.AddWithoutSaving(new Crop
                     {
                         Aez = request.Aez,
                         BotanicalName = request.BotanicalName,
@@ -93,33 +88,33 @@ namespace CRD.Application.Plants.Commands
                         Categories = request.Categories,
                         CropType = request.CropType,
                         CommonName = request.CommonName,
-                        //  Images=request.Images,
                         Info = request.Info,
                         Translations = _translation,
-                        CategoryInform = _cats
-
+                        CategoryInform = _cats,
+                        PlantType = request.PlantType
                     });
+                    return await _cropRepo.SaveAsync();
                 }
                 else if (request.PlantType == "tree")
                 {
-
-                    _treeRepo.Add(new Tree()
+                    _treeRepo.AddWithoutSaving(new Tree
                     {
                         Translations = _translation,
                         Info = request.Info,
-                        //  Images=request.Images,
                         BotanicalName = request.BotanicalName,
                         CommonName = request.CommonName,
                         Categories = request.Categories,
                         GrowthStages = request.GrowthStages,
-                        CategoryInform = _cats
-
+                        CategoryInform = _cats,
+                        PlantType = request.PlantType
                     });
+                    return await _treeRepo.SaveAsync();
                 }
 
-                return await _cropRepo.SaveAsync();
+                throw new ArgumentException("Invalid PlantType specified.");
 
             }
         }
     }
+
 }

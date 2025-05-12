@@ -1,4 +1,5 @@
 ﻿using CRD.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +25,17 @@ namespace CRD.Application.Common
         Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize);
         //Task<(ApplicationUser User, string[] Roles)?> GetUserAndRolesAsync(string userId);
         Task<ApplicationUser> GetUserByEmailAsync(string email);
-        Task<ApplicationUser> GetUserByIdAsync(string userId);
+        Task<ApplicationUser> GetUserByIdAsync(int userId);
         Task<ApplicationUser> GetUserByUserNameAsync(string userName);
         Task<IList<string>> GetUserRolesAsync(ApplicationUser user);
-       // Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize);
+        Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize);
         Task<(bool Succeeded, string[] Errors)> ResetPasswordAsync(ApplicationUser user, string newPassword);
         Task<(bool Succeeded, string[] Errors)> UpdatePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
         Task<(bool Succeeded, string[] Errors)> UpdateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
         Task<(bool Succeeded, string[] Errors)> UpdateUserAsync(ApplicationUser user);
         Task<(bool Succeeded, string[] Errors)> UpdateUserAsync(ApplicationUser user, IEnumerable<string> roles);
+        Task<IdentityResult> ResetPasswordAsync(string email, string token, string newPassword);
+        Task<(bool, string)> CheckIfPasswordIsTemporaryAsync(string email, string password);
     }
+
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CRD.Application.Workflows
 {// Handlers for Workflow Commands and Queries
-    public class WorkflowHandler :
+   /* public class WorkflowHandler :
         IRequestHandler<AssignWorkflowCommand, DistrictWorkflow>,
         IRequestHandler<ConfirmStepCommand, WorkflowStep>,
         IRequestHandler<GetDistrictStatusesQuery, List<GetDistrictStatusViewModel>>,
@@ -38,7 +38,7 @@ namespace CRD.Application.Workflows
             _workflowSubStepRepository = workflowSubStepRepository;
             _commentRepository = commentRepository;
         }
-
+        
         public async Task<DistrictWorkflow> Handle(AssignWorkflowCommand request, CancellationToken cancellationToken)
         {
             var districtWorkflow = new DistrictWorkflow { DistrictId = request.DistrictId, WorkflowId = request.WorkflowId };
@@ -111,7 +111,7 @@ namespace CRD.Application.Workflows
 
         public async Task<WorkflowStep> Handle(AddStepCommand request, CancellationToken cancellationToken)
         {
-            var step = new WorkflowStep {  WorkflowId = request.WorkflowId, Name = request.Name/*, AssignedToRole = request.AssignedToRole*/ };
+          //  var step = new WorkflowStep {  WorkflowId = request.WorkflowId, Name = request.Name/*, AssignedToRole = request.AssignedToRole};
             _workflowStepRepository.Add(step);
             await _workflowStepRepository.SaveChangesAsync();
             return step;
@@ -176,5 +176,5 @@ namespace CRD.Application.Workflows
             }).ToList());
            
         }
-    }
+    }*/
 }

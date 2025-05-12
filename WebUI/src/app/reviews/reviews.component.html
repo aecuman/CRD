@@ -1,1 +1,41 @@
-<p>reviews works!</p>
+<!-- district-rate.component.html -->
+
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">District Rates</h1>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="openModal()">Add District Rate</button>
+  
+    <ag-grid-angular
+      class="ag-theme-alpine mt-4 w-full h-80"
+      [rowData]="districtRates"
+      [columnDefs]="columnDefs"
+      rowSelection="single">
+    </ag-grid-angular>
+  </div>
+  
+  <!-- Modal -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="bg-white p-6 rounded shadow-lg w-96">
+      <h2 class="text-xl font-bold mb-4">{{ editMode ? 'Edit' : 'Add' }} District Rate</h2>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="mb-4">
+          <label class="block mb-1">District</label>
+          <select formControlName="districtId" class="w-full border px-3 py-2 rounded">
+            <option *ngFor="let district of all_districts" [value]="district.id">{{ district.name }}</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Year</label>
+          <input type="number" formControlName="year" class="w-full border px-3 py-2 rounded" />
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Status</label>
+          <input type="text" formControlName="status" class="w-full border px-3 py-2 rounded" />
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

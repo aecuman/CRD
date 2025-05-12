@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight" style="display: inline;"> Compensation Rate Reviews </h2>
         <div style="float: right;">
-            <button class="ml-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+            <button (click)="openModal()" class="ml-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg> &nbsp; 
@@ -14,7 +14,130 @@
 <main>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
+          <div class="p-6">
+          <!--   <h1 class="text-2xl font-bold mb-4">District Rates</h1>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="openModal()">Add District Rate</button>
+           -->
+           <table class="w-full table-auto border-collapse shadow rounded-lg overflow-hidden">
+            <thead>
+              <tr class="bg-gray-100 text-sm text-gray-700 font-semibold uppercase tracking-wide">
+                <th class="p-3 text-left">District</th>
+                <th class="p-3 text-left">Year</th>
+                <th class="p-3 text-left">Active Step</th>
+                <th class="p-3 text-left">Progress</th>
+                <th class="p-3 text-left">Assigned Roles</th><!-- 
+                <th class="p-3 text-left">Status</th> -->
+                <th class="p-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
+              <tr *ngFor="let r of districtRates" class="hover:bg-gray-50 transition">
+                <td class="p-3 font-medium">{{ r.districtName }}</td>
+                <td class="p-3">{{ r.year }}/{{ (r.year ?? 0) + 1 }}</td>
+          
+                <td class="p-3">
+                  <a *ngIf="r.workflowName" [routerLink]="['/portal/district', r.districtId, r.id, 'workflow-status']"
+                     class="text-blue-600 hover:underline">
+                    {{ r.activeStep || '—' }}
+                  </a>
+                  <span *ngIf="!r.workflowName" class="text-gray-400">—</span>
+                </td>
+          
+                <td class="p-3" title="Step: {{ r.activeStep }}">
+                  <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                    <div class="bg-green-500 h-4 text-xs text-white text-center leading-4"
+                         [style.width.%]="r.progressPercent">
+                      {{ r.progressPercent }}%
+                    </div>
+                  </div>
+                </td>
+          
+                <td class="p-3">
+                  <span class="text-xs text-gray-600 block truncate">
+                    {{ r.assignedTo?.join(', ') || '—' }}
+                  </span>
+                </td>
+          
+               <!--  <td class="p-3">
+                  <span *ngIf="r.workflowName" class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+                    In Progress
+                  </span>
+                  <span *ngIf="!r.workflowName" class="inline-block bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">
+                    Not Started
+                  </span>
+                </td> -->
+          
+                <td class="p-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <a [routerLink]="['/portal/district', r.districtId, r.id, 'workflow-status']"
+                       class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Manage</a>
+          
+                    <button (click)="openModal(true, r)"
+                            class="bg-yellow-500 text-white px-2 py-1 rounded text-xs hover:bg-yellow-600">
+                      Edit
+                    </button>
+          
+                    <button (click)="deleteRate(r.id ?? 0)"
+                            class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
+                      Delete
+                    </button>
+          
+                    <button *ngIf="!r.workflowName"
+                            (click)="startWorkflow(r.districtId ?? 0,r.id)"
+                            class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">
+                      Start Workflow
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+            <ag-grid-angular *ngIf="false"
+              class="ag-theme-alpine mt-4 w-full h-80"
+              [rowData]="districtRates"
+              [columnDefs]="columnDefs"
+              rowSelection="single">
+            </ag-grid-angular>
+          </div>
+          
+          <!-- Modal -->
+          <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-10">
+            <div class="bg-white p-6 rounded shadow-lg w-96">
+              <h2 class="text-xl font-bold mb-4">{{ editMode ? 'Edit' : 'Add' }} District Rate</h2>
+              <form [formGroup]="form" (ngSubmit)="submitForm()">
+                <div class="mb-4">
+                  <label class="block mb-1">District</label>
+                  <select formControlName="districtId" class="w-full border px-3 py-2 rounded">
+                    <option *ngFor="let district of all_districts" [value]="district.id">{{ district.name }}</option>
+                  </select>
+                </div>
+                <div class="mb-4">
+                  <label class="block mb-1">Year</label>
+                  <input type="number" formControlName="year" class="w-full border px-3 py-2 rounded" />
+                </div>
+                <div class="mb-4">
+                  <label class="block mb-1">Upload Files</label>
+                  <input type="file" (change)="onFileSelected($event)" multiple class="w-full border px-3 py-2 rounded" />
+                </div>
+                <div class="mb-4">
+                  <label class="block mb-1">Uploaded Files</label>
+                  <ul *ngIf="!uploading">
+                    <li *ngFor="let file of uploadedFiles" class="text-sm text-gray-700">{{ file.name }}</li>
+                  </ul>
+                  <svg *ngIf="uploading" class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="path" cx="12" cy="12" r="10" fill="none" stroke="#000000" stroke-width="2"></circle></svg>
+                </div>
+                <div class="flex justify-end">
+                  <button [disabled]="saving" type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" (click)="closeModal()">Cancel</button>
+                  <button [disabled]="saving" type="submit" class="bg-blue-500 flex flex-row text-white px-4 py-2 rounded disabled:opacity-50">
+                    <svg *ngIf="saving" class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="path" cx="12" cy="12" r="10" fill="none" stroke="#000000" stroke-width="2"></circle></svg>
+                   
+                    {{saving?'Saving':'Save'}}
+                  </button>
+                </div>
+              </form>
+                        </div>
+          </div>
         </div>
     </div>
 </main>

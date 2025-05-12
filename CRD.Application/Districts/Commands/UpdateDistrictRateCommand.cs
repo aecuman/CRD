@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CRD.Application.Districts.Commands
 {
-    public record UpdateDistrictRateCommand(int Id, string DistrictId, int Year, string Status) : IRequest<bool>;
+    public record UpdateDistrictRateCommand(int Id, int DistrictId, int Year, DistrictRateStatus Status) : IRequest<bool>;
 public class UpdateDistrictRateHandler : IRequestHandler<UpdateDistrictRateCommand, bool>
     {
         private readonly IRepository<DistrictRate> _context;
@@ -25,4 +25,5 @@ public class UpdateDistrictRateHandler : IRequestHandler<UpdateDistrictRateComma
             return true;
         }
     }
+
 }

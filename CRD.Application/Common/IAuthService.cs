@@ -10,6 +10,7 @@ namespace CRD.Application.Common
     public interface IAuthService
     {
         Task<LoginDto> LoginSystemUser(string email, string password);
+        Task<(bool, string,string)> ForgotPassword(string email);
 
     }
 }

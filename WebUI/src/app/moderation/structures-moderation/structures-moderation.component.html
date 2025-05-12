@@ -1,0 +1,231 @@
+<div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg h-[90vh] flex flex-col">
+    <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">
+      {{ currentDistrict.districtName }} District Compensation Rates {{ currentDistrict.year }}
+    </h2>
+   
+<button [disabled]="comparablesLoading" (click)="startModeration('Structure')" class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-75">{{comparablesLoading?'Comparables loading...':'Start Structure Rate Moderation'}}</button>
+<div class="flex flex-col overflow-hidden border rounded">
+    <div class="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center">
+      <h3 class="text-lg font-semibold">Submitted Structure Rates</h3>
+      <input
+        type="text"
+        [(ngModel)]="rateSearch"
+        placeholder="Search by structure name..."
+        class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/2"
+      />
+    </div>
+
+    <div class="overflow-y-auto flex-grow">
+      <table class="table-auto w-full border text-sm">
+          <thead class="bg-gray-100 sticky top-0 z-10">
+            <tr>
+              <th class="border p-2 w-1/4">Structure</th>
+              <th class="border p-2 w-1/6">Unit</th>
+              <th class="border p-2">Current Rate</th>
+              <th class="border p-2">Previous Rate</th>
+              <th class="border p-2">Moderated</th>
+              <th class="border p-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+              <ng-container *ngFor="let group of groupedStructureRates">
+                <!-- Group Header -->
+                <tr class="bg-gray-200 font-semibold text-gray-700 border-y">
+                  <td colspan="6" class="px-4 py-2">
+                    {{ group.categoryName }}
+                  </td>
+                </tr>
+            
+                <tr *ngFor="let rate of group.items; let i = index">
+                  <!-- Structure Name -->
+                  <td class="border p-2">{{ rate.structureName }}</td>
+            
+                  <!-- Unit -->
+                  <td class="border p-2">
+                      <ng-container  *ngIf="editIndex !== rate.id">{{ rate.unit }}</ng-container>
+                      <ng-container *ngIf="editIndex === rate.id">
+                          <select [(ngModel)]="rate.unitId" class="w-full border p-2 rounded">
+                              <option *ngFor="let key of unitKeys" [ngValue]="key">{{ unitDescriptions[key] }}</option>
+                            </select>
+                      </ng-container>
+
+                  </td>
+            
+                  <!-- Rate + Discretionary Info -->
+                  <td class="border p-2">
+                    <div class="relative">
+                      <ng-container *ngIf="editIndex === rate.id" class="relative">
+                          <div class="flex justify-between items-center space-x-2">
+                            <div class="relative flex items-center w-full">
+                        <input type="text" currencyMask [options]="{ prefix: 'UGX ', precision: 0, align:'left' }" [(ngModel)]="rate.rate" class="w-full border rounded px-2 py-1" placeholder="Rate (UGX)" />
+                      
+                <svg (click)="editIndex=null"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 hover:fill-red-500 transition-transform duration-200"
+                width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+             <path d="M6 6L18 18M18 6L6 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+           </svg>
+                      </div>
+                      
+        <!--    <button *ngIf="editIndex === rate.id" class="text-green-600 hover:underline" (click)="confirmSave(rate)">Save</button> -->
+                      </div>
+         <!--   -->
+                        <!--  <textarea [(ngModel)]="rate.discretionInfo" class="mt-1 w-full border rounded px-2 py-1" placeholder="Discretionary Info if no rate"></textarea> -->
+                      </ng-container>
+            
+                      <ng-container *ngIf="editIndex !== rate.id">
+                          <div class="flex justify-between items-center space-x-2">
+                        <div *ngIf="rate.rate; else noRateBlock">{{ 'UGX ' + (rate.rate | number: '1.0-0') }}</div>
+                        <div class="flex gap-2 items-center">
+                           <!-- <button *ngIf="editIndex !== rate.id" class="text-blue-600 hover:underline" (click)="rate.rate==null?editStructureRate(rate):editIndex = rate.id">Edit</button>
+           <button class="text-red-600 hover:underline" (click)="confirmDelete(rate)">Delete</button>  -->
+                        </div>
+          
+                        </div>
+                        <ng-template #noRateBlock>
+                          <span class="italic text-gray-500">N/A</span><br />
+                          <span class="text-xs text-gray-700">{{ rate.discretionInfo }}</span>
+                        </ng-template>
+                        <p *ngIf="rate.assumptions" class="text-xs text-gray-500 italic">
+                          {{ rate.assumptions}}
+                      </p>
+                      </ng-container>
+                    </div>
+                  </td>
+                          <!-- Moderation Values -->
+        <td class="border p-2">
+            {{rate.originalRate ? ('UGX ' + (rate.originalRate | number: '1.0-0')) : '—' }}
+           <!--  {{ rate.latestModeration?.oldRate ? ('UGX ' + (rate.latestModeration.oldRate | number: '1.0-0')) : '—' }} -->
+          </td>
+  
+          <!-- Status & Moderator -->
+          <td class="border p-2">
+            <span [ngClass]="{
+              'text-green-600 font-semibold': rate.isModerated,
+              'text-red-500 font-semibold': !rate.isModerated
+            }">
+              {{ rate.isModerated ? 'Yes' : 'No' }}
+            </span>
+          </td>
+  
+          <td class="border p-2 relative">
+            <span [ngClass]="{
+              'text-green-700 font-semibold': rate.latestModeration?.status === 'Approved',
+              'text-blue-700 font-semibold': rate.latestModeration?.status === 'Revised',
+              'text-yellow-600 font-semibold': rate.latestModeration?.status === 'Deferred',
+              'text-gray-400 italic': !rate.isModerated
+            }">
+              {{ rate.isModerated ? rate.latestModeration?.status : 'Unmoderated' }}
+            </span>
+            
+            <!-- Pencil Icon Button -->
+            <button *ngIf="rate.isModerated" [disabled]="comparablesLoading" (click)="startModerationAt(i);editMode=true;"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-black" [ngClass]="{ 'cursor-not-allowed opacity-75': comparablesLoading }">
+                   
+                      <svg fill="#000000" width="16px" height="16px" viewBox="0 0 528.899 528.899" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981 c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611 C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069 L27.473,390.597L0.3,512.69z"></path> </g> </g></svg>
+                 
+            </button>
+        </td>
+                  <!-- Assumptions 
+                  <td class="border p-2">
+                    <input *ngIf="editIndex === rate.id" [(ngModel)]="rate.assumptions" class="border w-full rounded px-2 py-1" />
+                    <span *ngIf="editIndex !== rate.id">{{ rate.assumptions || '—' }}</span>
+                  </td>
+            -->
+                  <!-- Actions 
+                  <td class="border p-2 flex gap-2 items-center">
+                 
+                  </td>-->
+                </tr>
+              </ng-container>
+            </tbody>
+            
+          <tbody *ngIf="false">
+            <tr *ngFor="let rate of structureRates; let i = index">
+              <!-- Structure Name -->
+              <td class="border p-2">{{ rate.structureName }}</td>
+        
+              <!-- Unit -->
+              <td class="border p-2">{{ unitDescriptions[rate.unit??0] }}{{rate.unit}}</td>
+        
+              <!-- Rate (editable) -->
+              <td class="border p-2">
+                <div class="flex items-center relative">
+                  <input *ngIf="editIndex === i"
+                         type="number"
+                         [(ngModel)]="rate.rate"
+                         class="border rounded w-full px-2 py-1" />
+                  <span *ngIf="editIndex !== i">
+                    {{ rate.rate ? ('UGX ' + (rate.rate | number:'1.0-0')) : '—' }}
+                  </span>
+        
+                  <!-- Cancel Button -->
+                  <svg *ngIf="editIndex === i"
+                       (click)="editIndex=null"
+                       class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 text-red-500"
+                       xmlns="http://www.w3.org/2000/svg"
+                       fill="none"
+                       viewBox="0 0 24 24"
+                       stroke="currentColor"
+                       width="20"
+                       height="20">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+              </td>
+        
+              <!-- Assumptions -->
+              <td class="border p-2">
+                <input *ngIf="editIndex === i"
+                       [(ngModel)]="rate.assumptions"
+                       class="border w-full rounded px-2 py-1" />
+                <span *ngIf="editIndex !== i">{{ rate.assumptions || '—' }}</span>
+              </td>
+        
+              <!-- Discretion Info -->
+              <td class="border p-2">
+                <input *ngIf="editIndex === i"
+                       [(ngModel)]="rate.discretionInfo"
+                       class="border w-full rounded px-2 py-1" />
+                <span *ngIf="editIndex !== i">{{ rate.discretionInfo || '—' }}</span>
+              </td>
+        
+              <!-- Actions -->
+              <td class="border p-2 flex gap-2 items-center">
+<!--                 <button *ngIf="editIndex !== i"
+                        (click)="editIndex = i"
+                        class="text-sm text-blue-600 hover:underline">
+                  Edit
+                </button>
+                <button *ngIf="editIndex === i"
+                        (click)="saveEditedRate(rate)"
+                        class="text-sm text-green-600 hover:underline">
+                  Save
+                </button>
+                <button (click)="deleteRate(rate.id??0)"
+                        class="text-sm text-red-600 hover:underline">
+                  Delete
+                </button> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+
+    </div>
+  </div>
+</div>
+<div *ngIf="showPopup">
+    <app-moderation-popup
+      [show]="showPopup"
+      [rate]="currentRate"
+      [comparisonRates]="getComparisonRates()"
+      [moderator]="moderator"
+      [isPlantRate]="isPlantContext"
+      (onSubmit)="onSave($event)"
+      (onSubmitAndNext)="onSaveAndNext($event)"
+      (onClose)="onClose()"
+      [growth_list]="growth_list"
+      [editMode]="editMode"
+      [DistrictRateDto]="currentDistrict"
+    ></app-moderation-popup>

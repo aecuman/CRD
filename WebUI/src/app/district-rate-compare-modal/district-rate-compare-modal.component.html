@@ -1,0 +1,47 @@
+<!-- district-rate-compare-modal.component.html -->
+<div *ngIf="isOpen" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+    <div class="bg-white w-full max-w-2xl p-6 rounded shadow-xl">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Select Comparable District Rates</h2>
+        <button (click)="close.emit()" class="text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
+      </div>
+  
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search by district name..."
+          [(ngModel)]="searchName"
+          class="w-full px-3 py-2 border border-gray-300 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Search by year..."
+          [(ngModel)]="searchYear"
+          class="w-full px-3 py-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div class="max-h-64 overflow-y-auto divide-y">
+        <div
+          *ngFor="let rate of filteredRates()"
+          class="flex items-center justify-between py-2 px-2 hover:bg-gray-50 rounded transition"
+        >
+          <label class="flex items-center gap-x-3 w-full cursor-pointer">
+            <input
+              type="checkbox"
+              [checked]="selectedIds.has(rate.id)"
+              (change)="toggleSelection(rate.id)"
+              class="form-checkbox h-4 w-4 text-blue-600"
+            />
+            <span class="text-gray-800 text-sm">{{ rate.districtName }} ({{ rate.year }})</span>
+          </label>
+        </div>
+      </div>
+      
+  
+      <div class="flex justify-end mt-4 space-x-2">
+        <button (click)="close.emit()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+        <button (click)="applySelection()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Apply</button>
+      </div>
+    </div>
+  </div>
+  

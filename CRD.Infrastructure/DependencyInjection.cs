@@ -20,7 +20,6 @@ namespace CRD.Infrastructure
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
             services.AddTransient<ITokenService, TokenService>();
             services.Configure<TokenConfig>(configuration.GetSection("JWT"));
-            services.AddTransient<IAuthService, AuthService>();
             return services;
         }
     }

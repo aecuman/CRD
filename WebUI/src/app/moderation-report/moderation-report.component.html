@@ -1,0 +1,155 @@
+<div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg h-[90vh] flex flex-col">
+  <h3 class="text-2xl font-semibold mb-4">Moderation Report - {{report?.districtName}} {{report?.year}}/{{(report?.year??0)+1}}</h3>
+  <p class="text-gray-600 mb-4 text-sm">This report contains the latest moderation rates for plants and structures. 
+    The rates are categorized into two tabs: Plant Rates and Structure Rates. 
+  You can search for specific rates using the search bar provided. The status of each rate is indicated in the last column. 
+The status can be one of the following: Approved, Revised, Deferred, or Not Moderated.
+ The rates are displayed in Ugandan Shillings (UGX).
+ The original rate is the rate before moderation, and the new rate is the rate after moderation.
+ The rates are displayed in a table format, with the following columns: Crop/Tree, Unit, Stage, Original, New, and Status.</p>
+
+  <div class="flex gap-4 justify-end mb-6">
+    <button (click)="exportModerationReportToPdf()"
+            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+      Export PDF
+    </button>
+  
+    <button (click)="exportModerationReportToExcel()"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+      Export Excel
+    </button>
+    <button (click)="PrintReport('pdf')"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Preview Draft
+    </button>
+  </div>
+<!--   <div class="text-center mt-6">
+    <button class="btn btn-primary mr-4" (click)="PrintReport('pdf')">Download Compensation Rates</button>
+    <button class="btn btn-secondary" (click)="PrintReport('print')">Print Compensation Rates</button>
+    <button class="btn btn-primary mr-4" (click)="PrintReport('excel')">Excel Compensation Rates</button>
+  </div> -->
+  
+<div class="mb-4 flex gap-4">
+    <button (click)="activeTab = 'plants'"
+            [ngClass]="activeTab === 'plants' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'"
+            class="px-4 py-2 rounded border">
+      Crops/Trees Rates
+    </button>
+  
+    <button (click)="activeTab = 'structures'"
+            [ngClass]="activeTab === 'structures' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'"
+            class="px-4 py-2 rounded border">
+      Structure Rates
+    </button>
+  </div>
+  
+  <!-- ✅ PLANT TABLE -->
+  <div *ngIf="activeTab === 'plants'" class="flex flex-col overflow-hidden border rounded">
+    
+      
+        <div class="mb-3 px-1">
+          <input
+            type="text"
+            [(ngModel)]="plantRateSearch"
+            placeholder="Search rates by Name"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+  <div class="overflow-y-auto flex-grow">
+    <table class="table-auto border border-gray-300 w-full text-sm">
+      <thead class="bg-gray-100 sticky top-0 z-10">
+        <tr>
+          <th class="border p-2">Crop/Tree</th>
+          <th class="border p-2">Unit</th>
+          <th class="border p-2">Growth Stage</th>
+          <th class="border p-2">Original</th>
+          <th class="border p-2">New</th>
+          <th class="border p-2">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rate of PlantData| filterRateTable:plantRateSearch; let i = index;">
+          <td *ngIf="rate.showPlant" class="border p-2" [attr.rowspan]="rate.plantRowspan">
+            {{ rate.groupedPlantId ? rate.groupName : rate.plantName }}
+          </td>
+          <td *ngIf="rate.showUnit"  class="border p-2 align-top" [attr.rowspan]="rate.unitRowspan">{{ rate.unit }}</td>
+          <td class="border p-2 capitalize">
+            {{ rate.groupedPlantId ? getGroupStageName(rate.growthStage ?? 0) : getStageName(rate.growthStage ?? 0) }}
+            <span *ngIf="hasNonGoodQuality(rate.groupedPlantId ? rate.groupName : rate.plantName)">
+           {{ rate.quality }}
+           </span>
+          </td>
+          <td class="border p-2 text-right">
+            {{ rate.originalRate ? ('UGX ' + (rate.originalRate | number:'1.0-0')) : '—' }}
+          </td>
+          <td class="border p-2 text-right">
+            {{ rate.latestModeration?.newRate ? ('UGX ' + (rate.latestModeration?.newRate | number:'1.0-0')) : '—' }}
+          </td>
+          <td class="border p-2"  [ngClass]="{
+            'text-green-700 font-semibold': rate.latestModeration?.status === 'Approved',
+            'text-blue-700 font-semibold': rate.latestModeration?.status === 'Revised',
+            'text-yellow-600 font-semibold': rate.latestModeration?.status === 'Deferred',
+            'text-gray-400 italic': !rate.isModerated
+          }">{{ rate.latestModeration?.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  
+  </div>
+  
+  <!-- ✅ STRUCTURE TABLE -->
+  <div *ngIf="activeTab === 'structures'">
+    <table class="table-auto w-full border text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border p-2">Structure</th>
+          <th class="border p-2">Type</th>
+          <th class="border p-2">Description</th>
+          <th class="border p-2">Unit</th>
+          <th class="border p-2">Original</th>
+          <th class="border p-2">New</th>
+          <th class="border p-2">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let group of structureRatesFlat">
+          <!-- Group Header -->
+          <tr class="bg-gray-200 font-semibold text-gray-700 border-y">
+            <td colspan="7" class="px-4 py-2">
+              {{ group.categoryName }}
+            </td>
+          </tr>
+          <tr *ngFor="let rate of group.items; let i = index">
+          <td class="border p-2">{{ rate.structureName }}</td>
+          <td class="border p-2">{{ rate.structure?.structureType?.name || '—' }}</td>
+          <td class="border p-2">
+            <div *ngIf="rate.structure?.attributeSelections?.length > 0" class="mt-1">
+              <div *ngFor="let attr of rate.structure.attributeSelections;let last=index">
+                {{ attr.attributeName }}:
+                <span class="italic text-gray-700">
+                  {{ GetAttributeNames(attr.selectedOptions) }}
+                </span><br *ngIf="last !== rate.structure?.attributeSelections?.length - 1">
+              </div>
+            </div>
+          </td>
+          <td class="border p-2">{{ rate.unit }}</td>
+          <td class="border p-2 text-right">
+            {{ rate.originalRate ? ('UGX ' + (rate.originalRate | number:'1.0-0')) : '—' }}
+          </td>
+          <td class="border p-2 text-right">
+            {{ rate.latestModeration?.newRate ? ('UGX ' + (rate.latestModeration?.newRate | number:'1.0-0')) : '—' }}
+          </td>
+          <td class="border p-2" [ngClass]="{
+            'text-green-700 font-semibold': rate.latestModeration?.status === 'Approved',
+            'text-blue-700 font-semibold': rate.latestModeration?.status === 'Revised',
+            'text-yellow-600 font-semibold': rate.latestModeration?.status === 'Deferred',
+            'text-gray-400 italic': !rate.isModerated
+          }">{{ rate.latestModeration?.status }}</td>
+        </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  

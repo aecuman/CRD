@@ -75,13 +75,13 @@ namespace CRD.Application.Options.Commands
                     _structureTypeRepo.Add(new StructureType() { Name = request.Name });
                   return await _structureTypeRepo.SaveAsync();*/
                 case OptionName.PlantCategoryOptionName:
-                    _categoryCropRepo.Add(new Category() { Name = request.Name });
+                    _categoryCropRepo.AddWithoutSaving(new Category() { Name = request.Name });
                     return await _categoryCropRepo.SaveAsync();
                 case OptionName.LanguangeOptionName:
-                    _languangeRepo.Add(new Languange() { Name = request.Name });
+                    _languangeRepo.AddWithoutSaving(new Languange() { Name = request.Name });
                     return await _languangeRepo.SaveAsync();
                 case OptionName.GrowthStageOptionName:
-                    _growthStageRepo.Add(new GrowthStage() { Name = request.Name });
+                    _growthStageRepo.AddWithoutSaving(new GrowthStage() { Name = request.Name });
                    return await _growthStageRepo.SaveAsync();
                 default:
                     throw new BadRequestException(request.Option+" does not exist as a option");

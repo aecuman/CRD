@@ -1,0 +1,29 @@
+<div class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white rounded shadow-lg w-[90%] max-w-[1000px] p-6 relative max-h-[90vh] overflow-y-auto">
+  
+      <h3 class="text-lg font-semibold text-center mb-4">
+        {{ previewOnly ? 'Preview' : 'Generating Draft District Compensation Rates...' }}
+      </h3>
+  
+      <div *ngIf="loading" class="flex justify-center my-6">
+        <div class="animate-spin h-10 w-10 rounded-full border-4 border-blue-600 border-t-transparent"></div>
+      </div>
+  
+      <ng-container *ngIf="!loading">
+        <div id="moderationReport">
+          <app-final-report
+            [report]="exportService.report"
+            [groupedPlantRates]="exportService.groupedPlantRates"
+            [groupedStructureRates]="exportService.groupedStructureRates"
+            
+          ></app-final-report>
+          <div *ngIf="previewOnly" class="flex justify-end gap-4 mt-6">
+            <button class="bg-green-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('pdf')">Download PDF</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('excel')">Download Excel</button>
+            <button class="bg-gray-600 text-white px-4 py-2 rounded" (click)="exportService.triggerExport('print')">Print</button>
+            <button class="border px-4 py-2 rounded" (click)="close()">Close</button>
+          </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>

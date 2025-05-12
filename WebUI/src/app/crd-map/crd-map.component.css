@@ -1,0 +1,13 @@
+.grid {
+  max-height: 80vh; /* Prevents overflowing */
+  overflow: hidden;
+}
+
+#map {
+  max-height: 80vh;
+}
+  
+  .filter-btn {
+    @apply px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium hover:bg-blue-200;
+  }
+  

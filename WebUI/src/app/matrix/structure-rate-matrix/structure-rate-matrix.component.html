@@ -1,0 +1,73 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start pt-20">
+    <div class="bg-white rounded shadow-lg w-full max-w-5xl p-6 overflow-y-auto max-h-[90vh]">
+      <div class="mb-4">
+        <h2 class="text-2xl font-semibold">Structure Rates - {{ categoryName }}</h2>
+        <p *ngIf="currentDistrict" class="text-sm text-gray-500">{{ currentDistrict.districtName }} District - {{currentDistrict.year}}</p>
+      </div>
+  
+      <form [formGroup]="matrixForm" (ngSubmit)="handleSubmit()">
+        <table class="table-auto w-full border border-gray-300 text-sm mt-4">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-2">Structure</th>
+              <th class="border p-2">Unit</th>
+              <th class="border p-2">Rate (UGX)</th>
+              <th class="border p-2">No Rate</th>
+              <th class="border p-2">Assumptions</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="rows">
+            <ng-container *ngFor="let row of rows.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                <tr>
+              <td class="border p-2">{{ row.get('structureName')?.value }} {{ categoryName }}</td>
+              <td class="border p-2">
+                <select formControlName="unit" class="w-full border p-2 rounded">
+                    <option *ngFor="let key of unitKeys" [ngValue]="key">{{ unitDescriptions[key] }}</option>
+                  </select>
+  
+            </td>
+              <td class="border p-2">
+                <input type="text" formControlName="rate" class="w-full border rounded px-2 py-1" currencyMask [options]="{ prefix: 'UGX ', precision: 0 }"/>
+              </td>
+              <td class="border p-2 text-center">
+                <input type="checkbox"
+                formControlName="noRate"
+                (change)="handleNoRateToggle(i, $event)"
+                class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+              <td class="border p-2 text-center">
+                <input type="checkbox"
+                formControlName="showAssumptions"
+                       (change)="toggleAssumptions(i, $event)"
+                       class="rounded border-gray-300 focus:ring-0 w-4 h-4" />
+              </td>
+              </tr>
+              <tr *ngIf="row.get('showAssumptions')?.value">
+                <td colspan="5" class="bg-gray-50 p-4 border-b border-gray-300">
+                    <label class="font-semibold text-gray-700 block mb-1">Assumptions:</label>
+                    <textarea type="text" formControlName="assumptions" placeholder="Enter assumptions here" class="w-full border rounded px-2 py-1"></textarea>
+                  </td>
+              </tr>
+              <tr *ngIf="row.get('noRate')?.value">
+                <td colspan="5" class="bg-gray-50 p-4 border-b border-gray-300">
+                    <label class="font-semibold text-gray-700 block mb-1">Discretionary Info:</label>
+                    <textarea type="text" formControlName="discretionInfo" placeholder="Enter Discretionary Information here" class="w-full border rounded px-2 py-1"></textarea>
+                  </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+  
+        <div class="mt-6 flex justify-end gap-4">
+          <button [disabled]="isSaving" type="button" (click)="cancel()" class="text-gray-700 border px-4 py-2 rounded">Cancel</button>
+          <button [disabled]="isSaving" type="submit" class="bg-green-600 text-white px-4 py-2 flex flex-row nowrap">
+            <svg *ngIf="isSaving" class="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v2a6 6 0 00-6 6H4z"></path>
+              </svg>
+            {{isSaving?'Saving...':'Save'}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

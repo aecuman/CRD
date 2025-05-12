@@ -1,0 +1,334 @@
+<div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg h-[90vh] flex flex-col">
+    <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">
+      {{ currentDistrict.districtName }} District Compensation Rates {{ currentDistrict.year }} - Structures
+    </h2>
+    <div class="grid grid-cols-3 gap-6 flex-grow overflow-hidden">
+        <!-- LEFT: Structure List -->
+        <div class="col-span-1 flex flex-col overflow-hidden border rounded bg-gray-50">
+            <div class="px-3 py-2 border-b bg-white sticky top-0 z-10">
+              <input
+                type="text"
+                [(ngModel)]="structureSearch"
+                placeholder="Search structures..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+      
+            <div class="overflow-y-auto flex-grow p-2">
+              <ul class="space-y-4">
+                <li *ngFor="let category of groupedStructures|filterByName:structureSearch" class="space-y-2">
+                  <div class="flex justify-between items-center px-2">
+                    <h3 class="text-md font-semibold text-gray-800">{{ category.categoryName }}</h3>
+                    <div class="mt-2 flex justify-end">
+                        <button 
+                          [disabled]="hasAllRates(category.items)" 
+                          (click)="openRateModalForCategory(category)"
+                          class="text-sm px-4 py-1 rounded font-medium"
+                          [ngClass]="{
+                            'bg-green-600 text-white': hasAnyRate(category.items),
+                            'bg-blue-600 text-white': !hasAnyRate(category.items),
+                            'opacity-50 cursor-not-allowed': hasAllRates(category.items)
+                          }">
+                          {{ hasAllRates(category.items) ? 'Fully Rated' : (hasAnyRate(category.items) ? 'Edit Rates' : 'Add Rates') }}
+                        </button>
+                      </div>
+                <!--     <button class="bg-blue-600 text-white text-sm px-3 py-1 rounded hover:bg-blue-700"
+                            (click)="openRateModalForCategory(category)">
+                      Add Rate
+                    </button> -->
+                  </div>
+                  <ul class="bg-white shadow-sm rounded-md border">
+                    <li *ngFor="let structure of category.items" class="p-3 flex justify-between items-center border-b last:border-b-0">
+                      <div>
+                        <div class="font-medium">{{ structure.name }}</div>
+                        <div class="text-xs text-gray-500 italic">{{ structure.structureType?.name }}</div>
+                      </div>
+                      <div class="flex gap-2 items-center">
+                        <span class="text-xs px-2 py-1 rounded"
+                              [ngClass]="hasRate(structure)
+                                        ? 'bg-green-100 text-green-700' 
+                                        : 'bg-red-100 text-red-700'">
+                          {{ hasRate(structure) ? 'Rated' : 'Missing' }}
+                        </span>
+<!--                         <button class="text-sm text-blue-500 hover:underline"
+                                (click)="openRateModal(structure)">
+                          Edit
+                        </button> -->
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+        </div>
+      
+        <!-- RIGHT: Structure Rates Table -->
+        <div class="col-span-2 flex flex-col overflow-hidden border rounded">
+          <div class="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Submitted Structure Rates</h3>
+            <input
+              type="text"
+              [(ngModel)]="rateSearch"
+              placeholder="Search by structure name..."
+              class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/2"
+            />
+          </div>
+      
+          <div class="overflow-y-auto flex-grow">
+            <table class="table-auto w-full border text-sm">
+                <thead class="bg-gray-100 sticky top-0 z-10">
+                  <tr>
+                    <th class="border p-2 w-1/4">Structure</th>
+                    <th class="border p-2 w-1/6">Unit</th>
+                    <th class="border p-2 w-1/6">Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let group of groupedStructureRates">
+                      <!-- Group Header -->
+                      <tr class="bg-gray-200 font-semibold text-gray-700 border-y">
+                        <td colspan="5" class="px-4 py-2">
+                          {{ group.categoryName }}
+                        </td>
+                      </tr>
+                  
+                      <tr *ngFor="let rate of group.items; let i = index">
+                        <!-- Structure Name -->
+                        <td class="border p-2">{{ rate.structureName }}</td>
+                  
+                        <!-- Unit -->
+                        <td class="border p-2">
+                            <ng-container  *ngIf="editIndex !== rate.id">{{ rate.unit }}</ng-container>
+                            <ng-container *ngIf="editIndex === rate.id">
+                                <select [(ngModel)]="rate.unitId" class="w-full border p-2 rounded">
+                                    <option *ngFor="let key of unitKeys" [ngValue]="key">{{ unitDescriptions[key] }}</option>
+                                  </select>
+                            </ng-container>
+
+                        </td>
+                  
+                        <!-- Rate + Discretionary Info -->
+                        <td class="border p-2">
+                          <div class="relative">
+                            <ng-container *ngIf="editIndex === rate.id" class="relative">
+                                <div class="flex justify-between items-center space-x-2">
+                                  <div class="relative flex items-center w-full">
+                              <input type="text" currencyMask [options]="{ prefix: 'UGX ', precision: 0, align:'left' }" [(ngModel)]="rate.rate" class="w-full border rounded px-2 py-1" placeholder="Rate (UGX)" />
+                            
+                      <svg (click)="editIndex=null"
+                      class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 hover:fill-red-500 transition-transform duration-200"
+                      width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                   <path d="M6 6L18 18M18 6L6 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                            </div>
+                            
+                 <button *ngIf="editIndex === rate.id" class="text-green-600 hover:underline" (click)="confirmSave(rate)">Save</button>
+                            </div>
+               <!--   -->
+                              <!--  <textarea [(ngModel)]="rate.discretionInfo" class="mt-1 w-full border rounded px-2 py-1" placeholder="Discretionary Info if no rate"></textarea> -->
+                            </ng-container>
+                  
+                            <ng-container *ngIf="editIndex !== rate.id">
+                                <div class="flex justify-between items-center space-x-2">
+                              <div *ngIf="rate.rate; else noRateBlock">{{ 'UGX ' + (rate.rate | number: '1.0-0') }}</div>
+                              <div class="flex gap-2 items-center">
+                                 <button *ngIf="editIndex !== rate.id" class="text-blue-600 hover:underline" (click)="rate.rate==null?editStructureRate(rate):editIndex = rate.id">Edit</button>
+                 <button class="text-red-600 hover:underline" (click)="confirmDelete(rate)">Delete</button> 
+                              </div>
+                
+                              </div>
+                              <ng-template #noRateBlock>
+                                <span class="italic text-gray-500">N/A</span><br />
+                                <span class="text-xs text-gray-700">{{ rate.discretionInfo }}</span>
+                              </ng-template>
+                              <p *ngIf="rate.assumptions" class="text-xs text-gray-500 italic">
+                                {{ rate.assumptions}}
+                            </p>
+                            </ng-container>
+                          </div>
+                        </td>
+                  
+                        <!-- Assumptions 
+                        <td class="border p-2">
+                          <input *ngIf="editIndex === rate.id" [(ngModel)]="rate.assumptions" class="border w-full rounded px-2 py-1" />
+                          <span *ngIf="editIndex !== rate.id">{{ rate.assumptions || '—' }}</span>
+                        </td>
+                  -->
+                        <!-- Actions 
+                        <td class="border p-2 flex gap-2 items-center">
+                       
+                        </td>-->
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                  
+                <tbody *ngIf="false">
+                  <tr *ngFor="let rate of structureRates; let i = index">
+                    <!-- Structure Name -->
+                    <td class="border p-2">{{ rate.structureName }}</td>
+              
+                    <!-- Unit -->
+                    <td class="border p-2">{{ unitDescriptions[rate.unit??0] }}{{rate.unit}}</td>
+              
+                    <!-- Rate (editable) -->
+                    <td class="border p-2">
+                      <div class="flex items-center relative">
+                        <input *ngIf="editIndex === i"
+                               type="number"
+                               [(ngModel)]="rate.rate"
+                               class="border rounded w-full px-2 py-1" />
+                        <span *ngIf="editIndex !== i">
+                          {{ rate.rate ? ('UGX ' + (rate.rate | number:'1.0-0')) : '—' }}
+                        </span>
+              
+                        <!-- Cancel Button -->
+                        <svg *ngIf="editIndex === i"
+                             (click)="editIndex=null"
+                             class="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-105 text-red-500"
+                             xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor"
+                             width="20"
+                             height="20">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                    </td>
+              
+                    <!-- Assumptions -->
+                    <td class="border p-2">
+                      <input *ngIf="editIndex === i"
+                             [(ngModel)]="rate.assumptions"
+                             class="border w-full rounded px-2 py-1" />
+                      <span *ngIf="editIndex !== i">{{ rate.assumptions || '—' }}</span>
+                    </td>
+              
+                    <!-- Discretion Info -->
+                    <td class="border p-2">
+                      <input *ngIf="editIndex === i"
+                             [(ngModel)]="rate.discretionInfo"
+                             class="border w-full rounded px-2 py-1" />
+                      <span *ngIf="editIndex !== i">{{ rate.discretionInfo || '—' }}</span>
+                    </td>
+              
+                    <!-- Actions -->
+                    <td class="border p-2 flex gap-2 items-center">
+                      <button *ngIf="editIndex !== i"
+                              (click)="editIndex = i"
+                              class="text-sm text-blue-600 hover:underline">
+                        Edit
+                      </button>
+                      <button *ngIf="editIndex === i"
+                              (click)="saveEditedRate(rate)"
+                              class="text-sm text-green-600 hover:underline">
+                        Save
+                      </button>
+                      <button (click)="deleteRate(rate.id??0)"
+                              class="text-sm text-red-600 hover:underline">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              
+            <table *ngIf="false" class="table-auto border border-gray-300 w-full text-sm">
+              <thead class="bg-gray-100 sticky top-0 z-10">
+                <tr>
+                  <th class="border p-2">Structure</th>
+                  <th class="border p-2">Unit</th>
+                  <th class="border p-2">Rate</th>
+                  <th class="border p-2">Assumptions</th>
+                  <th class="border p-2">Discretion</th>
+                  <th class="border p-2">Actions</th>
+                </tr>
+              </thead>
+          
+              
+              <tbody>
+                <tr *ngFor="let rate of structureRates | filterRateTable:rateSearch; let i = index;">
+                  <td class="border p-2">{{ rate.structureName }}</td>
+                  <td class="border p-2">{{ rate.unit }}</td>
+                  <td class="border p-2">{{ rate.rate | currency:'UGX' }}</td>
+                  <td class="border p-2">{{ rate.assumptions || '—' }}</td>
+                  <td class="border p-2">{{ rate.discretionInfo || '—' }}</td>
+                  <td class="border p-2 flex gap-2">
+                    <button class="text-blue-600 hover:underline" (click)="editStructureRate(rate)">Edit</button>
+                    <button class="text-red-600 hover:underline" (click)="deleteRate(rate.id)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <app-structure-rate-matrix
+    *ngIf="showMatrixModal"
+    [currentDistrict]="currentDistrict"
+    [structures]="selectedStructures"
+    [categoryName]="selectedCategoryName"
+    [districtRateId]="currentDistrict?.id??0"
+    (close)="closeRateModal()"
+    (save)="saveRates($event)">
+  </app-structure-rate-matrix>
+
+    <ng-container *ngIf="showRateModal">
+        <div class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+            <h2 class="text-xl font-semibold mb-4">
+              {{ editingRate ? 'Edit' : 'Add' }} Rate for: 
+              <span class="text-blue-600">{{ selectedStructure?.name }}</span>
+            </h2>
+      
+            <form [formGroup]="RateForm" (ngSubmit)="saveStructureRate()">
+              <div class="mb-4">
+                <label class="block text-sm font-medium">Unit of Measure</label>
+                <select formControlName="unit" class="w-full border p-2 rounded">
+                  <option *ngFor="let key of unitKeys" [ngValue]="key">{{ unitDescriptions[key] }}</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <!-- <label class="block text-sm font-medium">Has Rate</label> -->
+                <input type="checkbox"
+                    formControlName="noRate"
+                    class="rounded border-gray-300 focus:ring-0 w-4 h-4 mr-2" />
+                <span class="text-sm">No Rate</span>
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium">Rate (UGX) </label>
+                <input  *ngIf="!RateForm.get('noRate')?.value" type="text" formControlName="rate" class="w-full border p-2 rounded" currencyMask [options]="currencyOptions" />
+                <span *ngIf="RateForm.get('noRate')?.value"  class="text-sm">N/A</span>
+                <div *ngIf="RateForm.get('rate')?.invalid && RateForm.get('rate')?.touched" class="text-red-600 text-sm">
+                  Valid rate is required
+                </div>
+              </div>
+      
+              <div *ngIf="RateForm.get('noRate')?.value" class="mb-4">
+                <label class="block text-sm font-medium">Discretionary Info</label>
+                <textarea formControlName="discretionInfo" class="w-full border p-2 rounded" placeholder="Required if no rate"></textarea>
+              </div>
+      
+              <div class="mb-4 flex items-center gap-2">
+                <input type="checkbox" [(ngModel)]="showAssumptions" class="w-4 h-4" [ngModelOptions]="{ standalone: true }" />
+                <label class="text-sm">Include Assumptions</label>
+              </div>
+      
+              <div *ngIf="showAssumptions" class="mb-4">
+                <label class="block text-sm font-medium">Assumptions</label>
+                <textarea formControlName="assumptions" class="w-full border p-2 rounded"></textarea>
+              </div>
+      
+              <div class="flex justify-end gap-3 mt-6">
+                <button type="button" class="px-4 py-2 border rounded" (click)="closeRateModal()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+                <button *ngIf="editingRate" type="button" class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-container>
+      

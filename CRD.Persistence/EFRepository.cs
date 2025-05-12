@@ -29,11 +29,19 @@ namespace CRD.Persistence
         {
            _context.Set<TEntity>().Add(sender);
         }
-        public void AddMany(IEnumerable<TEntity> entities)
+        public async Task<int> AddMany(IEnumerable<TEntity> entities)
         {
-            _context.Set<TEntity>().AddRange(entities);
-            _context.SaveChanges();
+            var entitiesList = entities.ToList(); // Materialize the collection to avoid enumeration issues
+            _context.Set<TEntity>().AddRange(entitiesList);
+       return  await   _context.SaveChangesAsync();
         }
+        public async Task<int> AddManyAsync(IEnumerable<TEntity> entities)
+        {
+            var entitiesList = entities.ToList(); // Materialize the collection to avoid enumeration issues
+            await _context.Set<TEntity>().AddRangeAsync(entitiesList); // Use AddRangeAsync
+            return await _context.SaveChangesAsync(); // Save changes asynchronously
+        }
+
 
         public IEnumerable<TEntity> GetAll()
         {
@@ -102,6 +110,13 @@ namespace CRD.Persistence
             _context.SaveChanges();
             return true;
         }
+        public bool RemoveRange(List<TEntity> entities)
+        {
+            _context.Set<TEntity>().RemoveRange(entities);
+            _context.SaveChanges();
+            return true;
+        }
+
 
         public int Save()
         {
@@ -123,15 +138,30 @@ namespace CRD.Persistence
             return _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
 
-        public void Update(in TEntity sender)
+        public async Task Update(TEntity sender)
         {
             _context.Entry(sender).State = EntityState.Modified;
-            _context.SaveChanges();
+          await _context.SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task ExecuteInTransactionAsync(Func<Task> operation)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await operation();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
         /*public void Add(TEntity model)
 {
