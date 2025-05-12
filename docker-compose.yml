@@ -16,6 +16,8 @@ services:
       - MailSettings__Host=smtp.office365.com
       - MailSettings__Port=587
       - MailSettings__AppUrl=http://localhost
+      - CorsSettings__AllowedOrigins=["http://localhost:5100", "http://localhost"]
+
  mongo:
     container_name: crd-mongo-db
     image: mongo

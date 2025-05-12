@@ -37,12 +37,14 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName); // Uses full namespace to avoid conflicts
 });
 
+var corsOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "CorsPolicy",
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:53874", "https://cr-db-642aa.web.app","http://localhost:4200")
+                          policy.WithOrigins(corsOrigins)
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
