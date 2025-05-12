@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: CRD.API/Dockerfile
  mongo:
-    container_name: crd
+    container_name: crd-mongo-db
     image: mongo
     restart: always
     ports:
