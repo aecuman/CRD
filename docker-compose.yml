@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: CRD.API/Dockerfile
     environment:
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_URLS=http://+:5100
       - ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=crd-mssql-db;User Id=sa;Password=Str0p@ssword;Encrypt=false;
       - MongoDb__ConnectionString=mongodb://admin:password@localhost:27017/admin
       - MongoDb__DatabaseName=CRD
