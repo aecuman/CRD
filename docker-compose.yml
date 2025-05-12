@@ -6,7 +6,16 @@ services:
       dockerfile: CRD.API/Dockerfile
     environment:
       - ASPNETCORE_URLS=http://+:8080
-
+      - ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=crd-mssql-db;User Id=sa;Password=Str0p@ssword;Encrypt=false;
+      - MongoDb__ConnectionString=mongodb://admin:password@localhost:27017/admin
+      - MongoDb__DatabaseName=CRD
+      - MongoDb__CollectionName=PublishedRateDocuments
+      - MailSettings__Mail=notifications@redahug.com
+      - MailSettings__DisplayName=Notifications
+      - MailSettings__Password=Notify@123
+      - MailSettings__Host=smtp.office365.com
+      - MailSettings__Port=587
+      - MailSettings__AppUrl=http://localhost
  mongo:
     container_name: crd-mongo-db
     image: mongo
