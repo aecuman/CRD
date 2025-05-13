@@ -10,6 +10,9 @@ ENV ASPNETCORE_URLS=http://+:5100
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["CRD.API/CRD.API.csproj", "CRD.API/"]
@@ -30,5 +33,20 @@ RUN dotnet publish "./CRD.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
+
+# Copy published files
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CRD.API.dll"]
+
+# Install EF Core tools inside the container
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Copy entrypoint script for migrations and seeding
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Ensure the container runs migrations and seed data before starting the app
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+
+#ENTRYPOINT ["dotnet", "CRD.API.dll"]
