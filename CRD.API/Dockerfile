@@ -10,9 +10,6 @@ ENV ASPNETCORE_URLS=http://+:5100
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
-
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["CRD.API/CRD.API.csproj", "CRD.API/"]
