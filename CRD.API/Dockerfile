@@ -16,6 +16,10 @@ WORKDIR /src
 # Install required dependencies to prevent package issues
 RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu72 libssl3 libstdc++6 libunwind8 zlib1g
 
+# Install .NET SDK explicitly to prevent missing commands
+RUN apt-get install -y dotnet-sdk-9.0
+
+
 # Install EF Core tool globally
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
