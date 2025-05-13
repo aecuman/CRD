@@ -17,7 +17,9 @@ WORKDIR /src
 RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu72 libssl3 libstdc++6 libunwind8 zlib1g
 
 # Install .NET SDK explicitly to prevent missing commands
-RUN apt-get install -y dotnet-sdk-9.0
+RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
+    chmod +x dotnet-install.sh && \
+    ./dotnet-install.sh --version 9.0.0
 
 
 # Install EF Core tool globally
