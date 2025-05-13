@@ -75,8 +75,7 @@ app.UseAuthorization();
 app.MapControllers();
 // add in middleware section before app.Run()
 app.UseStaticFiles();
-app.UseDefaultFiles()
-    app.UseK
+app.UseDefaultFiles();
 
 app.Run();
 
