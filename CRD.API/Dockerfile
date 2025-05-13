@@ -14,7 +14,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Install required dependencies to prevent package issues
-RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu70 libssl3 libstdc++6 libunwind8 zlib1g
+RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu72 libssl3 libstdc++6 libunwind8 zlib1g
 
 # Install EF Core tool globally
 RUN dotnet tool install --global dotnet-ef
