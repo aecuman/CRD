@@ -16,7 +16,7 @@ WORKDIR /src
 # Install required dependencies to prevent package issues
 RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu72 libssl3 libstdc++6 libunwind8 zlib1g
 
-RUN apt-get update && apt-get install -y sudo
+
 
 # Install .NET SDK explicitly to prevent missing commands
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
@@ -54,6 +54,8 @@ COPY --from=publish /app/publish .
 # Install EF Core tools inside the container
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
+
+RUN apt-get update && apt-get install -y sudo
 
 # Copy entrypoint script for migrations and seeding
 COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
