@@ -190,6 +190,7 @@ import {
 } from '../api.service';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IDropdownSettings } from '../app.model';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-plants',
@@ -241,7 +242,7 @@ currentPage: number = 1;
   groupForm = { name: '', description: '', growthStages:new Array<any>() };
   activeTab='plants';
 
-  constructor(private api: APIService, private fb: FormBuilder) {  
+  constructor(private api: APIService, private fb: FormBuilder,private auth: AuthService) {  
     this.PlantForm = this.initPlant();
     this.CategoryChanges();
     this.getAll();
@@ -724,6 +725,9 @@ group.growthStages?.forEach(gs=>{
       }
  
     }
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 
 /*     savePlant() {

@@ -57,7 +57,7 @@
                       [ngClass]="plantHasRates(plant.id) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                   {{ plantHasRates(plant.id) ? 'Rate' : 'Missing' }}
                 </span>
-                <button (click)="openMatrixModal('plant', plant, ip)"
+                <button *ngIf="canManage" (click)="openMatrixModal('plant', plant, ip)"
                         class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
                   {{ plantHasRates(plant.id) ? 'Edit' : 'Add Rates' }}
                 </button>
@@ -77,7 +77,7 @@
                       [ngClass]="groupHasRates(group.id ?? 0) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                   {{ groupHasRates(group.id ?? 0) ? 'Rated' : 'Missing' }}
                 </span>
-                <button (click)="openMatrixModal('group', group, gi)"
+                <button *ngIf="canManage" (click)="openMatrixModal('group', group, gi)"
                         class="text-sm bg-indigo-500 text-white px-3 py-1 rounded">
                   {{ groupHasRates(group.id ?? 0) ? 'Edit' : 'Add Rate' }}
                 </button>
@@ -139,13 +139,13 @@
                         <path d="M6 6L18 18M18 6L6 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </div>
-                    <button *ngIf="editIndex !== i"
+                    <button *ngIf="(editIndex !== i)&& canManage"
                             class="text-sm text-blue-600 hover:underline"
                             (click)="editRate(i)">Edit</button>
-                    <button *ngIf="editIndex === i"
+                    <button *ngIf="(editIndex === i) && canManage"
                             class="text-sm text-green-600 hover:underline"
                             (click)="saveRate(rate, i)">Save</button>
-                    <button *ngIf="editIndex !== i" (click)="DeleteRate(rate.id??0)"
+                    <button *ngIf="(editIndex !== i)&& canManage" (click)="DeleteRate(rate.id??0)"
                             class="text-red-600 hover:text-red-800">
                       Remove
                     </button>

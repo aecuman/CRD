@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService, District } from '../api.service';
 import type { ColDef } from "ag-grid-community";
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-reviews',
@@ -32,7 +33,7 @@ export class ReviewsComponent {
     }
   ];
 
-  constructor(private fb: FormBuilder, private api: APIService) {
+  constructor(private fb: FormBuilder, private api: APIService,private auth:AuthService) {
     this.loadDistricts();
     this.form = this.fb.group({
       districtId: ['', Validators.required],
@@ -94,5 +95,8 @@ export class ReviewsComponent {
     this.api.districtRatesDELETE(id).subscribe(() => {
       this.loadDistrictRates();
     });
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

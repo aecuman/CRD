@@ -37,7 +37,7 @@ export class DistrictWorkflowDetailComponent {
     private api: APIService,
     private router: Router
   ) {
-    this.currentUser = this.auth.getUser()?.fullName || 'admin'; // replace with real user service in production
+    this.currentUser = this.auth.getUser?.fullName || 'admin'; // replace with real user service in production
   }
 
   ngOnInit(): void {
@@ -65,6 +65,7 @@ loadDistrictRatedetails(districtId: number) {
   });
 }
   markSubStepComplete(subStepId: number) {
+    confirm('Complete this step?') &&
     this.api.completeSubStep({districtSubStepId:subStepId}).subscribe(() => this.ngOnInit());
   }
 
@@ -117,7 +118,10 @@ loadDistrictRatedetails(districtId: number) {
   }
   
   completeStep(stepId: number): void {
-    this.api.ompleteStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
+    if (confirm('Complete this step and all its substeps?')) {
+      this.api.ompleteStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
+    }
+    //this.api.ompleteStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
   }
   handleComparables(event:any){
 this.loadDistrictRatedetails(this.districtRateId);
@@ -187,5 +191,8 @@ revertStep(stepId: number): void {
 }
 get preselectedRates(){
  return this.districtRate?.comparableDistrictRates?.map((c:any) => c.id)
+}
+get canManage(){
+  return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
 }
 }

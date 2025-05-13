@@ -8,7 +8,7 @@ The status can be one of the following: Approved, Revised, Deferred, or Not Mode
  The original rate is the rate before moderation, and the new rate is the rate after moderation.
  The rates are displayed in a table format, with the following columns: Crop/Tree, Unit, Stage, Original, New, and Status.</p>
 
-  <div class="flex gap-4 justify-end mb-6">
+  <div *ngIf="canManage" class="flex gap-4 justify-end mb-6">
     <button (click)="exportModerationReportToPdf()"
             class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
       Export PDF

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlantListViewModel, APIService, DistrictRateDto, GroupedPlantListViewModel, OptionsListViewModel, OptionViewModel, PlantRateViewModel } from 'src/app/api.service';
 import { PlantRateDto,UnitOfMeasure } from 'src/app/app.model';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-plant-rate-matrix',
@@ -54,7 +55,7 @@ export class PlantRateMatrixComponent {
   /**
    *
    */
- constructor(private fb: FormBuilder,private api:APIService) {
+ constructor(private fb: FormBuilder,private api:APIService, private auth:AuthService) {
     this.plantRateForm = this.fb.group({
       districtRateId: ['', Validators.required],
       isGrouped: [false, Validators.required],
@@ -733,5 +734,8 @@ toggleQuality(quality: string) {
     if (confirm("Are you sure you want to delete this rate?")) {
     this.api.deletePlantRate(id).subscribe({});
     }
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

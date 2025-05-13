@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, input } from '@angular/
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { APIService, DistrictRateDto, StructureViewDto } from 'src/app/api.service';
 import { StructuresUnitOfMeasure, StructureUnitDescriptions } from 'src/app/app.model';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-structure-rate-matrix',
@@ -24,7 +25,7 @@ export class StructureRateMatrixComponent implements OnInit {
 
   isSaving:boolean=false;
 
-  constructor(private fb: FormBuilder, private api: APIService) {
+  constructor(private fb: FormBuilder, private api: APIService,private auth:AuthService) {
     this.matrixForm = this.fb.group({
       rows: this.fb.array([])
     });
@@ -106,6 +107,9 @@ export class StructureRateMatrixComponent implements OnInit {
     }
     toggleAssumptions(i: number, event: any) {
      // this.matrixRows[i].showAssumptions = event.target.checked;
+    }
+    get canManage(){
+      return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
     }
     
 }

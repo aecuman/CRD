@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { APIService, DistrictRateDto, ModerateCompensationRateCommand,  PlantRateViewModel, RateType, StructureRatesListViewModel } from '../api.service';
 import { ModerationStatusDescriptions,ModerationStatus, ModerationStatusActions } from '../app.model';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-moderation-popup',
@@ -55,7 +56,8 @@ statusActions = ModerationStatusActions;
   /**
    *
    */
-  constructor(private api:APIService) {
+  constructor(private api:APIService, private auth:AuthService) {
+    // this.command = this.createEmptyCommand();
     
     
   }
@@ -236,5 +238,8 @@ createEmptyCommand(): ModerateCompensationRateCommand {
       };
      
     }
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

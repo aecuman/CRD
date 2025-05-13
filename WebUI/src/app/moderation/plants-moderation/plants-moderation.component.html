@@ -2,7 +2,7 @@
     <h2 *ngIf="currentDistrict" class="text-2xl font-semibold mb-4">
       {{ currentDistrict.districtName }} District Compensation Rates {{ currentDistrict.year }}
     </h2>
-    <button [disabled]="comparablesLoading" (click)="startModeration('Plant')" class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-75 ">{{comparablesLoading?'Comparables loading...':'Start Plant Rate Moderation'}}</button>
+    <button *ngIf="canManage" [disabled]="comparablesLoading" (click)="startModeration('Plant')" class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-75 ">{{comparablesLoading?'Comparables loading...':'Start Plant Rate Moderation'}}</button>
  <!--  <button (click)="startModeration('Structure')" class="bg-green-600 text-white px-4 py-2 rounded">Start Structure Rate Moderation</button>
 
    -->  <!-- Grid Layout -->
@@ -104,7 +104,7 @@
             </span>
             
             <!-- Pencil Icon Button -->
-            <button *ngIf="rate.isModerated" [disabled]="comparablesLoading" (click)="startModerationAt(i);editMode=true;"
+            <button *ngIf="rate.isModerated && canManage" [disabled]="comparablesLoading" (click)="startModerationAt(i);editMode=true;"
                     class="absolute right-2 top-1/2 transform -translate-y-1/2 text-black" [ngClass]="{ 'cursor-not-allowed opacity-75': comparablesLoading }">
                    
                       <svg fill="#000000" width="16px" height="16px" viewBox="0 0 528.899 528.899" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981 c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611 C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069 L27.473,390.597L0.3,512.69z"></path> </g> </g></svg>

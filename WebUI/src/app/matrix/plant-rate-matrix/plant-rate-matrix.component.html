@@ -98,7 +98,7 @@
   <label>{{ q }}</label>
 </div>
   
-      <button type="button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" (click)="generateMatrix()">
+      <button *ngIf="canManage&&!isConfigured" type="button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" (click)="generateMatrix()">
         Generate Matrix
       </button>
     </form>
@@ -250,7 +250,7 @@
       </ng-container>
     </tbody>
   </table>
-  <div class="flex justify-end items-center gap-4 mt-4">
+  <div *ngIf="isConfigured&&canManage" class="flex justify-end items-center gap-4 mt-4">
     <button class="px-4 py-2 bg-blue-200 rounded text-sm" 
             [disabled]="activeTabIndex === 0"
             (click)="previousTab()">← Previous</button>
@@ -407,7 +407,7 @@
   </table>
   
   </div>
-  <div class="mt-6 flex justify-end gap-4">
+  <div *ngIf="canManage&&isConfigured" class="mt-6 flex justify-end gap-4">
     <button [disabled]="isSaving" (click)="close.emit()" class="text-gray-700 border px-4 py-2 rounded">Cancel</button>
     <button [disabled]="isSaving" (click)="SaveMatrix()" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
   </div>

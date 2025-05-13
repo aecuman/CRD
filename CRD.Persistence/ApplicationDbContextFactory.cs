@@ -15,7 +15,7 @@ namespace CRD.Persistence
             var optionsBuilder= new DbContextOptionsBuilder<ApplicationDbContext>();
 
             optionsBuilder.
-                UseSqlServer(@"Server=localhost,1433;Database=crd-test-db;;User Id=sa;Password=Str0p@ssword;Encrypt=False");
+                UseSqlServer(@"Server=localhost,1433;Database=crd-mssql-db;User Id=sa;Password=Str0p@ssword;Encrypt=false");
                // UseSqlServer(@"Server=tcp:redah-db.database.windows.net,1433;Initial Catalog=crd;Persist Security Info=False;User ID=CloudSAb2bf6a20;Password=Str0p@ssword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             /*.UseSeeding((context, _) => {
 

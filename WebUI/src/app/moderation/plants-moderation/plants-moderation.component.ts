@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { APIService, DistrictRateDto, ModerateCompensationRateCommand, ModeratedPlantRateViewModel, OptionsListViewModel, OptionViewModel, PlantRateViewModel, StructureRatesListViewModel } from '../../api.service';
 import { FormBuilder } from '@angular/forms';
 import { RateRow } from '../../app.model';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-plants-moderation',
@@ -33,7 +34,7 @@ export class PlantsModerationComponent {
   allComparableStructureRates: StructureRatesListViewModel[] = [];
   comparablesLoading: boolean = false;
 
-  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute) {
+  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute, private auth:AuthService) {
  
     this.route.params.subscribe(params => {
       if (params['id']) {        
@@ -254,5 +255,8 @@ export class PlantsModerationComponent {
     }
     ngOnChange() {
       this.getCurrentRate();
+    }
+    get canManage(){
+      return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
     }
 }

@@ -18,6 +18,8 @@ export class PortalComponent {
   logout() {
     this.authService.logout();
   }
-
+get canManage(){
+  return this.authService.userValue?.roles?.includes('Admin') || this.authService.userValue?.roles?.includes('superadmin');
+}
 
 }

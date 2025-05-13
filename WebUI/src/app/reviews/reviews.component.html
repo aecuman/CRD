@@ -2,7 +2,7 @@
 
 <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">District Rates</h1>
-    <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="openModal()">Add District Rate</button>
+    <button *ngIf="canManage" class="bg-blue-500 text-white px-4 py-2 rounded" (click)="openModal()">Add District Rate</button>
   
     <ag-grid-angular
       class="ag-theme-alpine mt-4 w-full h-80"

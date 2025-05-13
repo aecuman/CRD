@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService, StructureCategoryViewModel, StructureViewDto } from '../api.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-structures',
@@ -34,7 +35,8 @@ isModalOpen=false;
   constructor(
     private fb: FormBuilder,
     private api: APIService,
-    private cdr: ChangeDetectorRef
+   // private cdr: ChangeDetectorRef,
+    private auth: AuthService
   ) {
     this.structureForm = this.fb.group({
       id:[''],
@@ -186,5 +188,8 @@ this.isModalOpen=true;
   closeModal(){
     this.selectedCategory=null;
     this.isModalOpen=false;
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

@@ -1,6 +1,6 @@
 <app-page-list-view [pageTitle]="'Structures'">
   <div buttoncontent>
-    <div class="flex justify-end gap-2 mb-4">
+    <div *ngIf="canManage" class="flex justify-end gap-2 mb-4">
       <button (click)="openModal()"
     class="ml-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -38,8 +38,8 @@
                   </ul>
               </td>
               <td class="border p-2">
-                <button (click)="editStructure(structure)" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
-                <button (click)="deleteStructure(structure.id!)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Delete</button>
+                <button *ngIf="canManage" (click)="editStructure(structure)" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+                <button *ngIf="canManage" (click)="deleteStructure(structure.id!)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Delete</button>
               </td>
             </tr>
           </ng-container>

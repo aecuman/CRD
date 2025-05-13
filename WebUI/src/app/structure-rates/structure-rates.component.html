@@ -20,7 +20,7 @@
                   <div class="flex justify-between items-center px-2">
                     <h3 class="text-md font-semibold text-gray-800">{{ category.categoryName }}</h3>
                     <div class="mt-2 flex justify-end">
-                        <button 
+                        <button *ngIf="canManage"
                           [disabled]="hasAllRates(category.items)" 
                           (click)="openRateModalForCategory(category)"
                           class="text-sm px-4 py-1 rounded font-medium"
@@ -122,7 +122,7 @@
                  </svg>
                             </div>
                             
-                 <button *ngIf="editIndex === rate.id" class="text-green-600 hover:underline" (click)="confirmSave(rate)">Save</button>
+                 <button *ngIf="(editIndex === rate.id)&& canManage" class="text-green-600 hover:underline" (click)="confirmSave(rate)">Save</button>
                             </div>
                <!--   -->
                               <!--  <textarea [(ngModel)]="rate.discretionInfo" class="mt-1 w-full border rounded px-2 py-1" placeholder="Discretionary Info if no rate"></textarea> -->
@@ -132,8 +132,8 @@
                                 <div class="flex justify-between items-center space-x-2">
                               <div *ngIf="rate.rate; else noRateBlock">{{ 'UGX ' + (rate.rate | number: '1.0-0') }}</div>
                               <div class="flex gap-2 items-center">
-                                 <button *ngIf="editIndex !== rate.id" class="text-blue-600 hover:underline" (click)="rate.rate==null?editStructureRate(rate):editIndex = rate.id">Edit</button>
-                 <button class="text-red-600 hover:underline" (click)="confirmDelete(rate)">Delete</button> 
+                                 <button *ngIf="(editIndex !== rate.id)&&canManage" class="text-blue-600 hover:underline" (click)="rate.rate==null?editStructureRate(rate):editIndex = rate.id">Edit</button>
+                 <button *ngIf="canManage" class="text-red-600 hover:underline" (click)="confirmDelete(rate)">Delete</button> 
                               </div>
                 
                               </div>

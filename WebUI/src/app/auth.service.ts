@@ -23,11 +23,11 @@ export class AuthService {
       private router: Router,
       private http: HttpClient
   ) {
-      this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
+      this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem(this.userKey)!));
       this.user = this.userSubject.asObservable();
   }
 
-  public get userValue() {
+  public get userValue():UserDto {
     return this.userSubject.value;
 }
  // Save token with expiry
@@ -36,6 +36,7 @@ export class AuthService {
   localStorage.setItem(this.tokenKey, token);
   localStorage.setItem(this.userKey, JSON.stringify(user));
   localStorage.setItem(this.tokenExpiryKey, expiryTime.toString());
+  this.userSubject.next(user);
   this.isLoggedInSubject.next(true);
 }
 
@@ -67,7 +68,7 @@ logout(no_redirect?: boolean) {
     return this.hasValidToken() ? localStorage.getItem(this.tokenKey) : null;
   }
 
-   getUser(): UserDto|null {
+  get getUser(): UserDto|null {
     const userJson = localStorage.getItem(this.userKey);
     return userJson ? JSON.parse(userJson) : null;
   }

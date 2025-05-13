@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { APIService, DistrictRateDto, ModerateCompensationRateCommand, ModeratedStructureRateViewModel, OptionsListViewModel, OptionViewModel, StructureRatesListViewModel, StructureViewDto } from 'src/app/api.service';
 import { StructuresUnitOfMeasure, StructureUnitDescriptions } from 'src/app/app.model';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-structures-moderation',
@@ -33,7 +34,7 @@ export class StructuresModerationComponent {
     allComparableStructureRates: StructureRatesListViewModel[] = [];
     comparablesLoading: boolean = false;
 
-  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute) {
+  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute, private auth:AuthService) {
  
     this.route.params.subscribe(params => {
       if (params['id']) {        
@@ -217,5 +218,8 @@ export class StructuresModerationComponent {
   
   get unitDescriptions():any {
     return StructureUnitDescriptions;
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

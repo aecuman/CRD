@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService, CompensationRateEntryDto,  CreatePlantRatesCommand,  DistrictRateDto, GroupedPlantListViewModel, OptionsListViewModel, OptionViewModel, PlantListViewModel, PlantRateViewModel, UpdatePlantRatesCommand} from '../api.service';
 import { PlantRateDto, UnitOfMeasure  } from '../app.model';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-plant-rates',
@@ -32,7 +33,7 @@ plantSearch:string ='';
 rateSearch:string ='';
   existingMatrixRates: PlantRateDto[]=[];
 
-  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute) {
+  constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute, private auth:AuthService) {
  
     this.route.params.subscribe(params => {
       if (params['id']) {        
@@ -355,7 +356,9 @@ groupHasRates(groupId: number): boolean {
       return acc;
     }, {}); */
 
-
+    get canManage(){
+      return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
+    }
   }
 
   

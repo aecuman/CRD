@@ -57,12 +57,12 @@ if (args.Length == 1 && args[0].ToLower() == "seeddata")
 if (args.Length == 1 && args[0].ToLower() == "seedworkflow")
     await SeedWorkFlow(app);
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 //app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");

@@ -232,7 +232,7 @@
   <div class="bg-white w-4/5 h-5/6 rounded-lg shadow-lg overflow-hidden p-6">
     
     <!-- Modal Header -->
-    <div class="flex justify-between items-center border-b pb-2">
+    <div  class="flex justify-between items-center border-b pb-2">
       <h2 class="text-xl font-semibold">Add New Crop/Tree</h2>
       <button (click)="closeModal()" class="text-red-600 font-bold text-xl">×</button>
     </div>
@@ -544,7 +544,7 @@
       --> </div>
 
       <!-- Form Buttons -->
-      <div class="flex justify-between mt-4">
+      <div class="flex justify-between mt-4" *ngIf="canManage">
         <button type="button" (click)="prevTab()" [disabled]="selectedTab === 0" class="px-4 py-2 bg-gray-300 rounded">Back</button>
         <button type="button" (click)="nextTab()" [disabled]="selectedTab === tabs.length - 1" class="px-4 py-2 bg-gray-300 rounded">Next</button>
         <button type="submit" *ngIf="selectedTab === tabs.length - 1" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
@@ -557,7 +557,7 @@
 <app-page-list-view [pageTitle]="'Crops/Trees'">
   <div buttoncontent>
     <div class="flex justify-end gap-2 mb-4">
-      <button (click)="openModal()"
+      <button *ngIf="canManage" (click)="openModal()"
     class="ml-5 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"><svg
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
         stroke="currentColor" class="w-6 h-6">
@@ -566,7 +566,7 @@
         </path>
     </svg> &nbsp; <span>New Crop/Tree</span></button>
     
-      <button 
+      <button *ngIf="canManage"
         (click)="openGroupModal()"
         class="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700"
       >
@@ -681,15 +681,15 @@
           </span>
 
           <!-- Buttons (Appears on Hover) -->
-          <div 
+          <div *ngIf="canManage"
             class="absolute top-0 right-0 hidden group-hover:flex gap-2 bg-white shadow-md p-2 rounded"
           >
-            <button
+            <!-- <button
               (click)="viewDetails(p)"
               class="text-blue-500 hover:text-blue-700 px-2"
             >
               View
-            </button>
+            </button> -->
             <button
               (click)="editPlant(p)"
               class="text-green-500 hover:text-green-700 px-2"
@@ -721,7 +721,7 @@
         <h3 class="text-xl font-bold">{{ group.name }}</h3>
         <p class="text-sm text-gray-500">{{ group.description }}</p>
       </div>
-      <button (click)="editGroup(group)" class="text-sm bg-blue-500 text-white px-3 py-1 rounded">Edit Group</button>
+      <button *ngIf="canManage" (click)="editGroup(group)" class="text-sm bg-blue-500 text-white px-3 py-1 rounded">Edit Group</button>
     </div>
 
     <div class="grid grid-cols-3 gap-4">
@@ -758,7 +758,7 @@
         <div class="text-sm text-gray-500 italic">{{ plant.botanicalName }}</div>
         <div class="text-xs text-gray-400">{{ plant.plantType | titlecase }}</div>
 
-        <button (click)="addToGroup(plant)"
+        <button *ngIf="canManage" (click)="addToGroup(plant)"
                 [disabled]="isSelected(plant)"
                 class="mt-2 px-2 py-1 text-sm rounded"
                 [class.bg-blue-500]="!isSelected(plant)"

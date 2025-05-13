@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIService, CRDFileDto, District, DistrictRateDto, FileParameter } from '../api.service';
 import type { ColDef } from "ag-grid-community";
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-status',
@@ -35,7 +36,7 @@ districtRates: DistrictRateDto[] = [];
     }
   ];
 
-  constructor(private fb: FormBuilder, private api: APIService) {
+  constructor(private fb: FormBuilder, private api: APIService, private auth: AuthService) {
     this.loadDistricts();
     this.form = this.fb.group({
       districtId: ['', Validators.required],
@@ -146,5 +147,8 @@ districtRates: DistrictRateDto[] = [];
       alert("Workflow started for district.");
       this.ngOnInit(); // Refresh the table
     });
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

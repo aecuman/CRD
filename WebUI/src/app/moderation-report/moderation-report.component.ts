@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { ExportService } from '../export.service';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class ModerationReportComponent {
   /**
    *
    */
-  constructor(private api:APIService, private route:ActivatedRoute, public exportService:ExportService, private router:Router) {
+  constructor(private api:APIService, private route:ActivatedRoute, public exportService:ExportService, private router:Router,private auth:AuthService) {
     this.getAllOptions();
     this.route.params.subscribe(params => {
 
@@ -492,6 +493,8 @@ getModerationSummary() {
     structure: summarize(this.structureRatesFlat),
   };
 }
-
+get canManage(){
+  return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
+}
 }
     

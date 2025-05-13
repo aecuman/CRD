@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { APIService, CreateOrUpdateStructureRateCommand, DistrictRateDto, OptionsListViewModel, StructureRateDto, StructureRatesListViewModel, StructureViewDto } from '../api.service';
 import { StructuresUnitOfMeasure, StructureUnitDescriptions } from '../app.model';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-structure-rates',
@@ -27,7 +28,7 @@ currencyOptions = { align: 'right', allowNegative: false, precision: 0, prefix: 
 showMatrixModal = false;
 selectedStructures: StructureViewDto[] = [];
 selectedCategoryName = '';
-    constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute) {
+    constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute, private auth:AuthService) {
    
       this.route.params.subscribe(params => {
         if (params['id']) {        
@@ -236,5 +237,8 @@ this.loadStructureRates();
   }
   hasRate(structure: StructureViewDto): boolean {
     return this.structureRates.some(rate => rate.structureId === structure.id);
+  }
+  get canManage(){
+    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }
