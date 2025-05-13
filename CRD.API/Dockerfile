@@ -42,7 +42,7 @@ RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
 # Copy entrypoint script for migrations and seeding
-COPY entrypoint.sh /app/CRD.API/entrypoint.sh
+COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 # Ensure the container runs migrations and seed data before starting the app
