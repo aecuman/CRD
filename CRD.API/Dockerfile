@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y sudo
 # Copy entrypoint script for migrations and seeding
 COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
 USER root
-RUN sudo chmod +x /app/CRD.API/entrypoint.sh
+RUN chmod +x /app/CRD.API/entrypoint.sh
 
 # Ensure the container runs migrations and seed data before starting the app
 ENTRYPOINT ["/app/entrypoint.sh"]
