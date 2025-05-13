@@ -55,7 +55,6 @@ COPY --from=publish /app/publish .
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-RUN apt-get update && apt-get install -y sudo
 
 # Copy entrypoint script for migrations and seeding
 COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
