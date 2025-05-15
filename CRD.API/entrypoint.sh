@@ -1,5 +1,5 @@
-﻿#!/bin/sh
+﻿#!/bin/bash
 set -e
-dotnet ef database update
+dotnet ef database update --project CRD.Persistence/CRD.Persistence.csproj
 dotnet run seeddata
 exec "$@"

@@ -19,14 +19,14 @@ RUN apt-get update && apt-get install -y libc6 libgcc1 libgssapi-krb5-2 libicu72
 
 
 # Install .NET SDK explicitly to prevent missing commands
-RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
-    chmod +x dotnet-install.sh && \
-    ./dotnet-install.sh --version latest
+#RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
+#   chmod +x dotnet-install.sh && \
+#    ./dotnet-install.sh --version latest
 
 
 # Install EF Core tool globally
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
+#RUN dotnet tool install --global dotnet-ef
+#ENV PATH="$PATH:/root/.dotnet/tools"
 
 
 COPY ["CRD.API/CRD.API.csproj", "CRD.API/"]
@@ -52,17 +52,17 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Install EF Core tools inside the container
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
+#RUN dotnet tool install --global dotnet-ef
+#ENV PATH="$PATH:/root/.dotnet/tools"
 
 
 # Copy entrypoint script for migrations and seeding
-COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
-USER root
-RUN chmod +x /app/CRD.API/entrypoint.sh
+#COPY CRD.API/entrypoint.sh /app/CRD.API/entrypoint.sh
+#USER root
+#RUN chmod +x /app/CRD.API/entrypoint.sh
 
 # Ensure the container runs migrations and seed data before starting the app
-ENTRYPOINT ["/app/entrypoint.sh"]
+#ENTRYPOINT ["/app/CRD.API/entrypoint.sh"]
 
 
-#ENTRYPOINT ["dotnet", "CRD.API.dll"]
+ENTRYPOINT ["dotnet", "CRD.API.dll"]
