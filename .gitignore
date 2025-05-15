@@ -7,6 +7,9 @@
 /CRD.Application/bin/Debug/net9.0
 /CRD.API/bin/Release/net9.0
 obj/
+**/obj/
+
+
 
 *.swp
 *.*~
