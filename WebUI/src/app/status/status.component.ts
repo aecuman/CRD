@@ -19,6 +19,13 @@ districtRates: DistrictRateDto[] = [];
   uploadedFiles: CRDFileDto[] = [];
   saving = false;
   uploading = false;
+  filterYear: number | null = null;
+  filterStatus?: string = '';
+  districtRateStatuses?: string[] = ['Pending', 'Approved', 'Rejected', 'UnderReview', 'Published'];
+filterDistrictId?: number | null = null;
+showCompleted: boolean = false;
+
+
 
   columnDefs: ColDef[] = [
     { field: 'districtName', headerName: 'District', sortable: true, filter: true},
@@ -53,10 +60,20 @@ districtRates: DistrictRateDto[] = [];
       this.all_districts = data;
     });
   }
+filteredRates: DistrictRateDto[] = [];
+
+applyFilter() {
+  this.filteredRates = this.districtRates.filter(r =>
+    (!this.showCompleted && (r?.progressPercent??0) < 100) || (this.showCompleted && r.progressPercent === 100)
+
+  );
+  
+}
 
   loadDistrictRates() {
     this.api.districtRatesAll().subscribe(data => {
       this.districtRates = data;
+      this.applyFilter();
     });
   }
 
@@ -149,6 +166,6 @@ districtRates: DistrictRateDto[] = [];
     });
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
   }
 }

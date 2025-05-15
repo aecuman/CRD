@@ -8,7 +8,7 @@
           <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5">
           </path>
-      </svg> &nbsp; <span>Users</span></button>
+      </svg> &nbsp; <span>Add User</span></button>
       
       
       </div>
@@ -29,7 +29,7 @@
                 <tr *ngFor="let user of users">
                     <td class="border p-2">{{ user.fullName }}</td>
                     <td class="border p-2">{{ user.email }}</td>
-                    <td class="border p-2">{{ user.role }}</td>
+                    <td class="border p-2 capitalize">{{ user.role }}</td>
                     <td class="border p-2">
                         <button (click)="editUser(user)" class="bg-gray-500 text-white px-2 py-1 rounded">Edit</button>
                         <button (click)="ResetPassword(user)" class="bg-gray-500 text-white px-2 py-1 rounded ml-2">Reset Password</button>
@@ -40,6 +40,17 @@
                 </table>
                 </div>
                 </app-page-list-view>
+                <!-- loader.component.html -->
+<div *ngIf="isResetting" class="fixed inset-0 flex flex-col items-center justify-center bg-gray-100 opacity-75">
+    <div class="bg-white p-4 rounded-lg shadow-lg">
+        <h2 class="text-lg font-semibold mb-4 text-center">Resetting Password...</h2>
+        <p class="text-gray-600 text-center">Please wait while we reset the password.</p>
+    </div>
+  <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+  
+</div>
+
+
                  <!-- Modal -->
 <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-8 rounded-lg w-96 shadow-lg">
@@ -81,7 +92,7 @@
           <label class="block text-gray-700">Roles</label>
           <select formControlName="roles" multiple class="w-full p-2 border border-gray-300 rounded mt-1"
             [ngClass]="{'border-red-500': registerForm.get('roles')?.touched && registerForm.get('roles')?.invalid}">
-            <option value="Admin">Admin</option>
+            <option value="admin">Admin</option>
             <option value="User">User</option>
             <option value="Manager">Manager</option>
           </select>

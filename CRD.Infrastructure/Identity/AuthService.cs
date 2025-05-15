@@ -28,20 +28,33 @@ namespace CRD.Infrastructure.Identity
 
         public async Task<LoginDto> LoginSystemUser(string email, string password)
         {
-            try
-            {
+           /* try
+            {*/
                 var user = await _userManager.FindByEmailAsync(email);
-                var result = await _signInManager.PasswordSignInAsync(user?.UserName, password, false, true);
-                var roles = await _userManager.GetRolesAsync(user);
-                user.LastLoginAt = DateTime.Now;
-                await _userManager.UpdateAsync(user);
-                return new LoginDto(true, "Login has been successfull", _tokenService.GenerateToken(user.UserName, roles.ToList()), new UserDto() { Id = user.Id, FullName = user.Firstname + " " + user.Lastname, Email = user.Email, Roles = roles });
-
-            }
-            catch (Exception ex)
+               // var result = await _signInManager.PasswordSignInAsync(user?.UserName, password, false, true);
+              
+           // var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
             {
                 return new LoginDto(false, "Invalid username or password.", null, null);
             }
+
+            // Generate JWT Token
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _tokenService.GenerateToken(user.UserName, roles.ToList());
+
+            return new LoginDto(true, "Login successful", token, new UserDto { Id = user.Id,FullName=user.Fullname, Email = user.Email, Roles = roles });
+
+            /* var roles = await _userManager.GetRolesAsync(user);
+             user.LastLoginAt = DateTime.Now;
+             await _userManager.UpdateAsync(user);
+             return new LoginDto(true, "Login has been successfull", _tokenService.GenerateToken(user.UserName, roles.ToList()), new UserDto() { Id = user.Id, FullName = user.Firstname + " " + user.Lastname, Email = user.Email, Roles = roles });
+            */
+            /* }
+             catch (Exception ex)
+             {
+                 return new LoginDto(false, "Invalid username or password.", null, null);
+             }*/
 
         }
         
@@ -51,8 +64,7 @@ namespace CRD.Infrastructure.Identity
             if (user == null)
                 return (false,"User does not exist","");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);//await GeneratePasswordResetToken(user, TimeSpan.FromHours(24));
-            var encodedToken = WebUtility.UrlEncode(token); //Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
-            await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
             return (true,encodedToken,user.Fullname);
         } 
     }

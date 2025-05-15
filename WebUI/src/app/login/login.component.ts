@@ -48,14 +48,14 @@ login() {
     this.api.login({email:this.f['email']?.value,password:this.f['password'].value}).subscribe({
       next:(value:LoginDto)=> {
        this.authService.saveSession(value?.token??'',value.user);
-              this.authService.LoggedInUser(value);
+              //this.authService.LoggedInUser(value);
                this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || "/"
        this.router.navigate([this.returnUrl]) 
       },
       error:(error?:any)=> {
        console.log(error);
         this.isLoading = false;
-        if (error.requiresReset) {
+        if (error?.requiresReset) {
           this.router.navigate(['/reset-password'], {
             queryParams: { 
               email: this.LoginForm.value.email ,

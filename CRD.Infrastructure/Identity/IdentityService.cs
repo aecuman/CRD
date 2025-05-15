@@ -276,9 +276,11 @@ namespace CRD.Infrastructure.Identity
             var roles = await _roleManager.Roles
                 .Where(r => userRoleIds.Contains(r.Id))
                 .ToArrayAsync();
-            return users
-                .Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray()))
-                .ToList();
+            /* return users
+                 .Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray()))
+                 .ToList();*/
+
+            return users.Select(u => (u,_userManager.GetRolesAsync(u).Result.ToArray())).ToList();
         }
 
         public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesByUserTypeAsync(int page, int pageSize, string userTypeId)
@@ -301,27 +303,34 @@ namespace CRD.Infrastructure.Identity
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return null;
+            Console.WriteLine($"Old User PasswordHash: {user.PasswordHash}");
 
-            var decodedToken = WebUtility.UrlDecode(token); //Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
+            var decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(token)); //Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
 
-
-
-
+            // Console.WriteLine("verification: "+ decodedToken);
+            Console.WriteLine($"New Password reset result: {newPassword}");
             var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
             if (result.Succeeded)
             {
-                var newtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var encodedToken = WebUtility.UrlEncode(token); //Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+                var updatedUser = await _userManager.FindByEmailAsync(email);
+                Console.WriteLine($"Updated User PasswordHash: {updatedUser.PasswordHash}");
+                               // var newtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                               // var encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
-                var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={encodedToken}&email={email}";
-                await _emailSender.SendPasswordUpdatedEmailAsync(user.Email, user.Fullname, resetLink);
-            user.LastPasswordChangedAt = DateTime.Now;
+                                //   var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={newtoken}&email={email}";
+                                await _emailSender.SendPasswordUpdatedEmailAsync(user.Email, user.Fullname, "");
+                Console.WriteLine($"Password reset result: {result.Succeeded}");
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"Error: {error.Description}");
+                }
+
+
+                user.LastPasswordChangedAt = DateTime.Now;
             
             await _userManager.UpdateAsync(user);
             }
-            {
-
-            }
+           
             return result;
         }
         public async Task<(bool, string)> CheckIfPasswordIsTemporaryAsync(string email, string password)
