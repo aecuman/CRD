@@ -5815,7 +5815,7 @@ export interface ModerationReportViewModel {
 
 export interface PublishedRateSummaryDto {
     districtId?: number;
-    districtRateId?: number;
+    districtRateId?: number | undefined;
     districtName?: string | undefined;
     year?: number | undefined;
     validFrom?: Date | undefined;
@@ -5996,6 +5996,7 @@ export interface UpdateUserCommand {
     lastname?: string | undefined;
     email?: string | undefined;
     role?: string | undefined;
+    roles?: string[] | undefined;
 }
 
 export interface UserViewModel {

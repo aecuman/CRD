@@ -43,7 +43,7 @@ namespace CRD.Application.Users.Queries
             {
                 FullName = u.User.Fullname,
                 Email = u.User.Email,
-                Role = u.User.Role,
+                Role = string.Join(", ",u.Roles), //u.User.Role,
                 Id = u.User.Id,
                 Firstname = u.User.Firstname,
                 Lastname = u.User.Lastname,

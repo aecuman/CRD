@@ -101,7 +101,7 @@ namespace CRD.API.Controllers
             if (result == null)
                 return BadRequest(new { message = "Invalid user" });
             if (!result.Succeeded)
-                return BadRequest(new { message = "Invalid or expired token" });
+                return BadRequest(new { message = result.Errors.Select(x => x.Description).ToList()  /*"Invalid or expired token"*/ });
             return Ok(new { message = "Password reset successful" });
         }
     }

@@ -36,6 +36,7 @@ namespace CRD.Application.Auth.Command
 
             if (result.Item1)
             {
+               
 var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={result.Item2}&email={request.Email}";
                 await _emailSender.SendPasswordResetEmailAsync(request.Email, result.Item3, resetLink);
 

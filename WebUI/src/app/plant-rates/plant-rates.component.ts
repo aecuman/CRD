@@ -357,7 +357,7 @@ groupHasRates(groupId: number): boolean {
     }, {}); */
 
     get canManage(){
-      return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
+      return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
     }
   }
 

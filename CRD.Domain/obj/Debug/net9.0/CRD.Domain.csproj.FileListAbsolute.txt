@@ -22,3 +22,4 @@ C:\Users\aecum\GitHub\CRD\CRD.Domain\obj\Debug\net9.0\CRD.Domain.dll
 C:\Users\aecum\GitHub\CRD\CRD.Domain\obj\Debug\net9.0\refint\CRD.Domain.dll
 C:\Users\aecum\GitHub\CRD\CRD.Domain\obj\Debug\net9.0\CRD.Domain.pdb
 C:\Users\aecum\GitHub\CRD\CRD.Domain\obj\Debug\net9.0\ref\CRD.Domain.dll
+C:\Users\aecum\GitHub\CRD\CRD.Domain\obj\Debug\net9.0\CRD.Domain.sourcelink.json

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 
 namespace CRD.Persistence
 {
@@ -27,24 +30,20 @@ namespace CRD.Persistence
             services.AddScoped<SignInManager<ApplicationUser>>();
             services.AddDataProtection();
 
-            /*services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-    .AddJwtBearer(cfg =>
+            /**/
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        cfg.RequireHttpsMetadata = false;
-        cfg.SaveToken = true;
-        cfg.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidIssuer = configuration.GetValue<string>("Jwt:JwtIssuer"),
-            ValidAudience = configuration.GetValue<string>("Jwt:JwtIssuer"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("Jwt:JwtKey"))),
-            ClockSkew = TimeSpan.Zero // remove delay of token when expire
-        };
-    });*/
+        ValidIssuer = configuration["Jwt:JwtIssuer"],
+        ValidAudience = configuration["Jwt:JwtAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:JwtKey"])),
+        ClockSkew = TimeSpan.Zero // Ensure token expires exactly when it should
+    };
+});
+
+
 
             services.AddTransient<SeedUsers>();
             services.AddTransient<WorkflowSeeder>();

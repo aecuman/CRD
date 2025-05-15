@@ -16,6 +16,7 @@ export class ResetPasswordComponent {
   email: string;
   errorMessage: string = '';
   successMessage: string = '';
+  loading=false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,7 +46,7 @@ export class ResetPasswordComponent {
 
   submit() {
     if (this.resetForm.invalid) return;
-
+this.loading = true;
     const request = {
       email: this.email,
       token: this.token,
@@ -54,10 +55,12 @@ export class ResetPasswordComponent {
 
     this.api.resetPassword(request).subscribe({
       next:() => {
-        this.successMessage = 'Password reset successful! Redirecting...';
+        this.loading=false;
+        this.successMessage = 'Password reset successful! Check your email for reset instructions. Redirecting...';
         setTimeout(() => this.router.navigate(['/login']), 3000);
       },
-      error:(error) => this.errorMessage = error.error.message || 'Failed to reset password'
+      error:(error) => {this.loading=false; 
+        this.errorMessage = error.error.message || 'Failed to reset password'}
     }
     );
   }

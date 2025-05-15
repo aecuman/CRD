@@ -28,3 +28,4 @@ C:\Users\aecum\GitHub\CRD\CRD.Application\obj\Debug\net9.0\CRD.Application.dll
 C:\Users\aecum\GitHub\CRD\CRD.Application\obj\Debug\net9.0\refint\CRD.Application.dll
 C:\Users\aecum\GitHub\CRD\CRD.Application\obj\Debug\net9.0\CRD.Application.pdb
 C:\Users\aecum\GitHub\CRD\CRD.Application\obj\Debug\net9.0\ref\CRD.Application.dll
+C:\Users\aecum\GitHub\CRD\CRD.Application\obj\Debug\net9.0\CRD.Application.sourcelink.json

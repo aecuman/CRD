@@ -109,7 +109,7 @@ export class StructureRateMatrixComponent implements OnInit {
      // this.matrixRows[i].showAssumptions = event.target.checked;
     }
     get canManage(){
-      return this.auth.userValue?.roles?.includes('Admin') || this.auth.userValue?.roles?.includes('superadmin');
+      return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
     }
     
 }

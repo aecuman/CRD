@@ -382,3 +382,4 @@ C:\Users\aecum\GitHub\CRD\CRD.API\bin\Debug\net9.0\MongoDB.Driver.dll
 C:\Users\aecum\GitHub\CRD\CRD.API\bin\Debug\net9.0\SharpCompress.dll
 C:\Users\aecum\GitHub\CRD\CRD.API\bin\Debug\net9.0\Snappier.dll
 C:\Users\aecum\GitHub\CRD\CRD.API\bin\Debug\net9.0\ZstdSharp.dll
+C:\Users\aecum\GitHub\CRD\CRD.API\obj\Debug\net9.0\CRD.API.sourcelink.json

@@ -15,6 +15,7 @@ namespace CRD.Application.Users.Commands
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public string[] Roles { get; set; }
     }
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, (bool, string[])>
@@ -37,7 +38,8 @@ namespace CRD.Application.Users.Commands
             user.Lastname = request.Lastname;
             user.Email = request.Email;
            user.Role = request.Role;
-           return await _userManager.UpdateUserAsync(user);
+           // user.Roles = request.Roles;
+           return await _userManager.UpdateUserAsync(user,request.Roles);
 
         }
     }

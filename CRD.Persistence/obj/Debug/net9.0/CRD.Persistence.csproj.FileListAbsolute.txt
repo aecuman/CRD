@@ -36,3 +36,4 @@ C:\Users\aecum\GitHub\CRD\CRD.Persistence\obj\Debug\net9.0\refint\CRD.Persistenc
 C:\Users\aecum\GitHub\CRD\CRD.Persistence\obj\Debug\net9.0\CRD.Persistence.pdb
 C:\Users\aecum\GitHub\CRD\CRD.Persistence\obj\Debug\net9.0\CRD.Persistence.genruntimeconfig.cache
 C:\Users\aecum\GitHub\CRD\CRD.Persistence\obj\Debug\net9.0\ref\CRD.Persistence.dll
+C:\Users\aecum\GitHub\CRD\CRD.Persistence\obj\Debug\net9.0\CRD.Persistence.sourcelink.json

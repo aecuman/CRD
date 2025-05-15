@@ -14,7 +14,36 @@
 <main>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div *ngIf="false" class="flex space-x-4 mb-4">
+            <!-- Filter by Year -->
+            <input type="number" [(ngModel)]="filterYear" (change)="loadDistrictRates()" placeholder="Filter by Year"
+                   class="border p-2 rounded">
+          
+            <!-- Filter by Status -->
+            <select [(ngModel)]="filterStatus" (change)="loadDistrictRates()" class="border p-2 rounded">
+              <option value="">All</option>
+              <option value="Completed">Completed</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+            </select>
+          
+            <!-- Filter by District -->
+            <select [(ngModel)]="filterDistrictId" (change)="loadDistrictRates()" class="border p-2 rounded">
+              <option value="">All Districts</option>
+              <option *ngFor="let district of all_districts" [value]="district.id">{{ district.name }}</option>
+            </select>
+          </div>
           <div class="p-6">
+            <div class="flex justify-end mb-4">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <span class="text-sm text-gray-700">Show Completed</span>
+                <input type="checkbox" [(ngModel)]="showCompleted" (change)="applyFilter()" class="hidden">
+                <div class="w-10 h-5 bg-gray-300 rounded-full relative">
+                  <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform"
+                       [ngClass]="{ 'translate-x-5': showCompleted }"></div>
+                </div>
+              </label>
+            </div>
           <!--   <h1 class="text-2xl font-bold mb-4">District Rates</h1>
             <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="openModal()">Add District Rate</button>
            -->
@@ -30,8 +59,8 @@
                 <th class="p-3 text-left">Actions</th>
               </tr>
             </thead>
-            <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
-              <tr *ngFor="let r of districtRates" class="hover:bg-gray-50 transition">
+            <tbody *ngIf="filteredRates.length > 0" class="text-sm text-gray-700 divide-y divide-gray-200">
+              <tr *ngFor="let r of filteredRates" class="hover:bg-gray-50 transition">
                 <td class="p-3 font-medium">{{ r.districtName }}</td>
                 <td class="p-3">{{ r.year }}/{{ (r.year ?? 0) + 1 }}</td>
           
@@ -69,15 +98,15 @@
           
                 <td class="p-3">
                   <div *ngIf="canManage" class="flex flex-wrap items-center gap-2">
-                    <a [routerLink]="['/portal/district', r.districtId, r.id, 'workflow-status']"
+                    <a *ngIf="!showCompleted" [routerLink]="['/portal/district', r.districtId, r.id, 'workflow-status']"
                        class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Manage</a>
           
-                    <button (click)="openModal(true, r)"
+                    <button *ngIf="!showCompleted"  (click)="openModal(true, r)"
                             class="bg-yellow-500 text-white px-2 py-1 rounded text-xs hover:bg-yellow-600">
                       Edit
                     </button>
           
-                    <button (click)="deleteRate(r.id ?? 0)"
+                    <button *ngIf="!showCompleted"  (click)="deleteRate(r.id ?? 0)"
                             class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
                       Delete
                     </button>
@@ -91,6 +120,15 @@
                 </td>
               </tr>
             </tbody>
+            <!-- Message when filteredRates is empty -->
+             <tr *ngIf="filteredRates.length === 0">
+                <td colspan="6" class="p-3 text-center text-gray-500">
+                  No district rates found for the selected filter.
+                </td>
+              </tr>
+
+
+
           </table>
           
             <ag-grid-angular *ngIf="false"

@@ -32,3 +32,4 @@ C:\Users\aecum\GitHub\CRD\CRD.Infrastructure\obj\Debug\net9.0\CRD.Infrastructure
 C:\Users\aecum\GitHub\CRD\CRD.Infrastructure\obj\Debug\net9.0\refint\CRD.Infrastructure.dll
 C:\Users\aecum\GitHub\CRD\CRD.Infrastructure\obj\Debug\net9.0\CRD.Infrastructure.pdb
 C:\Users\aecum\GitHub\CRD\CRD.Infrastructure\obj\Debug\net9.0\ref\CRD.Infrastructure.dll
+C:\Users\aecum\GitHub\CRD\CRD.Infrastructure\obj\Debug\net9.0\CRD.Infrastructure.sourcelink.json

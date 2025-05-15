@@ -155,7 +155,7 @@ namespace CRD.Application.Districts.Queries
                 results.Add(dto);
             }
 
-            return results;
+            return results.OrderByDescending(o=>o.Created).ToList();
         }
 
    

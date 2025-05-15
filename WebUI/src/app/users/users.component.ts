@@ -23,6 +23,7 @@ export class UsersComponent {
   errorMessage: string = '';
 
   isLoading = false;
+  isResetting: boolean= false;
   constructor(private api: APIService,private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       id:[''],
@@ -53,13 +54,17 @@ export class UsersComponent {
       lastname: user.lastname,
       email: user.email,
       role: user.role,
-      roles: [user.role], // Assuming roles is an array of strings
+      roles: user.role?.split(", "), // Assuming roles is an array of strings
     });
     //this.registerForm.get('roles')?.setValue(user.roles); // Set the selected roles
   }
   ResetPassword(user: UserViewModel) {
+    if(confirm("Are you sure you want to reset the password for "+user.fullName))
+      this.isResetting = true
     this.api.forgotPassword({email:user.email}).subscribe((data: any) => {
-      console.log(data);
+  alert(user.fullName+" password reset link sent to "+user.email);
+      this.isResetting = false;
+      //console.log(data);
     });
   }
   openModal(): void {
@@ -84,7 +89,8 @@ var payload:UpdateUserCommand={
       firstname: this.registerForm.value.firstname,
       lastname: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
-      role: this.registerForm.value.role
+      role: this.registerForm.value.role,
+      roles: this.registerForm.value.roles
     };
 
 
