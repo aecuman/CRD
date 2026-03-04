@@ -26,6 +26,9 @@
                class="text-blue-600 hover:underline">
               {{ r.districtName }}
             </a>
+		<span *ngIf="r.status=='Not Published'">
+              {{ r.districtName }}  
+              </span>
           </td>
         <!--   <td class="p-3">{{ r.year || '—' }}</td>
           
