@@ -5999,6 +5999,7 @@ export interface UpdateUserCommand {
     roles?: string[] | undefined;
     title?: string | undefined;
     designation?: string | undefined;
+    dutyStation?: string | undefined;
 }
 
 export interface UserViewModel {
