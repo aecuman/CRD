@@ -5997,6 +5997,8 @@ export interface UpdateUserCommand {
     email?: string | undefined;
     role?: string | undefined;
     roles?: string[] | undefined;
+    title?: string | undefined;
+    designation?: string | undefined;
 }
 
 export interface UserViewModel {
@@ -6006,6 +6008,9 @@ export interface UserViewModel {
     lastname?: string | undefined;
     email?: string | undefined;
     role?: string | undefined;
+    title?: string | undefined;
+    designation?: string | undefined;
+    dutyStation?: string | undefined;
     lastPasswordChangedAt?: Date | undefined;
     lastLoginAt?: Date | undefined;
     isLocked?: boolean;
@@ -6074,6 +6079,7 @@ export interface UserDto {
     id?: number;
     fullName?: string | undefined;
     email?: string | undefined;
+    title?: string | undefined;
     roles?: string[] | undefined;
 }
 

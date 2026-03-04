@@ -21,6 +21,7 @@
               <tr class="bg-gray-200">
                 <th class="border p-2 cursor-pointer">Name</th>
                 <th class="border p-2 cursor-pointer">Email</th>
+                <th class="border p-2 cursor-pointer">Designation</th>
                 <th class="border p-2 cursor-pointer">Role</th>
                 <th class="border p-2">Actions</th>
               </tr>
@@ -29,6 +30,7 @@
                 <tr *ngFor="let user of users">
                     <td class="border p-2">{{ user.fullName }}</td>
                     <td class="border p-2">{{ user.email }}</td>
+                    <td class="border p-2">{{ user.designation || '-' }}</td>
                     <td class="border p-2 capitalize">{{ user.role }}</td>
                     <td class="border p-2">
                         <button (click)="editUser(user)" class="bg-gray-500 text-white px-2 py-1 rounded">Edit</button>
@@ -38,6 +40,16 @@
                 </tr>
                 </tbody>
                 </table>
+                <!-- Pagination Controls -->
+                <div class="flex items-center justify-between mt-4 p-2">
+                  <button (click)="previousPage()" [disabled]="pageNumber <= 1" class="bg-gray-400 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded">
+                    Previous
+                  </button>
+                  <span class="text-gray-700">Page {{ pageNumber }} | Items per page: {{ pageSize }}</span>
+                  <button (click)="nextPage()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">
+                    Next
+                  </button>
+                </div>
                 </div>
                 </app-page-list-view>
                 <!-- loader.component.html -->
@@ -85,6 +97,24 @@
             class="text-red-500 text-sm mt-1">Email is required.</p>
           <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')" 
             class="text-red-500 text-sm mt-1">Invalid email format.</p>
+        </div>
+
+        <!-- Title -->
+        <div class="mb-4">
+          <label class="block text-gray-700">Title</label>
+          <input type="text" formControlName="title" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Mr., Mrs., Dr." />
+        </div>
+
+        <!-- Designation -->
+        <div class="mb-4">
+          <label class="block text-gray-700">Designation</label>
+          <input type="text" formControlName="designation" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Manager, Analyst" />
+        </div>
+
+        <!-- Duty Station -->
+        <div class="mb-4">
+          <label class="block text-gray-700">Duty Station</label>
+          <input type="text" formControlName="dutyStation" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Kampala, Jinja" />
         </div>
   
         <!-- Roles -->

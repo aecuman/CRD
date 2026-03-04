@@ -20,9 +20,11 @@ namespace CRD.Application.Users.Queries
         public string FullName { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-
         public string Email { get; set; }
         public string Role { get; set; }
+        public string Title { get; set; }
+        public string Designation { get; set; }
+        public string DutyStation { get; set; }
         public DateTime? LastPasswordChangedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }
         public bool IsLocked { get; set; }
@@ -47,6 +49,9 @@ namespace CRD.Application.Users.Queries
                 Id = u.User.Id,
                 Firstname = u.User.Firstname,
                 Lastname = u.User.Lastname,
+                Title = u.User.Title,
+                Designation = u.User.Designation,
+                DutyStation = u.User.DutyStation,
                 IsLocked = u.User.LockoutEnabled,
                 LastLoginAt = u.User.LastLoginAt,
                 LastPasswordChangedAt = u.User.LastPasswordChangedAt              

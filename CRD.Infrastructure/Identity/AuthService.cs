@@ -43,7 +43,7 @@ namespace CRD.Infrastructure.Identity
             var roles = await _userManager.GetRolesAsync(user);
             var token = _tokenService.GenerateToken(user.UserName, roles.ToList());
 
-            return new LoginDto(true, "Login successful", token, new UserDto { Id = user.Id,FullName=user.Fullname, Email = user.Email, Roles = roles });
+            return new LoginDto(true, "Login successful", token, new UserDto { Id = user.Id, FullName = user.Fullname, Email = user.Email, Title = user.Title, Roles = roles });
 
             /* var roles = await _userManager.GetRolesAsync(user);
              user.LastLoginAt = DateTime.Now;

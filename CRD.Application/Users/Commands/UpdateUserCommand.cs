@@ -15,6 +15,9 @@ namespace CRD.Application.Users.Commands
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public string Title { get; set; }
+        public string Designation { get; set; }
+        public string DutyStation { get; set; }
         public string[] Roles { get; set; }
     }
 
@@ -37,9 +40,12 @@ namespace CRD.Application.Users.Commands
             user.Firstname = request.Firstname;
             user.Lastname = request.Lastname;
             user.Email = request.Email;
-           user.Role = request.Role;
-           // user.Roles = request.Roles;
-           return await _userManager.UpdateUserAsync(user,request.Roles);
+            user.Role = request.Role;
+            user.Title = request.Title;
+            user.Designation = request.Designation;
+            user.DutyStation = request.DutyStation;
+            // user.Roles = request.Roles;
+            return await _userManager.UpdateUserAsync(user,request.Roles);
 
         }
     }

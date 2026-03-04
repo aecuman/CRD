@@ -14,6 +14,7 @@ export class UsersComponent {
    */
   pageNumber: number = 1;
   pageSize: number = 10;
+  totalUsers: number = 0;
   users: UserViewModel[]=[];
 
   isModalOpen: boolean = false; // Controls modal visibility
@@ -30,6 +31,9 @@ export class UsersComponent {
       firstname: ['', [Validators.required, Validators.minLength(3)]],
       lastname: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
+      title: [''],
+      designation: [''],
+      dutyStation: [''],
       role:[],
       roles: [[], Validators.required], // Ensure at least one role is selected
     });
@@ -43,6 +47,25 @@ export class UsersComponent {
       this.users = data;
     });
   }
+  nextPage() {
+    this.pageNumber++;
+    this.getUsers();
+  }
+  
+  previousPage() {
+    if (this.pageNumber > 1) {
+      this.pageNumber--;
+      this.getUsers();
+    }
+  }
+  
+  goToPage(page: number) {
+    if (page >= 1) {
+      this.pageNumber = page;
+      this.getUsers();
+    }
+  }
+  
   editUser(user: UserViewModel) {
     this.isModalOpen = true;
     this.registerForm.reset();
@@ -53,6 +76,9 @@ export class UsersComponent {
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
+      title: user.title,
+      designation: user.designation,
+      dutyStation: user.dutyStation,
       role: user.role,
       roles: user.role?.split(", "), // Assuming roles is an array of strings
     });
@@ -89,6 +115,9 @@ var payload:UpdateUserCommand={
       firstname: this.registerForm.value.firstname,
       lastname: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
+      title: this.registerForm.value.title,
+      dutyStation: this.registerForm.value.dutyStation,
+      designation: this.registerForm.value.designation,
       role: this.registerForm.value.role,
       roles: this.registerForm.value.roles
     };

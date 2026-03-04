@@ -18,6 +18,9 @@ namespace CRD.Application.Users.Commands
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
+        public string Title { get; set; }
+        public string Designation { get; set; }
+        public string DutyStation { get; set; }
         public string[] Roles { get; set; }
     }
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, (bool, string[])>
@@ -43,7 +46,10 @@ namespace CRD.Application.Users.Commands
                 Email = command.Email,
                 Firstname = command.Firstname,
                 Lastname = command.Lastname,
-                Role= command.Roles[0]
+                Title = command.Title,
+                Designation = command.Designation,
+                DutyStation = command.DutyStation,
+                Role = command.Roles[0]
             };
 
             string tempPassword = GenerateTempPassword();
