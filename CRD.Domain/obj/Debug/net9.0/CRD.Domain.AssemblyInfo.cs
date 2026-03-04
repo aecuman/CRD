@@ -13,7 +13,15 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CRD.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d5d6d4f159b051674d154bfa8b23d3dcaf5bbe1")]
+<<<<<<< HEAD
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e8a953824a3aaf50c35562ccf7fd9c3991d69c4")]
+=======
+<<<<<<< HEAD
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59e29f4b2884bd6a9c08ebd24f417914909309d8")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5032bf995184b14148adac22d354b33bc3e4b6f7")]
+>>>>>>> dev
+>>>>>>> master
 [assembly: System.Reflection.AssemblyProductAttribute("CRD.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CRD.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
