@@ -114,7 +114,7 @@ async Task SeedUsers(IHost app, string csvFilePath)
         
         // Default path if not provided
         if (string.IsNullOrEmpty(csvFilePath))
-            csvFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "users_migration.csv");
+            csvFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "users_migration.csv");
         
         Console.WriteLine($"Seeding users from: {csvFilePath}");
         await service.SeedUsersFromCsvAsync(csvFilePath);
