@@ -2763,39 +2763,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aecum\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Infrastructure\\CRD.Infrastructure.csproj",
+      "projectUniqueName": "/root/crd/CRD/CRD.Infrastructure/CRD.Infrastructure.csproj",
       "projectName": "CRD.Infrastructure",
-      "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Infrastructure\\CRD.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\aecum\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Infrastructure\\obj\\",
+      "projectPath": "/root/crd/CRD/CRD.Infrastructure/CRD.Infrastructure.csproj",
+      "packagesPath": "/root/.nuget/packages/",
+      "outputPath": "/root/crd/CRD/CRD.Infrastructure/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\aecum\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Application\\CRD.Application.csproj": {
-              "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Application\\CRD.Application.csproj"
+            "/root/crd/CRD/CRD.Application/CRD.Application.csproj": {
+              "projectPath": "/root/crd/CRD/CRD.Application/CRD.Application.csproj"
             }
           }
         }
@@ -2857,7 +2851,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.106/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

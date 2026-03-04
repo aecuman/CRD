@@ -14,15 +14,9 @@ namespace CRD.Domain.Identity
 return $"{Firstname} {Lastname}";
             } 
         }
-        public string Title { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Role { get; set; }
-        
-        // New columns for user migration
-        public string Designation { get; set; }
-        public string DutyStation { get; set; }
-        
         // NEW: Track when user last changed password
         public DateTime? LastPasswordChangedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }

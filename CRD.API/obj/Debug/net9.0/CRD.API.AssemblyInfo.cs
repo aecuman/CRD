@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CRD.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32dd7a0c2041aed2285cd6907020a692af3ccbc1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d5d6d4f159b051674d154bfa8b23d3dcaf5bbe1")]
 [assembly: System.Reflection.AssemblyProductAttribute("CRD.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CRD.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

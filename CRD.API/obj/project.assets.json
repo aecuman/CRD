@@ -7939,48 +7939,42 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aecum\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\CRD.API.csproj",
+      "projectUniqueName": "/root/crd/CRD/CRD.API/CRD.API.csproj",
       "projectName": "CRD.API",
-      "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\CRD.API.csproj",
-      "packagesPath": "C:\\Users\\aecum\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\obj\\",
+      "projectPath": "/root/crd/CRD/CRD.API/CRD.API.csproj",
+      "packagesPath": "/root/.nuget/packages/",
+      "outputPath": "/root/crd/CRD/CRD.API/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\aecum\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Application\\CRD.Application.csproj": {
-              "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Application\\CRD.Application.csproj"
+            "/root/crd/CRD/CRD.Application/CRD.Application.csproj": {
+              "projectPath": "/root/crd/CRD/CRD.Application/CRD.Application.csproj"
             },
-            "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Domain\\CRD.Domain.csproj": {
-              "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Domain\\CRD.Domain.csproj"
+            "/root/crd/CRD/CRD.Domain/CRD.Domain.csproj": {
+              "projectPath": "/root/crd/CRD/CRD.Domain/CRD.Domain.csproj"
             },
-            "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Infrastructure\\CRD.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Infrastructure\\CRD.Infrastructure.csproj"
+            "/root/crd/CRD/CRD.Infrastructure/CRD.Infrastructure.csproj": {
+              "projectPath": "/root/crd/CRD/CRD.Infrastructure/CRD.Infrastructure.csproj"
             },
-            "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Persistence\\CRD.Persistence.csproj": {
-              "projectPath": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.Persistence\\CRD.Persistence.csproj"
+            "/root/crd/CRD/CRD.Persistence/CRD.Persistence.csproj": {
+              "projectPath": "/root/crd/CRD/CRD.Persistence/CRD.Persistence.csproj"
             }
           }
         }
@@ -8079,7 +8073,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.106/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

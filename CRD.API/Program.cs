@@ -56,8 +56,6 @@ if (args.Length == 1 && args[0].ToLower() == "seeddata")
     await SeedData(app);
 if (args.Length == 1 && args[0].ToLower() == "seedworkflow")
     await SeedWorkFlow(app);
-if (args.Length >= 1 && args[0].ToLower() == "seedusers")
-    await SeedUsers(app, args.Length > 1 ? args[1] : null);
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
@@ -103,22 +101,5 @@ async Task SeedWorkFlow(IHost app)
         await service.SeedDefaultWorkflowAsync();
 
     }
-}
-
-async Task SeedUsers(IHost app, string csvFilePath)
-{
-    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
-    using (var scope = scopedFactory.CreateScope())
-    {
-        var service = scope.ServiceProvider.GetService<SeedUsers>();
-        
-        // Default path if not provided
-        if (string.IsNullOrEmpty(csvFilePath))
-            csvFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "users_migration.csv");
-        
-        Console.WriteLine($"Seeding users from: {csvFilePath}");
-        await service.SeedUsersFromCsvAsync(csvFilePath);
-        Console.WriteLine("User seeding completed.");
-    }
-}
+}   
 
