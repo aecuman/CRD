@@ -25,15 +25,15 @@ namespace CRD.Persistence
             logger.LogInformation("seeding is starting");
            var admin_role = new ApplicationRole() { Name = "admin" };
             
-            var resultRole=await userManager.CreateRoleAsync(admin_role);
+//            var resultRole=await userManager.CreateRoleAsync(admin_role);
 
-            if (resultRole.Succeeded)
-            {
-                var user = new ApplicationUser() {UserName="admin", Firstname = "John", Lastname = "Doe", Email = "admin@example.com",Role="admin" };
+//            if (resultRole.Succeeded)
+  //          {
+                var user = new ApplicationUser() {UserName="admin", Firstname = "John", Lastname = "Doe", Email = "aecuman24@gmail.com",Role="Admin" };
                 var result = await userManager.CreateUserAsync(user, new[] { user.Role }, "@Pa12345678");
                 if (!result.Succeeded)
                     throw new Exception($"Seeding \"{user.Firstname}\" user failed. Errors: {string.Join(Environment.NewLine, result.Errors)}");
-            }
+    //        }
         }
 
         public async Task SeedUsersFromCsvAsync(string csvFilePath)

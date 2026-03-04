@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "guLSGKmJpkDwym7OVHv0J1vPpCk1CKMf6n5h5pNeoVo=",
+  "Hash": "XVtNSylTGBebJn79jVTyXdyq8flRWV4W0eW9dAYn3Gc=",
   "Source": "CRD.API",
   "BasePath": "_content/CRD.API",
   "Mode": "Default",
@@ -8,19 +8,19 @@
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [
     {
-      "Name": "CRD.API\\wwwroot",
+      "Name": "CRD.API/wwwroot",
       "Source": "CRD.API",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Appendices Covae Uganda Limited.pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/Appendices Covae Uganda Limited#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -35,13 +35,13 @@
       "Integrity": "/DwmMXQKa8kXffjdID9wwfyEaIBY3QCBIvOFBAviEyY=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/Appendices Covae Uganda Limited.pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (1).pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/declaration (1)#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -56,13 +56,13 @@
       "Integrity": "EgO+Ir9HlFYC0ag9LgPdF1cG7JUI3aci6+zUV4WCXE8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\declaration (1).pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/declaration (1).pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (2).pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/declaration (2)#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -77,13 +77,13 @@
       "Integrity": "B0LpqSITOSZzOPAQV8EFlufr21RC3Jz4tLQre2yynLM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\declaration (2).pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/declaration (2).pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/dummy (1).pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/dummy (1)#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -98,13 +98,13 @@
       "Integrity": "yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\dummy (1).pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/dummy (1).pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Namyingo 2024.pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/Namyingo 2024#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -119,13 +119,13 @@
       "Integrity": "ulUbUurohXtChQbxspENMlvHR08SXIVh77B9XEjwO0c=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/Namyingo 2024.pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -140,13 +140,13 @@
       "Integrity": "QdwYftdcGfKm0lCPKtoi5htuMjYNmRsnuC7aFGmYylw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf"
+      "OriginalItemSpec": "wwwroot/uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf"
     },
     {
-      "Identity": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "Identity": "/root/crd/CRD/CRD.API/wwwroot/uploads/Substeps/dummy (1).pdf",
       "SourceId": "CRD.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\",
+      "ContentRoot": "/root/crd/CRD/CRD.API/wwwroot/",
       "BasePath": "_content/CRD.API",
       "RelativePath": "uploads/Substeps/dummy (1)#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -161,13 +161,13 @@
       "Integrity": "yOOyOx5EKb/+0RhBsbMFtpVjiMTa5oqaL9SM2y3jEqk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\Substeps\\dummy (1).pdf"
+      "OriginalItemSpec": "wwwroot/uploads/Substeps/dummy (1).pdf"
     }
   ],
   "Endpoints": [
     {
       "Route": "uploads/districtrates/Appendices Covae Uganda Limited.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Appendices Covae Uganda Limited.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -188,7 +188,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 06 Mar 2025 16:53:04 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -204,7 +204,7 @@
     },
     {
       "Route": "uploads/districtrates/Appendices Covae Uganda Limited.sc7f2yuyem.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Appendices Covae Uganda Limited.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Appendices Covae Uganda Limited.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -225,7 +225,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 06 Mar 2025 16:53:04 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -249,7 +249,7 @@
     },
     {
       "Route": "uploads/districtrates/declaration (1).2s28bms6p4.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -270,7 +270,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 09 Mar 2025 21:46:10 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -294,7 +294,7 @@
     },
     {
       "Route": "uploads/districtrates/declaration (1).pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -315,7 +315,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 09 Mar 2025 21:46:10 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -331,7 +331,7 @@
     },
     {
       "Route": "uploads/districtrates/declaration (2).fqtq9s1ur4.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (2).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -352,7 +352,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 09 Mar 2025 21:57:30 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -376,7 +376,7 @@
     },
     {
       "Route": "uploads/districtrates/declaration (2).pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\declaration (2).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/declaration (2).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -397,7 +397,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 09 Mar 2025 21:57:30 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -413,7 +413,7 @@
     },
     {
       "Route": "uploads/districtrates/dummy (1).gqginsl9o9.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/dummy (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -434,7 +434,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 09 May 2025 14:59:52 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -458,7 +458,7 @@
     },
     {
       "Route": "uploads/districtrates/dummy (1).pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\dummy (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/dummy (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -479,7 +479,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 09 May 2025 14:59:52 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -495,7 +495,7 @@
     },
     {
       "Route": "uploads/districtrates/Namyingo 2024.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Namyingo 2024.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -516,7 +516,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 21 Apr 2025 16:54:56 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -532,7 +532,7 @@
     },
     {
       "Route": "uploads/districtrates/Namyingo 2024.y60zm9pth6.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\Namyingo 2024.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/Namyingo 2024.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -553,7 +553,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 21 Apr 2025 16:54:56 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -577,7 +577,7 @@
     },
     {
       "Route": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -598,7 +598,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 06 Mar 2025 17:24:18 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -614,7 +614,7 @@
     },
     {
       "Route": "uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.znuioge2dn.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\districtrates\\WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/districtrates/WhatsApp Image 2025-01-28 at 13.30.01_2d0baac6.pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -635,7 +635,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 06 Mar 2025 17:24:18 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -659,7 +659,7 @@
     },
     {
       "Route": "uploads/Substeps/dummy (1).gqginsl9o9.pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/Substeps/dummy (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -680,7 +680,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 07 May 2025 23:53:51 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -704,7 +704,7 @@
     },
     {
       "Route": "uploads/Substeps/dummy (1).pdf",
-      "AssetFile": "C:\\Users\\aecum\\GitHub\\CRD\\CRD.API\\wwwroot\\uploads\\Substeps\\dummy (1).pdf",
+      "AssetFile": "/root/crd/CRD/CRD.API/wwwroot/uploads/Substeps/dummy (1).pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -725,7 +725,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 07 May 2025 23:53:51 GMT"
+          "Value": "Mon, 12 May 2025 10:01:05 GMT"
         },
         {
           "Name": "Cache-Control",
