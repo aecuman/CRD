@@ -17,8 +17,8 @@ services:
       - MailSettings__Password=Notify@123
       - MailSettings__Host=smtp.office365.com
       - MailSettings__Port=587
-      - MailSettings__AppUrl=http://172.16.22.89
-      - CorsSettings__AllowedOrigins=["http://localhost:5100", "http://localhost","http://172.16.22.89"]
+      - MailSettings__AppUrl=http://172.16.24.56
+      - CorsSettings__AllowedOrigins=["http://localhost:5100", "http://localhost","http://172.16.24.56"]
 
  mongo:
     container_name: crd-mongo-db
