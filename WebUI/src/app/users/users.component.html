@@ -22,6 +22,7 @@
                 <th class="border p-2 cursor-pointer">Name</th>
                 <th class="border p-2 cursor-pointer">Email</th>
                 <th class="border p-2 cursor-pointer">Designation</th>
+                <th class="border p-2 cursor-pointer">Duty Station</th>
                 <th class="border p-2 cursor-pointer">Role</th>
                 <th class="border p-2">Actions</th>
               </tr>
@@ -31,6 +32,7 @@
                     <td class="border p-2">{{ user.fullName }}</td>
                     <td class="border p-2">{{ user.email }}</td>
                     <td class="border p-2">{{ user.designation || '-' }}</td>
+                    <td class="border p-2">{{ user.dutyStation || '-' }}</td>
                     <td class="border p-2 capitalize">{{ user.role }}</td>
                     <td class="border p-2">
                         <button (click)="editUser(user)" class="bg-gray-500 text-white px-2 py-1 rounded">Edit</button>
