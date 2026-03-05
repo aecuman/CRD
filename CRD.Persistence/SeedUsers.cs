@@ -69,8 +69,25 @@ namespace CRD.Persistence
                         var existingUser = await userManager.GetUserByEmailAsync(userDto.Email);
                         if (existingUser != null)
                         {
-                            logger.LogWarning("User {email} already exists. Skipping.", userDto.Email);
-                            failureCount++;
+                            // Update existing user with new fields
+                            existingUser.Title = userDto.Title;
+                            existingUser.Designation = userDto.Designation;
+                            existingUser.DutyStation = userDto.DutyStation;
+                            
+                            var updateResult = await userManager.UpdateUserAsync(existingUser);
+                            
+                            if (updateResult.Succeeded)
+                            {
+                                successCount++;
+                                logger.LogInformation("User {firstname} {lastname} ({email}) updated with new fields.", 
+                                    existingUser.Firstname, existingUser.Lastname, existingUser.Email);
+                            }
+                            else
+                            {
+                                failureCount++;
+                                logger.LogError("Failed to update user {email}. Errors: {errors}", 
+                                    existingUser.Email, string.Join(", ", updateResult.Errors));
+                            }
                             continue;
                         }
 
