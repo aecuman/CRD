@@ -47,7 +47,9 @@ export class ManualsComponent implements OnInit {
     this.http.get(this.manuals[index].file, { responseType: 'text' }).subscribe({
       next: (markdown) => {
         const html = marked.parse(markdown) as string;
-        this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
+      // Files are version-controlled documentation, not user-generated content, so bypassing
+      // Angular's default sanitizer here is safe.
+      this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
         this.loading = false;
       },
       error: () => {

@@ -15,6 +15,10 @@ export class PortalComponent {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  openManuals() {
+    window.open('/portal/manuals', '_blank', 'noopener,noreferrer');
+  }
+
   logout() {
     this.authService.logout();
   }
