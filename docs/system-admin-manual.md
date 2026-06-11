@@ -44,6 +44,13 @@
 11. [Monitoring and Health Checks](#11-monitoring-and-health-checks)
 12. [Security Notes](#12-security-notes)
 13. [Troubleshooting Reference](#13-troubleshooting-reference)
+14. [API Integration Reference](#14-api-integration-reference)
+    - 14.1 [Overview and Authentication](#141-overview-and-authentication)
+    - 14.2 [District Rates (Published)](#142-district-rates-published)
+    - 14.3 [Plants / Crops](#143-plants--crops)
+    - 14.4 [Structures](#144-structures)
+    - 14.5 [Authentication Endpoints](#145-authentication-endpoints)
+    - 14.6 [Error Codes](#146-error-codes)
 
 ---
 
@@ -627,6 +634,414 @@ sudo docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd \
   -S localhost -U sa -P '<YOUR_SA_PASSWORD>' \
   -Q "BACKUP DATABASE [crd-mssql-db] TO DISK='/var/opt/mssql/backup/crd_backup.bak' WITH FORMAT"
 ```
+
+---
+
+## 14. API Integration Reference
+
+This section is intended for developers integrating an external application with the CRD system to programmatically retrieve approved compensation rates for a district.
+
+**Base URL:** `http://172.16.22.175/api`  
+All requests and responses use JSON (`Content-Type: application/json`).
+
+---
+
+### 14.1 Overview and Authentication
+
+The API uses ******** (JWT) authentication**.  Before calling any protected endpoint, obtain a token via the Login endpoint and include it in subsequent requests:
+
+```
+Authorization: ******
+```
+
+Tokens are issued on successful login and must be stored by the client application.  They expire after a configured period; re-authenticate when a `401 Unauthorized` response is returned.
+
+---
+
+### 14.2 District Rates (Published)
+
+These are the endpoints most relevant to external systems that need to collect approved/published compensation rates.
+
+#### Get All Published Rates
+
+Retrieves a summary list of all district rate submissions that have been published (approved).
+
+```
+GET /api/district-rates/published?filter={filter}
+```
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter` | string | No | `"all"` (default) returns every published record. Pass a district name or year to narrow results. |
+
+**Example Request**
+
+```bash
+curl -H "Authorization: ******" \
+     "http://172.16.22.175/api/district-rates/published"
+```
+
+**Example Response**
+
+```json
+[
+  {
+    "districtId": 5,
+    "districtName": "Kampala",
+    "year": 2024,
+    "status": "Published",
+    "publishedDate": "2024-03-15T00:00:00Z"
+  },
+  ...
+]
+```
+
+---
+
+#### Get Published Rates for a Specific District
+
+Returns the published rate summary for a single district identified by its numeric ID.
+
+```
+GET /api/district-rates/published/{districtId}
+```
+
+**Path Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `districtId` | integer | Yes | The numeric ID of the district. |
+
+**Example Request**
+
+```bash
+curl -H "Authorization: ******" \
+     "http://172.16.22.175/api/district-rates/published/5"
+```
+
+**Responses**
+
+| Status | Meaning |
+|--------|---------|
+| `200 OK` | Published rate summary returned. |
+| `404 Not Found` | District not found or has no published rates. |
+
+---
+
+#### Get All District Rates (with Filters)
+
+Returns all district rate submissions (any status) with optional year, status, and district filters.
+
+```
+GET /api/district-rates?year={year}&status={status}&districtId={districtId}
+```
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `year` | integer | No | Filter by submission year (e.g., `2024`). |
+| `status` | string | No | Filter by status: `Draft`, `InProgress`, `Published`. |
+| `districtId` | integer | No | Filter by district ID. |
+
+**Example Request**
+
+```bash
+curl -H "Authorization: ******" \
+     "http://172.16.22.175/api/district-rates?year=2024&status=Published&districtId=5"
+```
+
+---
+
+#### Get a Single District Rate by ID
+
+Returns the full detail of one district rate submission.
+
+```
+GET /api/district-rates/{id}
+```
+
+**Path Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | integer | Yes | The numeric ID of the district rate record. |
+
+---
+
+#### Get Plant / Crop Rates for a District Rate
+
+Returns the compensation rates for all plants/crops (or a single plant) under a specific district rate submission.
+
+```
+GET /api/district-rates/plants/{districtRateId}
+GET /api/district-rates/plants/{districtRateId}/{plantId}
+```
+
+**Path Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `districtRateId` | integer | Yes | The district rate submission ID. |
+| `plantId` | integer | No | Optional — restrict to a single plant/crop. |
+
+**Example Request**
+
+```bash
+curl -H "Authorization: ******" \
+     "http://172.16.22.175/api/district-rates/plants/12"
+```
+
+---
+
+#### Get Moderated Plant Rates for a District Rate
+
+Returns plant/crop rates that have been reviewed and moderated, with an option to include unmoderated entries.
+
+```
+GET /api/district-rates/moderation/plant-rates/{districtRateId}?includeUnmoderated={true|false}
+```
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `includeUnmoderated` | boolean | No | Default `false`. Set `true` to include rates not yet moderated. |
+
+---
+
+#### Get Moderated Structure Rates for a District Rate
+
+Returns structure rates that have been reviewed and moderated.
+
+```
+GET /api/district-rates/moderation/structure-rates/{districtRateId}?includeUnmoderated={true|false}
+```
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `includeUnmoderated` | boolean | No | Default `false`. |
+
+---
+
+#### Get Moderation Report
+
+Returns a moderation summary report for a district rate submission with optional filtering.
+
+```
+GET /api/district-rates/moderation/report/{districtRateId}?filter={filter}
+```
+
+**Path Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `districtRateId` | integer | Yes | The district rate submission ID. |
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filter` | string | No | Optional filter string (e.g., crop category or name). |
+
+---
+
+#### Get All Districts (Reference List)
+
+Returns a reference list of all districts with their IDs and names. Use this to look up `districtId` values.
+
+```
+GET /api/district-rates/all
+```
+
+**Example Request**
+
+```bash
+curl -H "Authorization: ******" \
+     "http://172.16.22.175/api/district-rates/all"
+```
+
+**Example Response**
+
+```json
+[
+  { "id": 1, "name": "Abim" },
+  { "id": 2, "name": "Adjumani" },
+  ...
+]
+```
+
+---
+
+### 14.3 Plants / Crops
+
+#### List All Plants / Crops
+
+```
+GET /api/plants
+```
+
+Returns all registered plant/crop types with their IDs and names.
+
+---
+
+#### List Grouped Plants
+
+```
+GET /api/plants/group
+```
+
+Returns plants organised by their category/group.
+
+---
+
+#### Get a Grouped Plant by ID
+
+```
+GET /api/plants/group/{id}
+```
+
+---
+
+### 14.4 Structures
+
+#### List All Structures
+
+```
+GET /api/structures
+```
+
+Returns all registered structure types.
+
+---
+
+#### Get Structure Rates
+
+Returns compensation rates for structures, filtered by district rate ID and optional structure ID.
+
+```
+GET /api/structures/structure-rates?districtRateId={id}&structureId={id}
+```
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `districtRateId` | integer | Yes | The district rate submission ID. |
+| `structureId` | integer | No | Optional — restrict to a specific structure type. |
+
+---
+
+#### List Structure Categories
+
+```
+GET /api/structure-categories
+```
+
+Returns all structure categories.
+
+---
+
+#### List Structure Attributes
+
+```
+GET /api/structure-attributes
+```
+
+Returns all structure attributes used in rate definitions.
+
+---
+
+### 14.5 Authentication Endpoints
+
+#### Login
+
+Obtain a JWT token for use in subsequent API calls.
+
+```
+POST /api/auth/login
+```
+
+**Request Body**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "YourPassword"
+}
+```
+
+**Response (200 OK — success)**
+
+```json
+{
+  "succeed": true,
+  "token": "<jwt_token>",
+  "message": null
+}
+```
+
+**Response (400 Bad Request — first-time login, password reset required)**
+
+```json
+{
+  "requiresReset": true,
+  "message": "You must reset your password before logging in.",
+  "token": "<reset_token>",
+  "email": "user@example.com"
+}
+```
+
+**Response (400 Bad Request — invalid credentials)**
+
+```json
+{
+  "message": "Invalid email or password."
+}
+```
+
+---
+
+#### Forgot Password
+
+Triggers a password-reset email to the specified address.
+
+```
+POST /api/auth/forgot-password
+```
+
+**Request Body**
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+---
+
+### 14.6 Error Codes
+
+| HTTP Status | Meaning | Common Cause |
+|-------------|---------|--------------|
+| `200 OK` | Request succeeded | — |
+| `204 No Content` | Request succeeded (no body returned) | Update/revert operations |
+| `400 Bad Request` | Invalid request payload or business rule violation | Mismatched IDs, missing required fields |
+| `401 Unauthorized` | Missing or expired JWT token | Re-authenticate via `/api/auth/login` |
+| `404 Not Found` | Requested resource does not exist | Invalid district ID, rate ID, etc. |
+| `500 Internal Server Error` | Unexpected server error | Check API container logs |
+
+---
+
+> **Integration Tip:** For a read-only integration that collects approved rates, the recommended workflow is:
+> 1. Call `POST /api/auth/login` to obtain a JWT token.
+> 2. Call `GET /api/district-rates/all` to retrieve the list of districts and their IDs.
+> 3. For each district of interest, call `GET /api/district-rates/published/{districtId}` to check whether published rates exist and get the `districtRateId`.
+> 4. Call `GET /api/district-rates/plants/{districtRateId}` and `GET /api/structures/structure-rates?districtRateId={districtRateId}` to retrieve the full rate tables.
 
 ---
 
