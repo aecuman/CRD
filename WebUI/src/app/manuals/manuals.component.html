@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Header -->
+  <div class="bg-white border-b border-gray-200 px-6 py-4">
+    <h1 class="text-2xl font-bold text-gray-800">Manuals</h1>
+    <p class="text-sm text-gray-500 mt-1">Reference documentation for the Compensation Rates Database system.</p>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <!-- Tab Navigation -->
+    <div class="flex space-x-1 bg-gray-200 rounded-lg p-1 mb-6 w-fit">
+      <button
+        *ngFor="let manual of manuals; let i = index"
+        (click)="selectTab(i)"
+        class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 focus:outline-none"
+        [ngClass]="activeIndex === i
+          ? 'bg-white text-indigo-700 shadow'
+          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'"
+      >
+        <span class="mr-1">{{ manual.icon }}</span>{{ manual.label }}
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="flex justify-center py-16">
+      <div class="text-gray-400 text-sm">Loading manual…</div>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error && !loading" class="text-center py-16 text-red-500 text-sm">
+      Failed to load the manual. Please try again later.
+    </div>
+
+    <!-- Rendered Markdown Content -->
+    <div *ngIf="!loading && !error"
+         class="bg-white rounded-lg shadow p-8 prose prose-indigo max-w-none"
+         [innerHTML]="renderedContent">
+    </div>
+  </div>
+</div>
