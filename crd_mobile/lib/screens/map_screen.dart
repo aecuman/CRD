@@ -185,16 +185,16 @@ class _MapScreenState extends State<MapScreen> {
                 if (_loading)
                   const Center(child: CircularProgressIndicator()),
                 // Legend
-                Positioned(
+                const Positioned(
                   bottom: 16,
                   right: 16,
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Text('Legend',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,

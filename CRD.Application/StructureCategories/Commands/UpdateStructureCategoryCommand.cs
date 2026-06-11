@@ -14,7 +14,7 @@ namespace CRD.Application.StructureCategories.Commands
     public class UpdateStructureCategoryCommand : IRequest<bool>
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public List<UpdateStructureAttributeDto> Attributes { get; set; } = new List<UpdateStructureAttributeDto>();
     }
 
@@ -107,21 +107,21 @@ namespace CRD.Application.StructureCategories.Commands
     public class UpdateStructureCategoryDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public List<UpdateStructureAttributeDto> Attributes { get; set; } = new List<UpdateStructureAttributeDto>();
     }
 
     public class UpdateStructureAttributeDto
     {
         public int? Id { get; set; } // Nullable for new attributes
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public List<UpdateStructureOptionDto> Options { get; set; } = new List<UpdateStructureOptionDto>();
     }
 
     public class UpdateStructureOptionDto
     {
         public int? Id { get; set; } // Nullable for new options
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 
 }

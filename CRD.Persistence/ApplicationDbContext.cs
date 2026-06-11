@@ -67,6 +67,9 @@ namespace CRD.Persistence
             
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
+            // ✅ Map DbSet<Workflow> to table "Workflow" (singular, as created in migration)
+            builder.Entity<Workflow>().ToTable("Workflow");
+
             builder.Entity<ApplicationUser>().HasMany(u => u.Roles).WithOne().HasForeignKey(r => r.UserId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ApplicationRole>().HasMany(r => r.Users).WithOne().HasForeignKey(r => r.RoleId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
@@ -271,7 +274,7 @@ namespace CRD.Persistence
             // ✅ Ensure PlantRate → Plant (Single FK) does not interfere with GroupedPlants relationship
             builder.Entity<PlantRate>()
                 .HasOne(pr => pr.Plant)
-                .WithMany()
+                .WithMany(p => p.PlantRates)
                 .HasForeignKey(pr => pr.PlantId)
                 .OnDelete(DeleteBehavior.NoAction); // ✅ Prevents multiple cascade paths
             builder.Entity<PlantRate>()

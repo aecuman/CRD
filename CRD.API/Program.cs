@@ -9,6 +9,7 @@ using CRD.API.Services;
 using CRD.Application.Common;
 using CRD.Infrastructure.Identity;
 using CRD.Persistence.Mongo;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,22 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// ✅ Apply migrations and create database on startup
+try
+{
+    Console.WriteLine("Applying database migrations...");
+    var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync();
+    Console.WriteLine("✅ Migrations completed successfully!");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Migration error: {ex.Message}");
+    // Don't throw - continue with seeding if available
+}
+
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
     await SeedData(app);
 if (args.Length == 1 && args[0].ToLower() == "seedworkflow")
