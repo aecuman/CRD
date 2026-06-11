@@ -27,8 +27,13 @@
 10. [Published Rates](#10-published-rates)
 11. [Crops / Trees Reference List](#11-crops--trees-reference-list)
 12. [Structures Reference List](#12-structures-reference-list)
-13. [Logging Out](#13-logging-out)
-14. [Troubleshooting](#14-troubleshooting)
+13. [Settings Page](#13-settings-page)
+    - 13.1 [Language](#131-language)
+    - 13.2 [Growth Stage](#132-growth-stage)
+    - 13.3 [Crop Category](#133-crop-category)
+    - 13.4 [Structure Category Configuration](#134-structure-category-configuration)
+14. [Logging Out](#14-logging-out)
+15. [Troubleshooting](#15-troubleshooting)
 
 ---
 
@@ -314,7 +319,101 @@ Click **Structures** in the navigation bar to view and manage the master list of
 
 ---
 
-## 13. Logging Out
+## 13. Settings Page
+
+> **Access:** Admin and Manager roles only.
+
+Click **Settings** in the navigation bar to open the application configuration page.  The Settings page is divided into two main sections: **Crops/Trees** option lists and **Structure Category Configuration**.
+
+---
+
+### 13.1 Language
+
+The **Language** section lets you define the local-language names that can be associated with crops and trees across all districts.
+
+**Viewing existing languages:**  
+All currently configured languages are displayed as tags at the top of the section.
+
+**Adding a new language:**
+
+1. Type the language name in the **Enter Language** text field.
+2. Click **Save**.  The new language tag will appear in the list immediately.
+
+---
+
+### 13.2 Growth Stage
+
+The **Growth Stage** section manages the stages of plant maturity that can be applied when entering crop/tree rates (e.g., *Seedling*, *Mature*, *Over-mature*).
+
+**Viewing existing growth stages:**  
+Current stages are displayed as tags.
+
+**Adding a new growth stage:**
+
+1. Type the stage name in the **Enter Growth Stages** field.
+2. Click **Save**.
+
+**Deleting a growth stage:**
+
+1. Click the **×** button on any existing growth-stage tag.
+2. A confirmation prompt will appear; confirm to permanently remove the stage.
+
+> **Note:** Deleting a growth stage only removes it from the configuration list; historical rate records that already used it are not affected.
+
+---
+
+### 13.3 Crop Category
+
+The **Crop Category** section defines custom groupings that can be applied to crops and trees (e.g., *Timber — Hardwood*, *Timber — Softwood*, *Fruit — Exotic*).
+
+**Viewing existing categories:**  
+Current categories are displayed as tags.
+
+**Adding a new crop category:**
+
+1. Type the category name in the **Enter Crop Categories** field.
+2. Click **Save**.
+
+> A crop category is a flexible grouping — use it to classify by variety, timber size, timber strength, or any other relevant attribute.
+
+---
+
+### 13.4 Structure Category Configuration
+
+The **Structure Category Configuration** section allows Admins and Managers to define the building-component categories and their descriptive attributes used when entering structure rates.
+
+#### Viewing existing categories
+
+All saved structure categories are listed under **Existing Categories**.  Each entry shows:
+
+- The **category name** (e.g., *Residential Building*).
+- Its **attributes** and the **options** available for each attribute (e.g., Attribute: *Roof Type* → Options: *Grass Thatched*, *Corrugated Iron Sheets*).
+
+Click **Edit** on a category row to load it into the form for editing, or **Delete** to permanently remove it.
+
+#### Adding a new structure category
+
+1. In the form below the existing-categories list, enter a **Category Name**.
+2. Click **+ Attribute** to add an attribute row.
+   - Enter the **Attribute Name** (e.g., *Wall Material*).
+   - Click **+ Option** to add one or more selectable options for that attribute (e.g., *Brick*, *Mud*, *Timber*).
+   - Repeat for as many options as needed.
+   - Click **X** beside an option or the **Remove** button beside an attribute to delete them.
+3. Repeat step 2 to add additional attributes.
+4. Click **Save** to create the category.
+
+#### Editing an existing structure category
+
+1. Click **Edit** next to the category you want to modify.
+2. The category name and all its attributes/options are loaded into the form.
+3. Make the required changes (rename, add/remove attributes or options).
+4. Click **Save** to apply the changes.
+
+> **Important:** Category names must be at least 3 characters long, and all attribute names must also be at least 3 characters.  Validation errors are shown in red if these requirements are not met.
+
+---
+
+## 14. Logging Out
 
 1. Click your name in the top-right corner of the navigation bar.
 2. A small dropdown appears.
@@ -324,7 +423,7 @@ You will be redirected to the Login page.
 
 ---
 
-## 14. Troubleshooting
+## 15. Troubleshooting
 
 | Problem | Likely Cause | Solution |
 |---------|-------------|---------|
