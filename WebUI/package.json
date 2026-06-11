@@ -25,6 +25,7 @@
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "leaflet": "^1.9.4",
+    "marked": "^18.0.5",
     "ngx-currency": "^19.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

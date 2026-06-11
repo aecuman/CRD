@@ -44,6 +44,7 @@ import { DistrictWorkflowDetailComponent } from './district-workflow-detail/dist
 import { DistrictRateCompareModalComponent } from './district-rate-compare-modal/district-rate-compare-modal.component';
 import { CrdMapComponent } from './crd-map/crd-map.component';
 import { PublishedDistrictComponent } from './published-district/published-district.component';
+import { ManualsComponent } from './manuals/manuals.component';
 import { AuthGuard } from './authguard';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -68,7 +69,8 @@ const routes: Routes = [
       { path: 'rates/moderation/report/:id', component: ModerationReportComponent },
       { path: 'rates/published/:id', component: PublishedDistrictComponent },
       { path: 'users', component: UsersComponent },
-      { path: 'district/:districtId/:districtRateId/workflow-status', component: DistrictWorkflowDetailComponent }
+      { path: 'district/:districtId/:districtRateId/workflow-status', component: DistrictWorkflowDetailComponent },
+      { path: 'manuals', component: ManualsComponent }
 
 
     ] },
@@ -114,7 +116,8 @@ const routes: Routes = [
         DistrictRateCompareModalComponent,
         PublishedComponent,
         CrdMapComponent,
-        PublishedDistrictComponent
+        PublishedDistrictComponent,
+        ManualsComponent
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,
