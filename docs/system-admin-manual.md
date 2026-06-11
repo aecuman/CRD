@@ -342,7 +342,7 @@ From the Linux server:
 ```bash
 # Open an interactive session inside the SQL Server container
 sudo docker exec -it crd-mssql-db /opt/mssql-tools/bin/sqlcmd \
-  -S localhost -U sa -P 'Str0p@ssword'
+  -S localhost -U sa -P '<YOUR_SA_PASSWORD>'
 ```
 
 Once connected you can run T-SQL queries:
@@ -377,7 +377,7 @@ Type `exit` to quit.
 ```bash
 # Create a backup file inside the container, then copy it to the host
 sudo docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd \
-  -S localhost -U sa -P 'Str0p@ssword' \
+  -S localhost -U sa -P '<YOUR_SA_PASSWORD>' \
   -Q "BACKUP DATABASE [crd-mssql-db] TO DISK='/var/opt/mssql/backup/crd_$(date +%Y%m%d).bak' WITH FORMAT"
 
 # Copy backup file from container to host
@@ -393,7 +393,7 @@ sudo crontab -e
 Add the following line to run a backup every night at 02:00:
 
 ```
-0 2 * * * docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Str0p@ssword' -Q "BACKUP DATABASE [crd-mssql-db] TO DISK='/var/opt/mssql/backup/crd_$(date +\%Y\%m\%d).bak' WITH FORMAT" >> /var/log/crd_backup.log 2>&1
+0 2 * * * docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '<YOUR_SA_PASSWORD>' -Q "BACKUP DATABASE [crd-mssql-db] TO DISK='/var/opt/mssql/backup/crd_$(date +\%Y\%m\%d).bak' WITH FORMAT" >> /var/log/crd_backup.log 2>&1
 ```
 
 ### 6.4 Restoring the MSSQL Database
@@ -404,7 +404,7 @@ sudo docker cp /path/to/crd_20240101.bak crd-mssql-db:/var/opt/mssql/backup/
 
 # Restore
 sudo docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd \
-  -S localhost -U sa -P 'Str0p@ssword' \
+  -S localhost -U sa -P '<YOUR_SA_PASSWORD>' \
   -Q "RESTORE DATABASE [crd-mssql-db] FROM DISK='/var/opt/mssql/backup/crd_20240101.bak' WITH REPLACE"
 ```
 
@@ -569,7 +569,7 @@ sudo tail -100 /var/log/apache2/error.log
 
 2. **Restrict access** to ports 1433 (MSSQL) and 27017 (MongoDB) at the firewall level — these should only be accessible from `localhost` / Docker network, not from external hosts.
 
-3. **HTTPS:** The current deployment uses plain HTTP on the internal network.  For sensitive deployments consider enabling HTTPS on Apache using a self-signed certificate or a certificate from an internal CA.
+3. **HTTPS (Critical):** The current deployment uses plain HTTP on the internal network.  This means user credentials and compensation data are transmitted unencrypted.  **Enabling HTTPS is strongly recommended** even on an internal network — configure Apache with a self-signed certificate or a certificate from an internal CA to protect all traffic.
 
 4. **Backup regularly:** Follow the backup procedures in Section 6 and store backups on a separate machine or network share.
 
@@ -624,7 +624,7 @@ sudo chown -R www-data:www-data /var/www/html/
 
 # MSSQL backup
 sudo docker exec crd-mssql-db /opt/mssql-tools/bin/sqlcmd \
-  -S localhost -U sa -P 'Str0p@ssword' \
+  -S localhost -U sa -P '<YOUR_SA_PASSWORD>' \
   -Q "BACKUP DATABASE [crd-mssql-db] TO DISK='/var/opt/mssql/backup/crd_backup.bak' WITH FORMAT"
 ```
 

@@ -70,8 +70,8 @@ If your credentials are correct you will be taken to the main portal. If an erro
 When an administrator triggers a password reset for your account, you will receive an email containing a secure reset link.
 
 1. Click the link in the email.  You will be taken to the **Reset Password** page at `http://172.16.22.175/reset-password?token=...`.
-2. Enter a **New Password** that satisfies the requirements:
-   - At least **6 characters** long.
+2. Enter a **New Password** that satisfies the minimum requirements:
+   - At least **6 characters** long (a longer password — 12 or more characters — is strongly recommended for security).
    - Must contain **at least one digit** (0–9).
    - Must contain **at least one special character** (e.g., `!`, `@`, `#`, `$`).
 3. Re-enter the same password in the **Confirm Password** field.
