@@ -498,6 +498,33 @@ namespace CRD.Persistence.Migrations
                     b.ToTable("PlantRateGroups");
                 });
 
+            modelBuilder.Entity("CRD.Domain.Entities.RateTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConfigJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RateTemplates");
+                });
+
             modelBuilder.Entity("CRD.Domain.Entities.Structure", b =>
                 {
                     b.Property<int>("Id")
@@ -1078,7 +1105,7 @@ namespace CRD.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workflows");
+                    b.ToTable("Workflow", (string)null);
                 });
 
             modelBuilder.Entity("CRD.Domain.Process.WorkflowStep", b =>

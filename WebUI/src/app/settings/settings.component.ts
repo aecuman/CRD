@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { APIService, CreateOptionCommand, DeleteOptionCommand, OptionsListViewModel,OptionViewModel,/*, StructureCategoryListViewModel, StructureDescriptionNameListViewModel, StructureDescriptionOptionListViewModel*/ 
-StructureCategoryViewModel} from '../api.service';
+StructureCategoryViewModel, StructureTypeViewModel, CreateStructureTypeCommand} from '../api.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StructureCategory } from '../app.model';
 
@@ -35,6 +35,7 @@ export class SettingsComponent {
     this.AddNewStructureCategory();
 
     this.loadStructureCategories();
+    this.loadStructureTypes();
 
     ///Structures
     this.categoryForm = this.fb.group({
@@ -206,13 +207,24 @@ this.api.optionsPOST(command).subscribe({
   categoryForm: FormGroup;
   categories: StructureCategoryViewModel[] = [];
   editingIndex: number | null = null;
+  showEditModal = false;
   submitted = false;
+
+  //// Structure Types
+  structureTypes: StructureTypeViewModel[] = [];
 
   loadStructureCategories(): void {
     this.api.structureCategoriesAll().subscribe(data => {
       this.categories = data;
     });
   }
+
+  loadStructureTypes(): void {
+    this.api.structureTypesAll().subscribe(data => {
+      this.structureTypes = data;
+    });
+  }
+
   get attributes(): FormArray {
     return this.categoryForm.get('attributes') as FormArray;
   }
@@ -223,6 +235,8 @@ this.api.optionsPOST(command).subscribe({
       name: ['', [Validators.required, Validators.minLength(3)]],
       options: this.fb.array([this.fb.group({name:['', [Validators.required]]})])
     }));
+    // Reset submitted flag when adding new attribute to avoid showing validation errors
+    this.submitted = false;
   }
 
   removeAttribute(index: number): void {
@@ -266,6 +280,8 @@ this.api.optionsPOST(command).subscribe({
 
   editCategory(index: number): void {
     this.editingIndex = index;
+    this.showEditModal = true;
+    this.submitted = false; // Reset validation to avoid showing errors
     const category = this.categories[index];
     this.categoryForm.patchValue(category);
     this.attributes.clear();
@@ -286,6 +302,26 @@ this.api.optionsPOST(command).subscribe({
     });
   }
 
+  //// Structure Types Methods
+  createStructureType(name: string): void {
+    if (!name || name.trim().length < 3) {
+      alert('Structure Type name must be at least 3 characters.');
+      return;
+    }
+    
+    const command: CreateStructureTypeCommand = { name: name.trim() };
+    this.api.structureTypesPOST(command).subscribe({
+      next: () => {
+        this.loadStructureTypes();
+        this.option_structure_type = '';
+      },
+      error: (error) => {
+        console.error('Error creating structure type:', error);
+        alert('Error creating structure type. Please try again.');
+      }
+    });
+  }
+
   deleteGrowthStageOption(option: OptionViewModel): void {
     if (confirm(`Are you sure you want to delete the Growth Stage "${option.name}"?`)) {
     let cmd: DeleteOptionCommand = { id: option.id, option: 'plant_growthstage' };
@@ -302,8 +338,14 @@ this.api.deleteSettingOption(cmd).subscribe({
   }
   resetForm(): void {
     this.submitted = false;
+    this.editingIndex = null;
+    this.showEditModal = false;
     this.categoryForm.reset({ id:null,name: '' });
     this.attributes.clear();
+  }
+
+  closeEditModal(): void {
+    this.resetForm();
   }
 
 }

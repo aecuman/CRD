@@ -19,6 +19,7 @@ export class LoginComponent {
   message: any;
   returnUrl: any;
   errorMessage: any;
+  showPassword = false;
 
   /**
    *
@@ -69,6 +70,11 @@ login() {
     
     })
 }
+
+togglePasswordVisibility(): void {
+  this.showPassword = !this.showPassword;
+}
+
 ResetPassword() {
     //this.authService.resetPassword("AECU001").subscribe(e=>{}
     //)

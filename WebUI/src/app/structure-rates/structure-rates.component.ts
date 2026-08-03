@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { APIService, CreateOrUpdateStructureRateCommand, DistrictRateDto, OptionsListViewModel, StructureRateDto, StructureRatesListViewModel, StructureViewDto } from '../api.service';
+import { APIService, CreateOrUpdateStructureRateCommand, DistrictRateDto, OptionsListViewModel, RateTemplateViewModel, StructureRateDto, StructureRatesListViewModel, StructureViewDto } from '../api.service';
 import { StructuresUnitOfMeasure, StructureUnitDescriptions } from '../app.model';
 import { AuthService } from '../auth.service';
 
@@ -239,6 +239,37 @@ this.loadStructureRates();
     return this.structureRates.some(rate => rate.structureId === structure.id);
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.isOperationalUser;
+  }
+
+  // Template application
+  templates: RateTemplateViewModel[] = [];
+  showTemplateModal = false;
+  selectedTemplateId: number | null = null;
+  applyingTemplate = false;
+  templateResult: string = '';
+
+  loadTemplates(): void {
+    this.api.getTemplates().subscribe(t => this.templates = t ?? []);
+  }
+
+  openTemplateModal(): void {
+    this.templateResult = '';
+    this.selectedTemplateId = null;
+    this.loadTemplates();
+    this.showTemplateModal = true;
+  }
+
+  applyTemplate(): void {
+    if (!this.selectedTemplateId || !this.currentDistrict?.id) return;
+    this.applyingTemplate = true;
+    this.api.applyTemplate({ templateId: this.selectedTemplateId, districtRateId: this.currentDistrict.id }).subscribe({
+      next: (r) => {
+        this.applyingTemplate = false;
+        this.templateResult = `Created ${r.structureRowsCreated} row(s). ${r.structureRowsSkipped} skipped.`;
+        this.loadStructureRates();
+      },
+      error: () => { this.applyingTemplate = false; this.templateResult = 'Failed to apply template.'; }
+    });
   }
 }

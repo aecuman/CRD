@@ -23,13 +23,22 @@ namespace CRD.Persistence
         public async Task SeedDefaultUserAsync()
         {
             logger.LogInformation("seeding is starting");
-           var admin_role = new ApplicationRole() { Name = "admin" };
+            var admin_role = new ApplicationRole() { Name = "admin" };
             
 //            var resultRole=await userManager.CreateRoleAsync(admin_role);
 
 //            if (resultRole.Succeeded)
   //          {
                 var user = new ApplicationUser() {UserName="admin", Firstname = "John", Lastname = "Doe", Email = "aecuman24@gmail.com",Role="Admin" };
+                
+                // Check if user already exists
+                var existingUser = await userManager.GetUserByUserNameAsync(user.UserName);
+                if (existingUser != null)
+                {
+                    logger.LogInformation("Admin user already exists, skipping creation");
+                    return;
+                }
+                
                 var result = await userManager.CreateUserAsync(user, new[] { user.Role }, "@Pa12345678");
                 if (!result.Succeeded)
                     throw new Exception($"Seeding \"{user.Firstname}\" user failed. Errors: {string.Join(Environment.NewLine, result.Errors)}");

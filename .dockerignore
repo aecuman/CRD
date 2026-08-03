@@ -23,3 +23,13 @@
 **/values.dev.yaml
 LICENSE
 README.md
+# Frontend / mobile — not needed in the API image
+WebUI/
+crd_mobile/
+# Data volumes and docs
+data/
+docs/
+# Office documents
+*.docx
+*.xlsx
+*.csv

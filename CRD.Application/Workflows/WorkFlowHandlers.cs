@@ -9,7 +9,48 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CRD.Application.Workflows
-{// Handlers for Workflow Commands and Queries
+{
+    // Handler for GetAllWorkflowsQuery
+    public class GetAllWorkflowsQueryHandler : IRequestHandler<GetAllWorkflowsQuery, List<WorkflowDto>>
+    {
+        private readonly IRepository<Workflow> _workflowRepository;
+
+        public GetAllWorkflowsQueryHandler(IRepository<Workflow> workflowRepository)
+        {
+            _workflowRepository = workflowRepository;
+        }
+
+        public async Task<List<WorkflowDto>> Handle(GetAllWorkflowsQuery request, CancellationToken cancellationToken)
+        {
+            var workflows = _workflowRepository.GetAll().AsQueryable()
+                .Include(w => w.Steps)
+                .ThenInclude(s => s.SubSteps)
+                .ToList();
+
+            return await Task.FromResult(
+                workflows.Select(w => new WorkflowDto
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    Description = w.Description,
+                    Steps = w.Steps.Select(s => new WorkflowStepDto
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        AssignedToRole = string.Join(", ", s.AssignedToRoles ?? new List<string>()),
+                        IsCompleted = false,
+                        SubSteps = s.SubSteps.Select(ss => new WorkflowSubStepDto
+                        {
+                            Id = ss.Id,
+                            Name = ss.Name,
+                            AssignedToRole = string.Join(", ", ss.AssignedToRoles ?? new List<string>()),
+                            IsCompleted = false
+                        }).ToList()
+                    }).ToList()
+                }).ToList());
+        }
+    }
+
    /* public class WorkflowHandler :
         IRequestHandler<AssignWorkflowCommand, DistrictWorkflow>,
         IRequestHandler<ConfirmStepCommand, WorkflowStep>,

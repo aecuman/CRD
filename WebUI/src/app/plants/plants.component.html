@@ -229,17 +229,17 @@
  -->
 <!-- Modal -->
 <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-  <div class="bg-white w-4/5 h-5/6 rounded-lg shadow-lg overflow-hidden p-6">
+  <div class="bg-white w-4/5 h-5/6 rounded-lg shadow-lg overflow-hidden flex flex-col">
     
     <!-- Modal Header -->
-    <div  class="flex justify-between items-center border-b pb-2">
+    <div  class="flex justify-between items-center border-b pb-2 px-6 pt-6 flex-shrink-0">
       <h2 class="text-xl font-semibold">Add New Crop/Tree</h2>
       <button (click)="closeModal()" class="text-red-600 font-bold text-xl">×</button>
     </div>
 
     <!-- Tab Navigation -->
-    <div class="mt-4">
-      <ul class="flex border-b">
+    <div class="px-6 flex-shrink-0">
+      <ul class="flex border-b mt-4">
         <li *ngFor="let tab of tabs; let i = index" 
             (click)="selectedTab = i" 
             [class.text-blue-500]="selectedTab === i"
@@ -250,8 +250,8 @@
       </ul>
     </div>
 
-    <!-- Tab Content -->
-    <form [formGroup]="PlantForm" (ngSubmit)="savePlant()" class="mt-4">
+    <!-- Tab Content - Scrollable -->
+    <form id="plantForm" [formGroup]="PlantForm" (ngSubmit)="savePlant()" class="flex-grow overflow-y-auto px-6 py-4">
       
       <!-- TAB 1: Basic Details -->
       <div *ngIf="selectedTab === 0">
@@ -315,6 +315,7 @@
                       [disabled]="false"
                       [settings]="dropdownSettings"
                       (onSelect)="onItemSelect($event)"
+                      (onDeSelect)="onItemDeselect($event)"
             >
             </app-multi-select>
         </div>
@@ -323,31 +324,34 @@
           <label class="block text-gray-700">Add Options</label>
           <table class="w-full overflow-auto">
             <thead>
-                <tr>
-                <th>Category</th>
-                <th>Options</th> 
-                <th></th>           
+                <tr class="bg-gray-100">
+                <th class="border border-gray-300 p-3 text-left">Category</th>
+                <th class="border border-gray-300 p-3 text-left">Options</th> 
+                <th class="border border-gray-300 p-3 text-center w-32">Action</th>           
                 </tr>
             </thead>
             <tbody>
-                <tr class="py-2 border-0 border-b" *ngFor="let t of CategoryInfo?.controls; let i=index" [formGroupName]="i">
-                     <td>
+                <tr class="hover:bg-gray-50 border-b" *ngFor="let t of CategoryInfo?.controls; let i=index" [formGroupName]="i">
+                     <td class="border border-gray-300 p-3 font-medium">
                       {{t.get('name')?.value}} 
                 </td>
-                     <td>
-                        <div id="tags-container">
-                            <div *ngFor="let l of t.get('categoryInfo')?.value" class="tag">
-                                <span class="tag-text">{{l}}</span>
-                                <span class="tag-close">x</span>
+                     <td class="border border-gray-300 p-3">
+                        <div class="mb-2">
+                            <div *ngFor="let l of t.get('categoryInfo')?.value" class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">
+                                <span>{{l}}</span>
+                                <span class="ml-2 cursor-pointer font-bold hover:text-blue-600">×</span>
                             </div>
                         </div>
-                        <input type="text" formControlName="info" placeholder="Enter Category Options" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
-        
-        
+                        <div class="flex gap-2">
+                            <input type="text" formControlName="info" placeholder="Type option name here..." class="flex-1 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
                      </td>
-                     <td>
-                        <button type="button" class="pl-5" (click)="addOption(t)">
-                            Add Option
+                     <td class="border border-gray-300 p-3 text-center align-middle">
+                        <button type="button" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200" (click)="addOption(t)" title="Add this option to the category">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            <span>Add</span>
                         </button>
                      </td>
                 </tr>
@@ -543,13 +547,20 @@
         <button type="button" (click)="addTranslation()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Add Translation</button>
       --> </div>
 
-      <!-- Form Buttons -->
-      <div class="flex justify-between mt-4" *ngIf="canManage">
-        <button type="button" (click)="prevTab()" [disabled]="selectedTab === 0" class="px-4 py-2 bg-gray-300 rounded">Back</button>
-        <button type="button" (click)="nextTab()" [disabled]="selectedTab === tabs.length - 1" class="px-4 py-2 bg-gray-300 rounded">Next</button>
-        <button type="submit" *ngIf="selectedTab === tabs.length - 1" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
-      </div>
+      <!-- Form Buttons - Removed from content area -->
     </form>
+
+    <!-- Modal Footer -->
+    <div class="border-t px-6 py-4 bg-gray-50 flex-shrink-0 flex justify-between items-center gap-2">
+      <div class="flex gap-2">
+        <button type="button" (click)="prevTab()" [disabled]="selectedTab === 0" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded transition-colors duration-200">Back</button>
+        <button type="button" (click)="nextTab()" [disabled]="selectedTab === tabs.length - 1" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded transition-colors duration-200">Next</button>
+      </div>
+      <div class="flex gap-2">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded transition-colors duration-200">Close</button>
+        <button type="submit" form="plantForm" *ngIf="selectedTab === tabs.length - 1" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors duration-200 font-semibold">Save</button>
+      </div>
+    </div>
   </div>
 </div>
 

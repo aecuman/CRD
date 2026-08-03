@@ -80,12 +80,31 @@ logout(no_redirect?: boolean) {
     return this.hasValidToken();
   }
 
+  // True for any user who can perform workflow actions (not read-only).
+  // Matches roles defined in WorkflowSeed: Registry, DataInputClerk,
+  // ChairModerationCommittee, ModerationCommitteeSecretary, RegionalOfficer (Manager), admin.
+  get isOperationalUser(): boolean {
+    const operationalRoles = [
+      'admin', 'superadmin',
+      'Manager', 'RegionalOfficer',
+      'Registry',
+      'ChairModerationCommittee',
+      'DataInputClerk',
+      'ModerationCommitteeSecretary'
+    ];
+    return this.userValue?.roles?.some((r: string) => operationalRoles.includes(r)) ?? false;
+  }
+
+  get isAdmin(): boolean {
+    return this.userValue?.roles?.some((r: string) => r === 'admin' || r === 'superadmin') ?? false;
+  }
+
   private hasValidToken(): boolean {
     const expiryTime = localStorage.getItem(this.tokenExpiryKey);
     if (!expiryTime || new Date().getTime() > parseInt(expiryTime, 10)) {
       this.clearSession();  // Automatically remove expired tokens
       return false;
-  }
+    }
     const now = new Date().getTime();
     return now < parseInt(expiryTime, 10); // Check if token is still valid
   }

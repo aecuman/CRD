@@ -49,7 +49,7 @@ namespace CRD.API.Controllers
             }
         }
         [HttpDelete(Name = "DeleteSettingOption")]
-        public async Task<ActionResult<bool>> Delete(DeleteOptionCommand command)
+        public async Task<ActionResult<bool>> Delete([FromBody] DeleteOptionCommand command)
         {
             var result = await Mediator.Send(command);
             if (!result)

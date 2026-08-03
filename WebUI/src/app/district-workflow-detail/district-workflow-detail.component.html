@@ -156,7 +156,7 @@
     </div>
   </div>
   </div> <!-- Right: Actions Panel -->
-  <div class="w-72 shrink-0 border-l border-gray-200 pl-4">
+  <div class="w-72 shrink-0 border-l border-gray-200 pl-4 overflow-y-auto">
     <div class="sticky top-6">
         <!-- CRD Upload Summary -->
 <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
@@ -194,16 +194,16 @@
 
   
     <!-- Section 1: Data -->
-    <div [class.opacity-100]="currentStepIndex < 1" [class.opacity-40]="currentStepIndex >= 1" class="mb-6 transition-opacity">
+    <div [class.opacity-100]="currentStepIndex < 2" [class.opacity-40]="currentStepIndex >= 2" class="mb-6 transition-opacity">
       <p class="text-sm font-semibold text-gray-700 mb-2">📦 Data</p>
-      <button [routerLink]="['/portal/rates/vegetation/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 1">➕ Add Crops/Trees</button>
-      <button [routerLink]="['/portal/rates/structures/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 1">➕ Add Structures</button>
+      <button [routerLink]="['/portal/rates/vegetation/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 2">➕ Add Crops/Trees</button>
+      <button [routerLink]="['/portal/rates/structures/',districtRateId]" class="btn-action" [disabled]="currentStepIndex >= 2">➕ Add Structures</button>
     </div>
   
     <!-- Section 2: Moderation -->
     <div
-    [class.opacity-100]="currentStepIndex >= 1 && currentStepIndex < 4"
-    [class.opacity-40]="currentStepIndex < 1 || currentStepIndex >= 4"
+    [class.opacity-100]="currentStepIndex >= 2 && currentStepIndex < 5"
+    [class.opacity-40]="currentStepIndex < 2 || currentStepIndex >= 5"
     class="mb-6 transition-opacity space-y-4 flex flex-col"
   >
     <!-- Section Header -->
@@ -216,7 +216,7 @@
         <button *ngIf="canManage"
           (click)="showModal = true"
           class="text-blue-600 hover:underline text-sm"
-          [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+          [disabled]="currentStepIndex < 2 || currentStepIndex >= 5"
         >
           Edit
         </button>
@@ -238,11 +238,11 @@
     </div>
   
     <!-- Action Buttons -->
-    <div class="gap-3" *ngIf="canManage">
+    <div class="flex flex-col gap-3 mb-6" *ngIf="canManage">
       <button
         [routerLink]="['/portal/rates/moderation/vegetation/', districtRateId]"
         class="btn-action w-full sm:w-auto"
-        [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+        [disabled]="currentStepIndex < 2 || currentStepIndex >= 5"
       >
         🌾 Moderate Crops/Trees
       </button>
@@ -250,34 +250,31 @@
       <button
         [routerLink]="['/portal/rates/moderation/structures/', districtRateId]"
         class="btn-action w-full sm:w-auto"
-        [disabled]="currentStepIndex < 1 || currentStepIndex >= 4"
+        [disabled]="currentStepIndex < 2 || currentStepIndex >= 5"
       >
         🏗 Moderate Structures
       </button>
     </div>
-  </div>
-  
-  
-<!-- Section 3: Reports -->
-<div *ngIf="canManage" [class.opacity-100]="reportsSectionEnabled"
-     [class.opacity-40]="!reportsSectionEnabled"
-     class="mb-6 transition-opacity">
-  <p class="text-sm font-semibold text-gray-700 mb-2">📑 Reports</p>
-  <button class="btn-action" [routerLink]="['/portal/rates/moderation/report/',districtRateId]" [disabled]="!reportsSectionEnabled">📘 Moderation Report</button>
-  <!-- <button class="btn-action" (click)="ViewReport()" [disabled]="!reportsSectionEnabled">📊 Adjusted Draft Rates</button> -->
-</div>
 
-  </div>
-  
-      <!-- Download Links -->
-      <div class="mb-6">
-        <p class="text-sm font-semibold text-gray-700 mb-2">Attachments</p>
+    <!-- Section 3: Reports -->
+    <div *ngIf="canManage" [class.opacity-100]="reportsSectionEnabled"
+         [class.opacity-40]="!reportsSectionEnabled"
+         class="mb-6 transition-opacity pt-6 border-t border-gray-200">
+      <p class="text-sm font-semibold text-gray-700 mb-2">📑 Reports</p>
+      <button class="btn-action" [routerLink]="['/portal/rates/moderation/report/',districtRateId]" [disabled]="!reportsSectionEnabled">📘 Moderation Report</button>
+    </div>
+
+    <!-- Download Links -->
+    <div class="mb-6 pt-6 border-t border-gray-200">
+      <p class="text-sm font-semibold text-gray-700 mb-2">Attachments</p>
+      <ng-container *ngIf="getAllUploadedDocs(status[0])?.length > 0; else noAttachments">
         <div *ngFor="let doc of getAllUploadedDocs(status[0])" class="text-xs text-blue-600 mb-1 truncate">
           📎 <a [href]="doc.filePath" target="_blank" class="hover:underline">{{ doc.fileName }}</a>
         </div>
-      </div>
-
-
+      </ng-container>
+      <ng-template #noAttachments>
+        <p class="text-xs italic text-gray-400">No attachments uploaded.</p>
+      </ng-template>
     </div>
   </div>
 </div>

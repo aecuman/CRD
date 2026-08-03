@@ -14,8 +14,8 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1 flex justify-between">
                             <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium text-gray-900">Languange  </h3>
-                                <p class="mt-1 text-sm text-gray-600"> The languanges to which the different crops </p>
+                                <h3 class="text-lg font-medium text-gray-900">Language</h3>
+                                <p class="mt-1 text-sm text-gray-600">Manage the languages used in the system</p>
                             </div>
                             <div class="px-4 sm:px-0"></div>
                         </div>
@@ -124,9 +124,8 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
                         <div class="md:col-span-1 flex justify-between">
                             <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium text-gray-900"> Growth Stage </h3>
-                                <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
-                                    password to stay secure. </p>
+                                <h3 class="text-lg font-medium text-gray-900">Growth Stage</h3>
+                                <p class="mt-1 text-sm text-gray-600">Define growth stages for crops and plants</p>
                             </div>
                             <div class="px-4 sm:px-0"></div>
                         </div>
@@ -169,9 +168,8 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
                         <div class="md:col-span-1 flex justify-between">
                             <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium text-gray-900"> Crop Category </h3>
-                                <p class="mt-1 text-sm text-gray-600"> Ensure your account is using a long, random
-                                    password to stay secure. </p>
+                                <h3 class="text-lg font-medium text-gray-900">Crop Category</h3>
+                                <p class="mt-1 text-sm text-gray-600">Organize crops and plants into categories</p>
                             </div>
                             <div class="px-4 sm:px-0"></div>
                         </div>
@@ -222,7 +220,8 @@
                         <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
                             <div class="md:col-span-1 flex justify-between">
                                 <div class="px-4 sm:px-0">
-                                    <h3 class="text-lg font-medium text-gray-900"> Types of Structures </h3>
+                                    <h3 class="text-lg font-medium text-gray-900">Structure Types</h3>
+                                    <p class="mt-1 text-sm text-gray-600">Define structure types like Permanent and Semi-Permanent</p>
                                 </div>
                                 <div class="px-4 sm:px-0"></div>
                             </div>
@@ -238,9 +237,7 @@
                                                     </div>
                                                     <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="tags" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
                                                     <p id="tags-helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                        Define types of structure types</p>                                                
-                                                    
-                                                </div>
+                                        Enter a new structure type name</p>
                                             </div>
                                         </div>
                                     </div>
@@ -433,90 +430,356 @@
                         </div>
                     </div>
                 </div> -->
-            <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-semibold mb-4">Structure Category Configuration</h2>
-      
+            <div class="mt-10">
+              <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                  <div class="px-4 sm:px-0">
+                    <h3 class="text-lg font-medium text-gray-900">Structure Categories</h3>
+                    <p class="mt-1 text-sm text-gray-600">Define and manage structure categories with their attributes and options</p>
+                  </div>
+                </div>
+                <div class="mt-5 md:mt-0 md:col-span-2">
+                  <!-- Existing Categories List -->
+                  <div *ngIf="categories.length > 0" class="mb-8">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                      <span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                      Existing Categories ({{ categories.length }})
+                    </h4>
+                    <div class="space-y-2 mb-6">
+                      <div *ngFor="let category of categories; let i = index" class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg hover:shadow-md transition flex justify-between items-start">
+                        <div class="flex-1">
+                          <h5 class="font-semibold text-gray-900">{{ category.name }}</h5>
+                          <div *ngIf="category.attributes && category.attributes.length > 0" class="mt-2 space-y-1">
+                            <div *ngFor="let attr of category.attributes" class="text-xs text-gray-600">
+                              <span class="font-medium">{{ attr.name }}:</span>
+                              <span class="inline-flex flex-wrap gap-1 ml-1">
+                                <span *ngFor="let opt of attr.options" class="bg-white px-2 py-1 rounded text-gray-700 border border-gray-200">{{ opt.name }}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex gap-2 ml-3 flex-shrink-0">
+                          <button (click)="editCategory(i)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium transition">Edit</button>
+                          <button (click)="deleteCategory(category.id!)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="border-t pt-6"></div>
+                  </div>
 
-        <!-- Existing Categories List -->
-        <h3 class="font-semibold text-lg mb-2">Existing Categories</h3>
-        <ul class="space-y-2">
-          <li *ngFor="let category of categories; let i = index" class="p-4 border rounded-lg">
-            <div class="flex justify-between items-center">
-              <span class="font-bold">{{ category.name }}</span>
-              <div>
-                <button (click)="editCategory(i)" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-                <button (click)="deleteCategory(category.id!)" class="ml-2 bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                  <!-- Create New Category Form -->
+                  <form [formGroup]="categoryForm" (ngSubmit)="categoryForm.valid? submitForm():false" class="bg-white px-4 py-6 sm:p-6 shadow sm:rounded-lg">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+                      <span class="w-2 h-2 bg-green-600 rounded-full mr-2"></span>
+                      Create New Category
+                    </h4>
+
+                    <!-- Category Name Input -->
+                    <div class="mb-6">
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                      <input 
+                        type="text" 
+                        formControlName="name" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Building, Fence, Garage"
+                      />
+                      <div *ngIf="submitted && categoryForm.get('name')?.errors" class="mt-1 text-red-600 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                        <span *ngIf="categoryForm.get('name')?.errors?.['required']">Category name is required.</span>
+                        <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Must be at least 3 characters.</span>
+                      </div>
+                    </div>
+
+                    <!-- Attributes Section -->
+                    <div class="mb-6">
+                      <div class="flex items-center justify-between mb-4">
+                        <h5 class="text-sm font-semibold text-gray-900">Attributes</h5>
+                        <span class="text-xs text-gray-500">{{ attributes?.controls?.length || 0 }} attributes</span>
+                      </div>
+
+                      <div formArrayName="attributes" class="space-y-4">
+                        <!-- Attribute Cards -->
+                        <div *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i" class="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition">
+                          <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                              <label class="block text-xs font-semibold text-gray-600 mb-2">Attribute {{ i + 1 }} Name</label>
+                              <input 
+                                type="text" 
+                                formControlName="name" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                placeholder="e.g., Material, Color, Size"
+                              />
+                              <div *ngIf="submitted && attribute.get('name')?.errors" class="mt-1 text-red-600 text-xs flex items-center">
+                                <span *ngIf="attribute.get('name')?.errors?.['required']">Attribute name required</span>
+                                <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters</span>
+                              </div>
+                            </div>
+                            <button 
+                              type="button" 
+                              (click)="removeAttribute(i)" 
+                              class="ml-3 text-red-600 hover:text-red-900 hover:bg-red-100 p-2 rounded transition"
+                              title="Remove attribute"
+                            >
+                              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            </button>
+                          </div>
+
+                          <!-- Options for this Attribute -->
+                          <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-2">Options</label>
+                            <div formArrayName="options" class="space-y-2 mb-3">
+                              <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center gap-2">
+                                <input 
+                                  type="text" 
+                                  formControlName="name" 
+                                  class="flex-1 px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                  placeholder="e.g., Wood, Brick, Stone"
+                                />
+                                <button 
+                                  type="button" 
+                                  (click)="removeOption(i, j)" 
+                                  class="text-red-500 hover:text-red-700 p-1 hover:bg-red-100 rounded transition"
+                                  title="Remove option"
+                                >
+                                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                                </button>
+                              </div>
+                            </div>
+                            <button 
+                              type="button" 
+                              (click)="addOption(i)" 
+                              class="text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1 rounded transition font-medium"
+                            >
+                              + Add Option
+                            </button>
+                          </div>
+                        </div>
+
+                        <!-- No Attributes Message -->
+                        <div *ngIf="!attributes?.controls || attributes?.controls?.length === 0" class="text-center py-8 text-gray-500 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          <p class="text-sm">No attributes added yet. Click the button below to add one.</p>
+                        </div>
+                      </div>
+
+                      <!-- Add Attribute Button -->
+                      <button 
+                        type="button" 
+                        (click)="addAttribute()" 
+                        class="mt-4 text-green-600 hover:text-green-800 hover:bg-green-50 px-4 py-2 rounded border border-green-600 font-medium transition"
+                      >
+                        + Add Attribute
+                      </button>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 justify-end pt-4 border-t">
+                      <button 
+                        type="button" 
+                        (click)="resetForm()" 
+                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition"
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        [disabled]="!categoryForm?.valid" 
+                        type="submit" 
+                        class="px-4 py-2 bg-blue-600 disabled:bg-gray-400 text-white rounded-lg hover:bg-blue-700 font-medium transition"
+                      >
+                        + Save Category
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-      
-            <!-- Display Attributes -->
-            <ul class="ml-4 mt-2 text-sm">
-              <li *ngFor="let attr of category.attributes">
-                <strong>{{ attr.name }}:</strong>
-                <span *ngFor="let opt of attr.options" class="ml-2"> {{ opt.name }} </span>
-              </li>
-            </ul>
-          </li>
-        </ul>
-                <!-- Category Form -->
-                <form [formGroup]="categoryForm" (ngSubmit)="categoryForm.valid? submitForm():false" class="mb-6 p-4 border rounded-lg bg-gray-50">
-                    <label class="block mb-2 text-gray-700">Category Name:</label>
+
+            <!-- Edit Modal -->
+            <div *ngIf="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <!-- Modal Header -->
+                <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center justify-between border-b">
+                  <div>
+                    <h2 class="text-lg font-semibold">Edit Category</h2>
+                    <p class="text-blue-100 text-sm">{{ categories[editingIndex!]?.name }}</p>
+                  </div>
+                  <button 
+                    type="button"
+                    (click)="closeEditModal()"
+                    class="text-blue-100 hover:text-white transition"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Modal Body -->
+                <form [formGroup]="categoryForm" (ngSubmit)="categoryForm.valid? submitForm():false" class="p-6">
+                  <!-- Category Name Input -->
+                  <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
                     <input 
                       type="text" 
                       formControlName="name" 
-                      class="w-full p-2 border rounded mb-2" 
-                      placeholder="Enter category name" 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Building, Fence, Garage"
                     />
-                    <div *ngIf="submitted && categoryForm.get('name')?.errors" class="text-red-500 text-sm">
+                    <div *ngIf="submitted && categoryForm.get('name')?.errors" class="mt-1 text-red-600 text-sm flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
                       <span *ngIf="categoryForm.get('name')?.errors?.['required']">Category name is required.</span>
                       <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Must be at least 3 characters.</span>
                     </div>
-                
-                    <h3 class="font-semibold text-lg mt-4">Attributes</h3>
-                    <table class="w-full border-collapse border border-gray-300">
-                      <thead>
-                        <tr class="bg-gray-200">
-                          <th class="border p-2">Attribute Name</th>
-                          <th class="border p-2">Options</th>
-                          <th class="border p-2">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody formArrayName="attributes">
-                        <tr *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i">
-                          <td class="border p-2">
-                            <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Attribute Name" required />
-                            <div *ngIf="submitted && attribute.get('name')?.errors" class="text-red-500 text-sm">
-                              <span *ngIf="attribute.get('name')?.errors?.['required']">Required.</span>
-                              <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters.</span>
-                            </div>
-                          </td>
-                          <td  class="border p-2" formArrayName="options">
-                            <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center space-x-2 mb-2">
-                              
-                              <input type="text" formControlName="name" class="w-full p-2 border rounded" placeholder="Option" required />
-                              <button type="button" (click)="removeOption(i, j)" class="bg-red-500 text-white px-2 py-1 rounded">X</button>
-                            </div>
-                            <button type="button" (click)="addOption(i)" class="bg-blue-500 text-white px-2 py-1 rounded">+ Option</button>
-                          </td>
-                          <td class="border p-2">
-                            <button type="button" (click)="removeAttribute(i)" class="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                
-                    <div class="flex flex-col">
-                       <button type="button" (click)="addAttribute()" class="mt-2 bg-green-500 text-white px-3 py-1 rounded">+ Attribute</button>
-                
-                    <button [disabled]="!categoryForm?.valid" type="submit" class="mt-4 bg-green-500 disabled:opacity-75 text-white px-4 py-2 rounded">Save</button>    
+                  </div>
+
+                  <!-- Attributes Section -->
+                  <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                      <h5 class="text-sm font-semibold text-gray-900">Attributes</h5>
+                      <span class="text-xs text-gray-500">{{ attributes?.controls?.length || 0 }} attributes</span>
                     </div>
-                 
+
+                    <div formArrayName="attributes" class="space-y-4">
+                      <!-- Attribute Cards -->
+                      <div *ngFor="let attribute of attributes?.controls; let i = index" [formGroupName]="i" class="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition">
+                        <div class="flex items-start justify-between mb-4">
+                          <div class="flex-1">
+                            <label class="block text-xs font-semibold text-gray-600 mb-2">Attribute {{ i + 1 }} Name</label>
+                            <input 
+                              type="text" 
+                              formControlName="name" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                              placeholder="e.g., Material, Color, Size"
+                            />
+                            <div *ngIf="submitted && attribute.get('name')?.errors" class="mt-1 text-red-600 text-xs flex items-center">
+                              <span *ngIf="attribute.get('name')?.errors?.['required']">Attribute name required</span>
+                              <span *ngIf="attribute.get('name')?.errors?.['minlength']">Min 3 characters</span>
+                            </div>
+                          </div>
+                          <button 
+                            type="button" 
+                            (click)="removeAttribute(i)" 
+                            class="ml-3 text-red-600 hover:text-red-900 hover:bg-red-100 p-2 rounded transition"
+                            title="Remove attribute"
+                          >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                          </button>
+                        </div>
+
+                        <!-- Options for this Attribute -->
+                        <div>
+                          <label class="block text-xs font-semibold text-gray-600 mb-2">Options</label>
+                          <div formArrayName="options" class="space-y-2 mb-3">
+                            <div *ngFor="let option of getOptions(i)?.controls; let j = index" [formGroupName]="j" class="flex items-center gap-2">
+                              <input 
+                                type="text" 
+                                formControlName="name" 
+                                class="flex-1 px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                placeholder="e.g., Wood, Brick, Stone"
+                              />
+                              <button 
+                                type="button" 
+                                (click)="removeOption(i, j)" 
+                                class="text-red-500 hover:text-red-700 p-1 hover:bg-red-100 rounded transition"
+                                title="Remove option"
+                              >
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                              </button>
+                            </div>
+                          </div>
+                          <button 
+                            type="button" 
+                            (click)="addOption(i)" 
+                            class="text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1 rounded transition font-medium"
+                          >
+                            + Add Option
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- No Attributes Message -->
+                      <div *ngIf="!attributes?.controls || attributes?.controls?.length === 0" class="text-center py-8 text-gray-500 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+                        <p class="text-sm">No attributes added yet. Click the button below to add one.</p>
+                      </div>
+                    </div>
+
+                    <!-- Add Attribute Button -->
+                    <button 
+                      type="button" 
+                      (click)="addAttribute()" 
+                      class="mt-4 text-green-600 hover:text-green-800 hover:bg-green-50 px-4 py-2 rounded border border-green-600 font-medium transition"
+                    >
+                      + Add Attribute
+                    </button>
+                  </div>
+
+                  <!-- Modal Footer -->
+                  <div class="flex gap-3 justify-end pt-4 border-t sticky bottom-0 bg-white">
+                    <button 
+                      type="button" 
+                      (click)="closeEditModal()" 
+                      class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      [disabled]="!categoryForm?.valid" 
+                      type="submit" 
+                      class="px-4 py-2 bg-blue-600 disabled:bg-gray-400 text-white rounded-lg hover:bg-blue-700 font-medium transition"
+                    >
+                      ✓ Update Category
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Structure Types Section -->
+            <div>
+              <div class="md:grid md:grid-cols-3 md:gap-6 mt-10 sm:mt-0">
+                <div class="md:col-span-1 flex justify-between">
+                  <div class="px-4 sm:px-0">
+                    <h3 class="text-lg font-medium text-gray-900">Structure Types</h3>
+                    <p class="mt-1 text-sm text-gray-600">Define structure types like Permanent and Semi-Permanent</p>
+                  </div>
+                  <div class="px-4 sm:px-0"></div>
+                </div>
+                <div class="mt-5 md:mt-0 md:col-span-2">
+                  <form>
+                    <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                      <div class="grid grid-cols-6 gap-6">
+                        <div class="col-span-6 sm:col-span-4">
+                          <div class="m-4 relative">
+                            <div id="tags-container">
+                              <div *ngFor="let type of structureTypes" class="tag">
+                                <span class="tag-text">{{type?.name}}</span>
+                              </div>
+                            </div>
+                            <input type="text" [(ngModel)]="option_structure_type" [ngModelOptions]="{standalone: true}" id="structure-type-input" placeholder="Enter a structure type" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                            <p class="mt-2 text-sm text-gray-500">Enter a new structure type name</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                      <div class="mr-3">
+                        <div class="text-sm text-gray-600" style="display: none;"> Saved. </div>
+                      </div>
+                      <button type="button" (click)="createStructureType(option_structure_type)" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
+                        Save
+                      </button>
+                    </div>
                   </form>
-                
-      </div>
+                </div>
+              </div>
+              <div class="hidden sm:block">
+                <div class="py-8">
+                  <div class="border-t border-gray-200"></div>
+                </div>
+              </div>
             </div>
        
         </div>
+    </div>
     </main>
     
       

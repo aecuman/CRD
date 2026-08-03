@@ -47,7 +47,7 @@
       <span *ngFor="let c of cat.info;let ic =index">      
              <input type="checkbox"
              (change)="toggleCategoryInfo(cat.categoryId??0,c,cat?.id??0,ic)"
-             [checked]="isCategoryInfoSelected(cat.categoryId??0,ic)"
+             [checked]="isCategoryInfoSelected(cat.categoryId??0,cat?.id??0,ic)"
              class="mr-2" />
       <label>{{ c }}</label>
     </span>
@@ -114,21 +114,24 @@
     {{ getCategoryNameById(cid) }}
   </button>
 </div> -->
-<!-- Tabs -->
-<div *ngIf="isConfigured&&selectedCategoryInfos.length > 0" class="mb-4 flex gap-2 border-b border-gray-300">
-  <ng-container *ngFor="let entry of selectedCategoryInfos.value">
+<!-- Tabs with Active/Completion Status -->
+<div *ngIf="isConfigured&&selectedCategoryInfos.length > 0" class="mb-4 flex gap-2 border-b-2 border-gray-300 overflow-x-auto">
+  <ng-container *ngFor="let entry of selectedCategoryInfos.value; let i = index">
     <button type="button"
             (click)="setActiveInfoTab(entry)"
-            [class.bg-blue-600]="activeCategoryInfo?.categoryInfoId === entry.categoryInfoId"
-            [class.text-white]="activeCategoryInfo?.categoryInfoId === entry.categoryInfoId"
-            class="px-4 py-2 rounded-t font-medium border border-gray-300 hover:bg-blue-100 text-gray-700 w-full">
-      {{ entry.info }}
-      <span class="text-sm"
+            class="px-4 py-2 rounded-t font-medium border-b-4 transition-all whitespace-nowrap flex items-center gap-2 shadow-sm"
             [ngClass]="{
-              'text-green-600': isTabValid(entry.categoryInfoIndex),
-              'text-red-600': !isTabValid(entry.categoryInfoIndex)
+              'border-blue-600 bg-blue-600 text-white shadow-md': activeCategoryInfo?.categoryInfoIndex === entry.categoryInfoIndex,
+              'border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200': activeCategoryInfo?.categoryInfoIndex !== entry.categoryInfoIndex
             }">
-        {{ isTabValid(entry.categoryInfoId) ? '✔️' : '❌' }}
+      <span>{{ entry.info }}</span>
+      <span class="text-lg font-bold"
+            [ngClass]="{
+              'text-white': activeCategoryInfo?.categoryInfoIndex === entry.categoryInfoIndex,
+              'text-green-600': isTabValid(entry.categoryInfoIndex) && activeCategoryInfo?.categoryInfoIndex !== entry.categoryInfoIndex,
+              'text-red-600': !isTabValid(entry.categoryInfoIndex) && activeCategoryInfo?.categoryInfoIndex !== entry.categoryInfoIndex
+            }">
+        {{ isTabValid(entry.categoryInfoIndex) ? '✔️' : '✗' }}
       </span>
     </button>
   </ng-container>

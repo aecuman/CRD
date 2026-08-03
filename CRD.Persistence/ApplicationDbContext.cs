@@ -5,6 +5,7 @@ using CRD.Domain.Identity;
 using CRD.Domain.Process;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,14 @@ namespace CRD.Persistence
     public class ApplicationDbContext:IdentityDbContext<ApplicationUser,ApplicationRole,int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            // Suppress pending model changes warning to allow migrations to apply in development
+            optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        }
+
         public DbSet<District> Districts { get; set; }
 
         public DbSet<Crop> Crops { get; set; }
@@ -57,6 +66,7 @@ namespace CRD.Persistence
         public DbSet<GroupedPlantItem> GroupedPlantItems { get; set; }
 
         public DbSet<StructureRate> StructureRates { get; set; }
+        public DbSet<RateTemplate> RateTemplates { get; set; }
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<DistrictWorkflow> DistrictWorkflows { get; set; }
         public DbSet<DistrictWorkflowStep> DistrictWorkflowSteps { get; set; }
@@ -389,7 +399,8 @@ namespace CRD.Persistence
         public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Deleted || e.State == EntityState.Added || e.State == EntityState.Modified);
+                .Where(e => e.State == EntityState.Deleted || e.State == EntityState.Added || e.State == EntityState.Modified)
+                .ToList();
 
             foreach (var entry in entries)
             {

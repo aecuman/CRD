@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { APIService, CompensationRateEntryDto,  CreatePlantRatesCommand,  DistrictRateDto, GroupedPlantListViewModel, OptionsListViewModel, OptionViewModel, PlantListViewModel, PlantRateViewModel, UpdatePlantRatesCommand} from '../api.service';
-import { PlantRateDto, UnitOfMeasure  } from '../app.model';
+import { APIService, CompensationRateEntryDto, CreatePlantRatesCommand, DistrictRateDto, GroupedPlantListViewModel, OptionsListViewModel, OptionViewModel, PlantListViewModel, PlantRateViewModel, RateTemplateViewModel, UpdatePlantRatesCommand} from '../api.service';
+import { PlantRateDto, UnitOfMeasure } from '../app.model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 
@@ -32,6 +32,37 @@ isGroupedMatrix: boolean=false;
 plantSearch:string ='';
 rateSearch:string ='';
   existingMatrixRates: PlantRateDto[]=[];
+
+  // Template application
+  templates: RateTemplateViewModel[] = [];
+  showTemplateModal = false;
+  selectedTemplateId: number | null = null;
+  applyingTemplate = false;
+  templateResult: string = '';
+
+  loadTemplates(): void {
+    this.api.getTemplates().subscribe(t => this.templates = t ?? []);
+  }
+
+  openTemplateModal(): void {
+    this.templateResult = '';
+    this.selectedTemplateId = null;
+    this.loadTemplates();
+    this.showTemplateModal = true;
+  }
+
+  applyTemplate(): void {
+    if (!this.selectedTemplateId || !this.currentDistrict?.id) return;
+    this.applyingTemplate = true;
+    this.api.applyTemplate({ templateId: this.selectedTemplateId, districtRateId: this.currentDistrict.id }).subscribe({
+      next: (r) => {
+        this.applyingTemplate = false;
+        this.templateResult = `Created ${r.plantRowsCreated} row(s). ${r.plantRowsSkipped} skipped (already exist).`;
+        this.loadDistrictPlantRates();
+      },
+      error: () => { this.applyingTemplate = false; this.templateResult = 'Failed to apply template.'; }
+    });
+  }
 
   constructor(private fb: FormBuilder,private api:APIService, private route:ActivatedRoute, private auth:AuthService) {
  
@@ -357,7 +388,7 @@ groupHasRates(groupId: number): boolean {
     }, {}); */
 
     get canManage(){
-      return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+      return this.auth.isOperationalUser;
     }
   }
 

@@ -22,7 +22,7 @@ namespace CRD.API.Controllers
         }
 
         // ✅ Mark a step as completed
-        [HttpPost("step/complete",Name = "ompleteStep")]
+        [HttpPost("step/complete",Name = "CompleteStep")]
         public async Task<IActionResult> CompleteStep([FromBody] CompleteDistrictStepCommand command)
         {
             var result = await Mediator.Send(command);

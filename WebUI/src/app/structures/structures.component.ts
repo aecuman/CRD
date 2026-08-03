@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { APIService, StructureCategoryViewModel, StructureViewDto } from '../api.service';
+import { APIService, StructureCategoryViewModel, StructureViewDto, StructureTypeViewModel } from '../api.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -25,11 +25,8 @@ export class StructuresComponent {
   groupedStructures: { categoryName: string; items: StructureViewDto[]; }[]=[]; 
 
   selectedCategory?: StructureCategoryViewModel|null=null;
-  structureTypes=[
-    {id:1,name:'Permanent'},
-    {id:2, name:'Semi-Permanent'}
-  ];
-Math: any=Math
+  structureTypes: StructureTypeViewModel[] = [];
+  Math: any=Math
 isModalOpen=false;
 
   constructor(
@@ -50,6 +47,7 @@ isModalOpen=false;
   ngOnInit(): void {
     this.loadCategories();
     this.loadStructures();
+    this.loadStructureTypes();
   }
   groupStructuresByCategory() {
     const grouped: { [key: string]: StructureViewDto[] } = {};
@@ -81,6 +79,12 @@ isModalOpen=false;
     });
   }
 
+  loadStructureTypes(): void {
+    this.api.structureTypesAll().subscribe(data => {
+      this.structureTypes = data;
+    });
+  }
+
   onCategoryChange(): void {
     this.structureForm.get('categoryId')?.setValue(this.selectedCategory?.id);
    
@@ -108,12 +112,16 @@ isModalOpen=false;
       this.api.structuresPOST({structure:this.structureForm.value}).subscribe(() => {
         this.loadStructures();
         this.structureForm.reset();
+        this.selectedCategory = null;
+        this.isModalOpen = false;
       });
     } else {
       this.api.structuresPUT(this.structureForm.value).subscribe(() => {
         this.loadStructures();
         this.structureForm.reset();
+        this.selectedCategory = null;
         this.editingId = null;
+        this.isModalOpen = false;
       });
     }
   }
@@ -190,6 +198,6 @@ this.isModalOpen=true;
     this.isModalOpen=false;
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.isAdmin;
   }
 }

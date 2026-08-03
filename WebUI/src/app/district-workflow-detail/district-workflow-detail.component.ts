@@ -51,11 +51,10 @@ export class DistrictWorkflowDetailComponent {
     this.currentStepIndex = steps.findIndex(s => !s.isCompleted);
     if (this.currentStepIndex === -1) this.currentStepIndex = steps.length; // All completed
 
-    // ✅ Enable reports section if step 4 exists and its first substep is completed
-    const step4 = steps[3];
-    const step4Substep1 = step4?.subSteps?.[0];
-
-    this.reportsSectionEnabled = !!(step4Substep1 && step4Substep1.isCompleted);
+    // ✅ Enable reports section once moderation begins (first substep of Moderation Session done).
+    // Reports are allowed mid-session since moderation can take multiple days.
+    const moderationStep = steps[3];
+    this.reportsSectionEnabled = !!(moderationStep?.subSteps?.[0]?.isCompleted);
     
     });
   }
@@ -86,7 +85,7 @@ loadDistrictRatedetails(districtId: number) {
   }
 
   deleteComment(commentId: number) {
-   // this.api.deleteComment(commentId).subscribe(() => this.ngOnInit());
+    this.api.comment(commentId).subscribe(() => this.ngOnInit());
   }
  /*  isCurrentStep(step: DistrictWorkflowStepStatusDto): boolean {
     return !step.isCompleted && this.status&&
@@ -119,9 +118,8 @@ loadDistrictRatedetails(districtId: number) {
   
   completeStep(stepId: number): void {
     if (confirm('Complete this step and all its substeps?')) {
-      this.api.ompleteStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
+      this.api.completeStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
     }
-    //this.api.ompleteStep({districtStepId:stepId}).subscribe(() => this.ngOnInit());
   }
   handleComparables(event:any){
 this.loadDistrictRatedetails(this.districtRateId);
@@ -193,6 +191,6 @@ get preselectedRates(){
  return this.districtRate?.comparableDistrictRates?.map((c:any) => c.id)
 }
 get canManage(){
-  return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+  return this.auth.isOperationalUser;
 }
 }

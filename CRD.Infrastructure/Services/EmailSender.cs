@@ -21,7 +21,7 @@ namespace CRD.Infrastructure.Services
         {
             _appSettings = appSettings.Value;
         }
-        public Task SendEmailAsync(string to, string from, string subject, string body, string? cc)
+        public async Task SendEmailAsync(string to, string from, string subject, string body, string? cc)
         {
             // create message
             var email = new MimeMessage();
@@ -29,16 +29,14 @@ namespace CRD.Infrastructure.Services
             email.To.Add(MailboxAddress.Parse(to));
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) { Text = body };
-            if(!string.IsNullOrEmpty(cc))email.Cc.Add(MailboxAddress.Parse(cc));
-           
+            if (!string.IsNullOrEmpty(cc)) email.Cc.Add(MailboxAddress.Parse(cc));
 
-            // send email
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
             using var smtp = new SmtpClient();
-            smtp.Connect(_appSettings.Host, _appSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_appSettings.Mail, _appSettings.Password);
-            smtp.Send(email);
-            smtp.Disconnect(true);
-           return Task.FromResult(0);
+            await smtp.ConnectAsync(_appSettings.Host, _appSettings.Port, SecureSocketOptions.StartTls, cts.Token);
+            await smtp.AuthenticateAsync(_appSettings.Mail, _appSettings.Password, cts.Token);
+            await smtp.SendAsync(email, cts.Token);
+            await smtp.DisconnectAsync(true, cts.Token);
         }
 
         public async Task SendNewUserEmail(string to, string userName, string tempPassword, string loginUrl)

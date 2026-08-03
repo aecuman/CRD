@@ -1,0 +1,470 @@
+<app-page-list-view [pageTitle]="'Rate Templates'">
+  <div buttoncontent>
+    <button *ngIf="auth.isOperationalUser" (click)="openBuilder()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+      + New Template
+    </button>
+  </div>
+
+  <div tabularcontent class="p-4">
+
+    <!-- ── Template list ───────────────────────────────────────────────── -->
+    <div *ngIf="!showBuilder">
+      <p *ngIf="!templates.length" class="text-gray-400 italic text-sm mt-4">
+        No templates yet. Create one to speed up district rate data entry.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div *ngFor="let t of templates"
+             class="border rounded-lg p-4 bg-white shadow-sm flex flex-col gap-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-semibold text-gray-800">{{ t.name }}</h3>
+              <p *ngIf="t.description" class="text-xs text-gray-500">{{ t.description }}</p>
+            </div>
+            <button *ngIf="auth.isAdmin" (click)="deleteTemplate(t.id!)"
+              class="text-red-400 hover:text-red-600 text-sm">✕</button>
+          </div>
+          <div class="flex gap-3 text-xs text-gray-600">
+            <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+              {{ t.plantCount }} plant item{{ t.plantCount !== 1 ? 's' : '' }}
+            </span>
+            <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+              {{ t.structureCount }} structure{{ t.structureCount !== 1 ? 's' : '' }}
+            </span>
+          </div>
+          <p class="text-xs text-gray-400">Created {{ t.createdAt | date:'mediumDate' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Builder ─────────────────────────────────────────────────────── -->
+    <div *ngIf="showBuilder" class="flex gap-6 h-[80vh]">
+
+      <!-- LEFT: item picker -->
+      <div class="w-72 shrink-0 flex flex-col border-r pr-4 overflow-y-auto">
+
+        <!-- Template name / description -->
+        <div class="mb-4 space-y-2">
+          <input [(ngModel)]="templateName" placeholder="Template name *"
+            class="w-full border rounded p-2 text-sm" />
+          <textarea [(ngModel)]="templateDescription" placeholder="Description (optional)"
+            rows="2" class="w-full border rounded p-2 text-sm resize-none"></textarea>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="flex border-b mb-3 text-sm font-medium">
+          <button (click)="activeMainTab='crops'" class="py-1.5 px-3"
+            [ngClass]="activeMainTab==='crops' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'">
+            🌱 Crops/Trees
+          </button>
+          <button (click)="activeMainTab='structures'" class="py-1.5 px-3"
+            [ngClass]="activeMainTab==='structures' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'">
+            🏗️ Structures
+          </button>
+        </div>
+
+        <!-- Crops/Trees Section -->
+        <ng-container *ngIf="activeMainTab==='crops'">
+          <!-- Sub-tabs for Single/Groups -->
+          <div class="flex border-b mb-3 bg-gray-50 rounded-t text-xs font-medium">
+            <button (click)="activeCropsSubTab='single'" class="flex-1 py-1.5 text-center"
+              [ngClass]="activeCropsSubTab==='single' ? 'border-b-2 border-green-600 text-green-600 bg-white' : 'text-gray-500'">
+              Single Crop/Tree ({{ plants.length }})
+            </button>
+            <button (click)="activeCropsSubTab='groups'" class="flex-1 py-1.5 text-center"
+              [ngClass]="activeCropsSubTab==='groups' ? 'border-b-2 border-green-600 text-green-600 bg-white' : 'text-gray-500'">
+              Groups ({{ groupedPlants.length }})
+            </button>
+          </div>
+
+          <!-- Individual Crops/Trees -->
+          <ng-container *ngIf="activeCropsSubTab==='single'">
+            <div *ngFor="let p of plants" class="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+              <span class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-medium truncate">{{ p.commonName }}</span>
+                <span class="text-xs text-gray-400 truncate italic">{{ p.botanicalName }}</span>
+              </span>
+              <ng-container *ngIf="isPlantSelected('p_'+p.id); else addBtn">
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2 shrink-0">✓ Added</span>
+              </ng-container>
+              <ng-template #addBtn>
+                <button (click)="addPlant(p)" 
+                  class="ml-2 text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded shrink-0">
+                  + Add
+                </button>
+              </ng-template>
+            </div>
+          </ng-container>
+
+          <!-- Grouped Crops/Trees -->
+          <ng-container *ngIf="activeCropsSubTab==='groups'">
+            <div *ngFor="let g of groupedPlants" class="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+              <span class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-medium truncate">{{ g.name }}</span>
+                <span class="text-xs text-gray-400">
+                  {{ g.plants?.length ?? 0 }} plant(s) • {{ g.growthStages?.length ?? 0 }} stage(s)
+                </span>
+              </span>
+              <ng-container *ngIf="isPlantSelected('g_'+g.id); else addBtn">
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2 shrink-0">✓ Added</span>
+              </ng-container>
+              <ng-template #addBtn>
+                <button (click)="addGroupedPlant(g)" 
+                  class="ml-2 text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded shrink-0">
+                  + Add
+                </button>
+              </ng-template>
+            </div>
+            <p *ngIf="!groupedPlants.length" class="text-xs text-gray-400 italic p-2">
+              No grouped crops/trees. Create groups in the Crops/Trees page first.
+            </p>
+          </ng-container>
+        </ng-container>
+
+        <!-- Structures Section -->
+        <ng-container *ngIf="activeMainTab==='structures'">
+          <ng-container *ngFor="let cat of groupedStructures">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-2 mb-1 px-1">
+              {{ cat.categoryName }}
+            </p>
+            <div *ngFor="let s of cat.items" class="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+              <span class="text-sm text-gray-800 flex-1">{{ s.name }}</span>
+              <ng-container *ngIf="isStructureSelected(s.id!); else addBtn">
+                <select class="text-xs border rounded px-1 py-0.5"
+                  [ngModel]="structureConfigs.get(s.id!)?.unit"
+                  (ngModelChange)="setStructureUnit(s.id!, $event)">
+                  <option *ngFor="let k of structureUnitKeys" [value]="k">
+                    {{ structureUnitLabels[k] }}
+                  </option>
+                </select>
+              </ng-container>
+              <ng-template #addBtn>
+                <button (click)="addStructure(s)" 
+                  class="ml-2 text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded shrink-0">
+                  + Add
+                </button>
+              </ng-template>
+            </div>
+          </ng-container>
+        </ng-container>
+
+      </div><!-- /left -->
+
+      <!-- RIGHT: Template Configuration & Builder Table -->
+      <div class="flex-1 flex flex-col gap-4 overflow-hidden">
+
+        <!-- No items added -->
+        <div *ngIf="plantConfigs.size === 0 && structureConfigs.size === 0" class="flex flex-col items-center justify-center h-full text-gray-400">
+          <p class="text-sm">Click "+ Add" on the left to start building your template.</p>
+        </div>
+
+        <!-- Template Configuration Summary -->
+        <div *ngIf="plantConfigs.size > 0 || structureConfigs.size > 0" class="flex flex-col overflow-hidden border rounded bg-white">
+          <h3 class="text-sm font-semibold text-gray-800 px-4 py-2 border-b bg-gray-50">Template Configuration</h3>
+          
+          <div class="overflow-y-auto flex-1 space-y-2 p-3">
+            <!-- Plants -->
+            <ng-container *ngFor="let config of getPreviewItems(); let idx = index">
+              <!-- Summary Item -->
+              <div class="border rounded-lg bg-white hover:shadow-sm transition-shadow" [ngClass]="{'border-blue-300 bg-blue-50': expandedPreviewRows[idx]}">
+                <!-- Summary Row (only shown when collapsed) -->
+                <div *ngIf="!expandedPreviewRows[idx]" class="flex items-center justify-between px-4 py-3 gap-3">
+                  <div class="flex items-center gap-2 flex-1 min-w-0">
+                    <button (click)="togglePreviewRow(idx)" class="text-gray-500 hover:text-gray-700 shrink-0">
+                      {{ expandedPreviewRows[idx] ? '▼' : '▶' }}
+                    </button>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium text-gray-800 mb-2">{{ config.displayName }}</p>
+                      <!-- Growth Stages -->
+                      <div class="mb-2">
+                        <p class="text-xs font-semibold text-gray-600 mb-1">Growth Stages</p>
+                        <div class="flex flex-wrap gap-1">
+                          <span *ngFor="let stage of config.growthStages" class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded">{{ stage }}</span>
+                        </div>
+                      </div>
+                      <!-- Units -->
+                      <div class="mb-2">
+                        <p class="text-xs font-semibold text-gray-600 mb-1">Units</p>
+                        <div class="flex flex-wrap gap-1">
+                          <span *ngFor="let unit of config.units" class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded">{{ unit }}</span>
+                        </div>
+                      </div>
+                      <!-- Quality Levels -->
+                      <div class="mb-2">
+                        <p class="text-xs font-semibold text-gray-600 mb-1">Quality Levels</p>
+                        <div class="flex flex-wrap gap-1">
+                          <span *ngFor="let quality of config.qualities" class="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded">{{ quality }}</span>
+                        </div>
+                      </div>
+                      <!-- Categories -->
+                      <div *ngIf="config.categoryLabels?.length">
+                        <p class="text-xs font-semibold text-gray-600 mb-1">Categorisation</p>
+                        <div class="flex flex-wrap gap-1">
+                          <span *ngFor="let cat of config.categoryLabels" class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded">{{ cat }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-center shrink-0">
+                    <p class="font-semibold text-blue-600 text-sm">{{ config.rowCount }} row{{ config.rowCount !== 1 ? 's' : '' }}</p>
+                  </div>
+                  <div class="flex gap-1 shrink-0">
+                    <button (click)="movePreviewItem(idx, 'up')" [disabled]="idx === 0" class="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded">↑</button>
+                    <button (click)="movePreviewItem(idx, 'down')" [disabled]="idx === getPreviewItems().length - 1" class="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded">↓</button>
+                    <button (click)="removeItem(idx)" class="px-2 py-1 text-xs text-red-600 hover:text-red-800 font-semibold">×</button>
+                  </div>
+                </div>
+
+                <!-- Expanded Configuration Form (Edit Controls) -->
+                <div *ngIf="expandedPreviewRows[idx]" class="bg-white">
+                  <!-- Header -->
+                  <div class="px-4 py-2.5 border-b bg-gray-50 flex items-center justify-between">
+                    <h4 class="font-medium text-gray-800">{{ config.displayName }}</h4>
+                    <button (click)="togglePreviewRow(idx)" class="text-xs bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded">
+                      Close
+                    </button>
+                  </div>
+                  
+                  <!-- Form Content -->
+                  <div class="px-4 py-3 space-y-3">
+                  <!-- Categorisation -->
+                  <div *ngIf="config.infoCategories?.length">
+                    <p class="text-xs font-semibold text-gray-700 mb-1.5">Categorisation</p>
+                    <div class="space-y-2">
+                      <ng-container *ngFor="let catInfo of config.infoCategories; let i = index">
+                        <div class="border-b pb-2 last:border-b-0">
+                          <p class="text-xs font-medium text-gray-600 mb-1">{{ catInfo.name }}</p>
+                          <div class="flex flex-wrap gap-1.5">
+                            <label *ngFor="let option of catInfo.info; let j = index" class="flex items-center gap-1.5 text-xs cursor-pointer">
+                              <input type="checkbox"
+                                [checked]="isCategoryInfoSelected(config, catInfo.categoryId!, catInfo.id!, j)"
+                                (change)="toggleCategoryInfo(config, catInfo.categoryId!, catInfo.id!, j)"
+                                class="h-3.5 w-3.5 accent-blue-600" />
+                              {{ option }}
+                            </label>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <!-- Units -->
+                  <div>
+                    <p class="text-xs font-semibold text-gray-700 mb-1.5">Units of Measure</p>
+                    <div class="flex flex-wrap gap-2">
+                      <label *ngFor="let u of plantUnitKeys" class="flex items-center gap-1.5 text-xs cursor-pointer">
+                        <input type="checkbox"
+                          [checked]="config.selectedUnits?.includes(u)"
+                          (change)="toggleUnit(config, u)"
+                          class="h-3.5 w-3.5 accent-blue-600" />
+                        {{ unitLabels[u] }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Growth Stages -->
+                  <div *ngIf="config.availableStages?.length">
+                    <p class="text-xs font-semibold text-gray-700 mb-1.5">Growth Stages</p>
+                    <div class="flex flex-wrap gap-2">
+                      <label *ngFor="let s of config.availableStages" class="flex items-center gap-1.5 text-xs cursor-pointer">
+                        <input type="checkbox"
+                          [checked]="config.selectedGrowthStageIds?.includes(s.id!)"
+                          (change)="toggleStage(config, s.id!)"
+                          class="h-3.5 w-3.5 accent-blue-600" />
+                        {{ s.name }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Quality -->
+                  <div>
+                    <p class="text-xs font-semibold text-gray-700 mb-1.5">Quality Levels</p>
+                    <div class="flex flex-wrap gap-2">
+                      <label *ngFor="let q of qualityOptions" class="flex items-center gap-1.5 text-xs cursor-pointer" [ngClass]="{'opacity-60': q==='Good'}">
+                        <input type="checkbox"
+                          [checked]="config.selectedQualities?.includes(q)"
+                          [disabled]="q==='Good'"
+                          (change)="toggleQuality(config, q)"
+                          class="h-3.5 w-3.5 accent-blue-600" />
+                        {{ q }}{{ q==='Good' ? ' (always included)' : '' }}
+                      </label>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Structures -->
+            <!-- Structures Summary -->
+            <div *ngIf="structureConfigs.size > 0" class="space-y-3">
+              <h3 class="text-sm font-semibold text-gray-800">Structures</h3>
+              
+              <!-- Group structures by category -->
+              <div *ngFor="let category of getStructuresByCategory() | keyvalue" class="space-y-2">
+                <!-- Category Header -->
+                <div class="font-medium text-gray-700 text-sm px-2 py-1 bg-gray-50 rounded">
+                  {{ category.key }}
+                </div>
+                
+                <!-- Structures in Category -->
+                <div *ngFor="let struct of category.value; let structIdx = index" class="border rounded-lg bg-white hover:shadow-sm transition-shadow">
+                  <div class="flex items-start justify-between px-4 py-3 gap-3">
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium text-gray-800">{{ struct.displayName }}</p>
+                      <p *ngIf="struct.description" class="text-xs text-gray-600 mt-1 whitespace-pre-line">{{ struct.description }}</p>
+                      <p class="text-xs text-gray-500 mt-1">
+                        <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded">{{ structureUnitLabels[struct.unit] }}</span>
+                      </p>
+                    </div>
+                    <div class="flex gap-1 shrink-0">
+                      <button (click)="moveStructure(struct.structureId, 'up')" 
+                              class="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded"
+                              [disabled]="(getStructuresByCategory()[category.key]?.indexOf(struct) ?? -1) === 0">↑</button>
+                      <button (click)="moveStructure(struct.structureId, 'down')" 
+                              class="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed rounded"
+                              [disabled]="(getStructuresByCategory()[category.key]?.indexOf(struct) ?? -1) === (getStructuresByCategory()[category.key]?.length ?? 0) - 1">↓</button>
+                      <button (click)="removeStructure(struct.structureId)" class="px-2 py-1 text-xs text-red-600 hover:text-red-800 font-semibold">×</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons Footer -->
+        <div *ngIf="plantConfigs.size > 0 || structureConfigs.size > 0" class="flex gap-2 justify-end px-4 py-2 border-t bg-gray-50">
+          <button (click)="closeBuilder()" class="px-3 py-1.5 text-sm border rounded hover:bg-gray-100">Cancel</button>
+          <button (click)="showPreviewModal = true" class="px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded">📋 Preview</button>
+          <button (click)="saveTemplate()" [disabled]="!templateName || saving" class="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50">
+            {{ saving ? 'Saving...' : 'Save Template' }}
+          </button>
+        </div>
+
+      </div><!-- /right -->
+    </div><!-- /builder -->
+
+    <!-- ── Preview Modal ──────────────────────────────────────────────── -->
+    <div *ngIf="showPreviewModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white rounded-lg shadow-xl max-w-6xl w-[90%] max-h-[85vh] flex flex-col">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b bg-gray-50 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-800">Template Preview</h2>
+          <button (click)="showPreviewModal = false" class="text-2xl text-gray-400 hover:text-gray-600">×</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="flex-1 overflow-hidden flex flex-col">
+          
+          <!-- Tab Controls -->
+          <div class="flex border-b px-6 pt-4 mb-3 gap-0">
+            <button (click)="previewActiveTab = 'plants'" 
+                    class="py-2 px-4 text-sm font-medium border-b-2 transition-colors"
+                    [ngClass]="previewActiveTab === 'plants' 
+                      ? 'border-blue-600 text-blue-600 bg-blue-50' 
+                      : 'border-transparent text-gray-600 hover:text-gray-800'">
+              🌱 Plant/Tree Rates
+            </button>
+            <button (click)="previewActiveTab = 'structures'" 
+                    *ngIf="getStructurePreviewItems().length > 0"
+                    class="py-2 px-4 text-sm font-medium border-b-2 transition-colors"
+                    [ngClass]="previewActiveTab === 'structures' 
+                      ? 'border-blue-600 text-blue-600 bg-blue-50' 
+                      : 'border-transparent text-gray-600 hover:text-gray-800'">
+              🏗️ Structures
+            </button>
+          </div>
+
+          <!-- Tab Content Area -->
+          <div class="flex-1 overflow-hidden px-6 pb-6">
+            
+            <!-- Plants Tab Content -->
+            <div *ngIf="previewActiveTab === 'plants'" class="h-full flex flex-col">
+              <p class="text-xs text-gray-600 mb-2">
+                <strong>{{ getPreviewItems().length }}</strong> plant item(s) generating 
+                <strong class="text-blue-600">{{ getSummaryRowCount() }}</strong> total rate rows
+              </p>
+              <div class="overflow-x-auto overflow-y-auto flex-1 bg-white rounded border border-gray-300">
+                <table class="w-full text-sm border-collapse">
+                  <thead class="bg-gray-100 sticky top-0 z-10">
+                    <tr>
+                      <th class="border border-gray-300 p-2 text-left font-semibold w-1/4">Plant Name</th>
+                      <th class="border border-gray-300 p-2 text-left font-semibold w-1/6">Unit</th>
+                      <th class="border border-gray-300 p-2 text-left font-semibold w-1/4">Growth Stage</th>
+                      <th class="border border-gray-300 p-2 text-left font-semibold w-1/4">Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Rows with proper rowspan for Plant Name and Unit -->
+                    <tr *ngFor="let row of getPreviewRowsWithRowspan(); let idx = index">
+                      <td *ngIf="row.showPlant" 
+                          class="border border-gray-300 p-2 align-top font-semibold bg-gray-50" 
+                          [attr.rowspan]="row.plantRowspan">
+                        {{ row.plantName }}
+                      </td>
+                      <td *ngIf="row.showUnit" 
+                          class="border border-gray-300 p-2 align-top bg-gray-50" 
+                          [attr.rowspan]="row.unitRowspan">
+                        {{ row.unit }}
+                      </td>
+                      <td class="border border-gray-300 p-2">{{ row.stage }}</td>
+                      <td class="border border-gray-300 p-2">—</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="!getPreviewRowsWithRowspan().length" class="p-4 text-center text-gray-400 text-sm">
+                  No plant rows to preview
+                </div>
+              </div>
+            </div>
+
+            <!-- Structures Tab Content -->
+            <div *ngIf="previewActiveTab === 'structures' && getStructurePreviewItems().length > 0" class="h-full flex flex-col">
+              <p class="text-xs text-gray-600 mb-2">
+                <strong>{{ getStructurePreviewItems().length }}</strong> structure(s)
+              </p>
+              <div class="overflow-y-auto flex-1 space-y-4">
+                <!-- Group structures by category -->
+                <ng-container *ngFor="let category of getStructuresByCategory() | keyvalue">
+                  <!-- Category Header -->
+                  <div class="font-medium text-gray-700 text-sm px-3 py-1.5 bg-gray-50 rounded border border-gray-200">
+                    {{ category.key }}
+                  </div>
+                  
+                  <!-- Structures Table for this category -->
+                  <table class="w-full text-sm border-collapse border border-gray-300 rounded">
+                    <thead class="bg-gray-100">
+                      <tr>
+                        <th class="border border-gray-300 p-2 text-left font-semibold w-1/3">Structure Name</th>
+                        <th class="border border-gray-300 p-2 text-left font-semibold w-1/3">Description</th>
+                        <th class="border border-gray-300 p-2 text-left font-semibold w-1/3">Unit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let struct of category.value">
+                        <td class="border border-gray-300 p-2 font-medium">{{ struct.displayName }}</td>
+                        <td class="border border-gray-300 p-2 text-xs text-gray-700 whitespace-pre-line">{{ struct.description || '—' }}</td>
+                        <td class="border border-gray-300 p-2">{{ structureUnitLabels[struct.unit] }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-container>
+              </div>
+            </div>
+
+          </div><!-- /Tab Content Area -->
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t bg-gray-50 flex gap-3 justify-end">
+          <button (click)="showPreviewModal = false" class="px-4 py-2 text-sm border rounded hover:bg-gray-100">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</app-page-list-view>

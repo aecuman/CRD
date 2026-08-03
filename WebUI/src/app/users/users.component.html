@@ -66,88 +66,132 @@
 
 
                  <!-- Modal -->
-<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-lg w-96 shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-center">{{registerForm.get('id')?.value?'Edit':'Register New'}} User</h2>
-  
-      <form [formGroup]="registerForm" (ngSubmit)="submit()">
-        <!-- Full Name -->
-        <div class="mb-4">
-          <label class="block text-gray-700">First Name</label>
-          <input type="text" formControlName="firstname" class="w-full p-2 border border-gray-300 rounded mt-1"
-            [ngClass]="{'border-red-500': registerForm.get('firstname')?.touched && registerForm.get('firstname')?.invalid}" />
-          <p *ngIf="registerForm.get('firstname')?.touched && registerForm.get('firstname')?.hasError('required')" 
-            class="text-red-500 text-sm mt-1">Full Name is required.</p>
-          <p *ngIf="registerForm.get('firstname')?.touched && registerForm.get('firstname')?.hasError('minlength')" 
-            class="text-red-500 text-sm mt-1">Full Name must be at least 3 characters.</p>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700">Last Name</label>
-            <input type="text" formControlName="lastname" class="w-full p-2 border border-gray-300 rounded mt-1"
-              [ngClass]="{'border-red-500': registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid}" />
-            <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.hasError('required')" 
-              class="text-red-500 text-sm mt-1">Full Name is required.</p>
-            <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.hasError('minlength')" 
-              class="text-red-500 text-sm mt-1">Full Name must be at least 3 characters.</p>
-          </div>
-        <!-- Email -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Email</label>
-          <input type="email" formControlName="email" class="w-full p-2 border border-gray-300 rounded mt-1"
-            [ngClass]="{'border-red-500': registerForm.get('email')?.touched && registerForm.get('email')?.invalid}" />
-          <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')" 
-            class="text-red-500 text-sm mt-1">Email is required.</p>
-          <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')" 
-            class="text-red-500 text-sm mt-1">Invalid email format.</p>
-        </div>
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 z-50 overflow-y-auto py-8">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4">
 
-        <!-- Title -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Title</label>
-          <input type="text" formControlName="title" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Mr., Mrs., Dr." />
-        </div>
+      <!-- Header -->
+      <div class="flex items-center justify-between px-8 py-5 border-b">
+        <h2 class="text-xl font-semibold text-gray-800">
+          {{ registerForm.get('id')?.value ? 'Edit' : 'Register New' }} User
+        </h2>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+      </div>
 
-        <!-- Designation -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Designation</label>
-          <input type="text" formControlName="designation" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Manager, Analyst" />
-        </div>
+      <form [formGroup]="registerForm" (ngSubmit)="submit()" class="px-8 py-6">
 
-        <!-- Duty Station -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Duty Station</label>
-          <input type="text" formControlName="dutyStation" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="e.g., Kampala, Jinja" />
-        </div>
-  
-        <!-- Roles -->
-        <div class="mb-4">
-          <label class="block text-gray-700">Roles</label>
-          <select formControlName="roles" multiple class="w-full p-2 border border-gray-300 rounded mt-1"
-            [ngClass]="{'border-red-500': registerForm.get('roles')?.touched && registerForm.get('roles')?.invalid}">
-            <option value="admin">Admin</option>
-            <option value="User">User</option>
-            <option value="Manager">Manager</option>
-          </select>
-          <p *ngIf="registerForm.get('roles')?.touched && registerForm.get('roles')?.hasError('required')" 
-            class="text-red-500 text-sm mt-1">At least one role must be selected.</p>
-        </div>
-  
+        <!-- 2-column grid: personal info | roles -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
 
-        <!-- Submit Button -->
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 mt-4 rounded disabled:opacity-70" 
-          [disabled]="registerForm.invalid||isLoading">
-          {{registerForm.get('id')?.value?'Update' : 'Register'}} User
-        </button>
-  
-        <!-- Success/Error Messages -->
-        <p *ngIf="message" class="text-green-500 text-sm mt-4">{{ message }}</p>
+          <!-- ── LEFT COLUMN: personal details ── -->
+          <div class="space-y-4">
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">First Name <span class="text-red-500">*</span></label>
+              <input type="text" formControlName="firstname"
+                class="mt-1 w-full p-2 border rounded text-sm"
+                [ngClass]="{'border-red-400': registerForm.get('firstname')?.touched && registerForm.get('firstname')?.invalid}" />
+              <p *ngIf="registerForm.get('firstname')?.touched && registerForm.get('firstname')?.hasError('required')"
+                class="text-red-500 text-xs mt-1">Required.</p>
+              <p *ngIf="registerForm.get('firstname')?.touched && registerForm.get('firstname')?.hasError('minlength')"
+                class="text-red-500 text-xs mt-1">Minimum 3 characters.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Last Name <span class="text-red-500">*</span></label>
+              <input type="text" formControlName="lastname"
+                class="mt-1 w-full p-2 border rounded text-sm"
+                [ngClass]="{'border-red-400': registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid}" />
+              <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.hasError('required')"
+                class="text-red-500 text-xs mt-1">Required.</p>
+              <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.hasError('minlength')"
+                class="text-red-500 text-xs mt-1">Minimum 3 characters.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+              <input type="email" formControlName="email"
+                class="mt-1 w-full p-2 border rounded text-sm"
+                [ngClass]="{'border-red-400': registerForm.get('email')?.touched && registerForm.get('email')?.invalid}" />
+              <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')"
+                class="text-red-500 text-xs mt-1">Required.</p>
+              <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')"
+                class="text-red-500 text-xs mt-1">Invalid email format.</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Title</label>
+              <input type="text" formControlName="title" placeholder="e.g., Mr., Mrs., Dr."
+                class="mt-1 w-full p-2 border rounded text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Designation</label>
+              <input type="text" formControlName="designation" placeholder="e.g., Valuer, Analyst"
+                class="mt-1 w-full p-2 border rounded text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Duty Station</label>
+              <input type="text" formControlName="dutyStation" placeholder="e.g., Kampala, Jinja"
+                class="mt-1 w-full p-2 border rounded text-sm" />
+            </div>
+
+          </div><!-- /left column -->
+
+          <!-- ── RIGHT COLUMN: roles ── -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Roles <span class="text-red-500">*</span>
+              <span class="text-xs text-gray-400 font-normal ml-1">(select all that apply)</span>
+            </label>
+
+            <div class="border rounded p-3 space-y-2 bg-gray-50 max-h-80 overflow-y-auto">
+              <label *ngFor="let role of availableRoles"
+                class="flex items-start gap-3 p-2 rounded hover:bg-white cursor-pointer group">
+                <input type="checkbox"
+                  class="mt-0.5 h-4 w-4 accent-blue-600 cursor-pointer"
+                  [value]="role.value"
+                  [checked]="registerForm.get('roles')?.value?.includes(role.value)"
+                  (change)="toggleRole(role.value, $event)" />
+                <span class="flex flex-col">
+                  <span class="text-sm font-medium text-gray-800">{{ role.label }}</span>
+                  <span class="text-xs text-gray-500">{{ role.desc }}</span>
+                </span>
+              </label>
+            </div>
+
+            <p *ngIf="registerForm.get('roles')?.touched && registerForm.get('roles')?.hasError('required')"
+              class="text-red-500 text-xs mt-1">At least one role must be selected.</p>
+
+            <!-- current selection summary -->
+            <div *ngIf="registerForm.get('roles')?.value?.length" class="mt-2 flex flex-wrap gap-1">
+              <span *ngFor="let r of registerForm.get('roles')?.value"
+                class="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full">
+                {{ r }}
+              </span>
+            </div>
+          </div><!-- /right column -->
+
+        </div><!-- /grid -->
+
+        <!-- Messages -->
+        <p *ngIf="message" class="text-green-600 text-sm mt-4">{{ message }}</p>
         <p *ngIf="errorMessage" class="text-red-500 text-sm mt-4">{{ errorMessage }}</p>
+
+        <!-- Actions -->
+        <div class="flex gap-3 mt-6">
+          <button type="submit"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded disabled:opacity-60"
+            [disabled]="registerForm.invalid || isLoading">
+            {{ registerForm.get('id')?.value ? 'Update User' : 'Register User' }}
+          </button>
+          <button type="button" (click)="closeModal()"
+            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded">
+            Cancel
+          </button>
+        </div>
+
       </form>
-  
-      <!-- Close Button -->
-      <button (click)="closeModal()" class="mt-4 bg-gray-500 text-white px-4 py-2 rounded w-full">
-        Close
-      </button>
     </div>
   </div>
   

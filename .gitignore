@@ -43,3 +43,7 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+# Docker volume data
+data/mssql/
+data/mongo/
+data/

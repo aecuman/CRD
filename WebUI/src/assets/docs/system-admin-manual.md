@@ -159,11 +159,22 @@ User management is performed through the **web application** by users with the *
 
 ### 3.4 User Roles Explained
 
-| Role | Web Portal Access | Notes |
-|------|-----------------|-------|
-| `User` | Reviews (view), Published Rates, Map, Crops/Trees, Structures | Read-only access |
-| `Manager` | All User access + Submit District Rate, Manage Workflow, Moderate Rates, View Reports, Settings | Day-to-day operational role |
-| `admin` | All Manager access + User Management, full Settings | Reserved for system administrators |
+Roles map directly to the responsibilities defined in the Compensation Rates Database stakeholder consultation (REDAH/MLHUD, July 2022).
+
+| Role value | Portal access | Corresponds to |
+|------------|--------------|----------------|
+| `User` | View-only: Reviews, Published Rates, Map, Crops/Trees, Structures | Any read-only observer |
+| `Registry` | Operational: all workflow steps assigned to Registry (document upload, scan/upload, data entry buttons) | Registry staff |
+| `DataInputClerk` | Operational: data entry screens (Add Crops/Trees, Add Structures) | Data Input Clerk |
+| `ChairModerationCommittee` | Operational: review, approve/defer, schedule, final publishing approval | Chair – Moderation Committee |
+| `ModerationCommitteeSecretary` | Operational: moderate rates, generate reports, draft communications | Secretary – Moderation Committee |
+| `RegionalOfficer` | Operational: communicate moderation outcomes and publishing approvals to/from districts | Regional Officer |
+| `Manager` | Operational (legacy alias for Regional Officer) | Regional Officer |
+| `admin` | Full access: all operational actions + User Management, Settings, delete/revert any record | System Administrator |
+
+> **Assigning multiple roles:** A user can hold more than one role (e.g., a senior Registry officer may also hold `ChairModerationCommittee`). Hold **Ctrl** while clicking options in the Roles list to select multiple.
+
+> **Read-only vs operational:** Any user whose only role is `User` will see all content but will not see action buttons (Mark Complete, Upload, Moderate, etc.). All other roles are operational.
 
 ---
 

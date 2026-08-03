@@ -25,6 +25,25 @@ export class UsersComponent {
 
   isLoading = false;
   isResetting: boolean= false;
+
+  availableRoles = [
+    { value: 'admin',                       label: 'Admin',                         desc: 'All actions + user management' },
+    { value: 'superadmin',                  label: 'Super Admin',                   desc: 'Full unrestricted access' },
+    { value: 'User',                        label: 'User',                          desc: 'View only' },
+    { value: 'Registry',                    label: 'Registry',                      desc: 'Document upload & data entry' },
+    { value: 'DataInputClerk',              label: 'Data Input Clerk',              desc: 'Rate entry (crops/structures)' },
+    { value: 'ChairModerationCommittee',    label: 'Chair – Moderation Committee',  desc: 'Review, approve, schedule, final approval' },
+    { value: 'ModerationCommitteeSecretary',label: 'Secretary – Moderation Committee', desc: 'Moderate, generate reports, draft comms' },
+    { value: 'RegionalOfficer',             label: 'Regional Officer',              desc: 'Communicate outcomes to/from districts' },
+    { value: 'Manager',                     label: 'Manager (legacy)',              desc: 'Alias for Regional Officer' },
+  ];
+
+  toggleRole(value: string, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const current: string[] = this.registerForm.get('roles')?.value ?? [];
+    const updated = checked ? [...current, value] : current.filter((r: string) => r !== value);
+    this.registerForm.patchValue({ roles: updated });
+  }
   constructor(private api: APIService,private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       id:[''],

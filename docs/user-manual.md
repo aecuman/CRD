@@ -45,9 +45,13 @@ Typical user roles:
 
 | Role | Capabilities |
 |------|-------------|
-| **User** | View reviews, view published rates, navigate the map |
-| **Manager** | All of the above, plus submit new district rates, manage workflow steps, moderate rates, and access reports |
-| **Admin** | All of the above, plus manage system users and application settings |
+| **User** | View reviews, view published rates, navigate the map — no action buttons visible |
+| **Registry** | All User access + mark document-submission and data-upload substeps complete, add attachments and comments |
+| **Data Input Clerk** | All User access + enter crop/tree and structure rates (Add Crops/Trees, Add Structures) |
+| **Chair – Moderation Committee** | All User access + review and approve/defer rates, schedule sessions, give final publishing approval |
+| **Secretary – Moderation Committee** | All User access + conduct moderation, generate reports, draft communications |
+| **Regional Officer** (`RegionalOfficer` or `Manager`) | All User access + communicate moderation outcomes and publishing approvals to/from districts |
+| **Admin** | All of the above + manage system users and application settings |
 
 ---
 
@@ -175,27 +179,114 @@ The **Workflow Timeline** page shows the complete progression of a district rate
 3. Once all sub-steps within a step are complete the **✅ Complete Step** button appears.  Click it to advance to the next step.
 4. To undo a completed step or sub-step, click 🔁 **Revert Step** / 🔁 **Revert** (visible on completed items for Managers/Admins).
 
-**Workflow stages overview:**
+**Sidebar quick-actions unlock by stage:**
 
-| Stage | Description |
-|-------|-------------|
-| **1 — Data Entry** | Field data entered for crops/trees and structures |
-| **2 — Moderation** | Rates reviewed and moderated by the committee |
-| **3 — Approval** | Moderated rates reviewed for approval |
-| **4 — Publication** | Approved rates published to the public record |
+| Sidebar Section | Available When |
+|-----------------|---------------|
+| **📦 Data** — Add Crops/Trees, Add Structures | Steps 1 and 2 (Document Submission & Data Input) |
+| **🧮 Moderation** — Moderate rates, Configure Comparables | Steps 3 – 5 (Initial Review through District Notification) |
+| **📑 Reports** — Moderation Report | After Step 4 (Moderation Session) is fully complete |
+
+---
+
+### Full Workflow — 6 Steps with Sub-Steps
+
+The **Compensation Rates Database Workflow** consists of six sequential steps.  Every sub-step must be marked complete before the parent step can be closed.
+
+---
+
+#### Step 1 — Document Submission
+**Responsible role:** Registry
+
+| # | Sub-step |
+|---|----------|
+| 1.1 | Receive proposed district compensation rates (hardcopy) |
+| 1.2 | Scan and upload to Compensation Rates Database (CRD) |
+| 1.3 | Submit electronic copy to Chief Government Valuer |
+| 1.4 | Forward to Chair – Moderation Committee |
+
+> **Sidebar action:** No CRD data-entry actions are required at this step — use the sub-step document upload to attach scanned copies.
+
+---
+
+#### Step 2 — Data Input
+**Responsible roles:** Chair – Moderation Committee, Data Input Clerk
+
+| # | Sub-step | Role |
+|---|----------|------|
+| 2.1 | Allocate file for input into digital format | Chair – Moderation Committee |
+| 2.2 | Migrate / input rates into database | Data Input Clerk |
+
+> **Sidebar action:** The **📦 Data** sidebar section is enabled.  Use **➕ Add Crops/Trees** and **➕ Add Structures** to enter all rates for this district.
+
+---
+
+#### Step 3 — Initial Review & Scheduling
+**Responsible role:** Chair – Moderation Committee
+
+| # | Sub-step |
+|---|----------|
+| 3.1 | Review digital format for moderation |
+| 3.2 | Approve or defer for moderation |
+| 3.3 | Schedule moderation session |
+
+> **Sidebar action:** The **🧮 Moderation** sidebar section becomes available.  Configure comparable districts before the session begins (see Section 9.1).
+
+---
+
+#### Step 4 — Moderation Session
+**Responsible role:** Moderation Committee Secretary
+
+| # | Sub-step |
+|---|----------|
+| 4.1 | Conduct moderation (adjust or approve item by item) |
+| 4.2 | Generate moderation report and adjustment list |
+| 4.3 | Draft communication to Regional Officer |
+
+> **Sidebar action:** Use **🌾 Moderate Crops/Trees** and **🏗 Moderate Structures** from the Moderation sidebar section to review and moderate each rate.  Once this step is complete the **📑 Reports** section unlocks.
+
+---
+
+#### Step 5 — District Notification & Adjustment Upload
+**Responsible roles:** Regional Officer, Registry, Moderation Committee Secretary
+
+| # | Sub-step | Role |
+|---|----------|------|
+| 5.1 | Send moderation outcome to district (email / print) | Regional Officer |
+| 5.2 | Receive adjusted report | Registry |
+| 5.3 | Scan and upload adjusted report to CRD | Registry |
+| 5.4 | Pass / defer the adjusted schedule | Moderation Committee Secretary |
+| 5.5 | Generate report of adjusted schedule | Moderation Committee Secretary |
+| 5.6 | Submit for publishing communication | Moderation Committee Secretary |
+
+> **Sidebar action:** Upload the adjusted report as a sub-step document attachment (sub-step 5.3).
+
+---
+
+#### Step 6 — Final Publishing & Approval
+**Responsible roles:** Regional Officer, Registry, Chair – Moderation Committee
+
+| # | Sub-step | Role |
+|---|----------|------|
+| 6.1 | Send approved report to district (email / print) | Regional Officer |
+| 6.2 | Receive published copy from district | Registry |
+| 6.3 | Upload published report to CRD | Registry |
+| 6.4 | Approve as current official schedule | Chair – Moderation Committee |
+
+> **Sidebar action:** Upload the final published report as a document attachment on sub-step 6.3.  Completing this step marks the district rate schedule as officially approved.
 
 ---
 
 ## 7. Adding Crops / Trees Rates
 
-When the workflow is in the **Data Entry** step, the right sidebar on the Workflow Timeline page enables data entry:
+When the workflow is in the **Data Input** step (Step 2), the right sidebar on the Workflow Timeline page enables the Data section:
 
 1. Click **➕ Add Crops/Trees** (or navigate via the sidebar button).
 2. You are taken to the **Plant Rates** entry screen for the selected district rate.
 3. Enter rates for each crop/tree type, growth stage, and unit.
 4. Save each entry.
 
-> The Add Crops/Trees button is **disabled** once the workflow advances past the Data Entry step.
+> The Add Crops/Trees button is **disabled** once the workflow advances past the Data Input step (Step 2).
 
 ---
 
@@ -203,7 +294,7 @@ When the workflow is in the **Data Entry** step, the right sidebar on the Workfl
 
 Similar to Crops/Trees:
 
-1. Click **➕ Add Structures** from the Workflow Timeline sidebar.
+1. Click **➕ Add Structures** from the Workflow Timeline sidebar (available during Steps 1 and 2).
 2. Enter rates for each structure type and unit.
 3. Save each entry.
 
@@ -211,7 +302,7 @@ Similar to Crops/Trees:
 
 ## 9. Moderation
 
-Moderation is available once the workflow reaches the **Moderation** stage.
+Moderation is available once the workflow reaches **Step 3 — Initial Review & Scheduling** (the Moderation sidebar section unlocks).
 
 ### 9.1 Configuring Comparable Districts
 

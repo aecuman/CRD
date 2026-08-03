@@ -105,7 +105,7 @@ const cutoff = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
         layer.bindPopup(`
           <strong>${name}</strong><br>
           Status: ${status?.status ?? 'Unknown'}<br>
-          Year: ${ (status?status.year+'/'+nextYear:'')}<br>`
+          Year: ${ (status?.year ? status.year+'/'+nextYear : 'N/A') }<br>`
          + (nextYear&&((nextYear+1)==(new Date().getFullYear()+1))?'<span class="text-blue-500">Expiring Soon</span>':''))
         // + status?.inWorkflowProcess?(`<span class="text-blue-500">${status?.currentWorkflowStatusName}</span>`:'');
         layer.on('click', () => {

@@ -54,8 +54,7 @@ namespace CRD.API.Controllers
             var result = await Mediator.Send(new DeleteDistrictRateCommand(id));
             return result ? Ok() : NotFound();
         }
-        [HttpPost]
-        [Route("upload")]
+        [HttpPost("upload")]
         public async Task<ActionResult<int>> UploadFile(IFormFile file, [FromForm] int refId)
         {
             if (file == null || file.Length == 0)

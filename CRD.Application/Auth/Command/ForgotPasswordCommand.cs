@@ -36,10 +36,13 @@ namespace CRD.Application.Auth.Command
 
             if (result.Item1)
             {
-               
-var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={result.Item2}&email={request.Email}";
-                await _emailSender.SendPasswordResetEmailAsync(request.Email, result.Item3, resetLink);
-
+                var resetLink = $"{_configuration["FrontendUrl"]}/reset-password?token={result.Item2}&email={request.Email}";
+                // Fire-and-forget: return immediately, don't block on SMTP
+                _ = Task.Run(async () =>
+                {
+                    try { await _emailSender.SendPasswordResetEmailAsync(request.Email, result.Item3, resetLink); }
+                    catch (Exception ex) { _logger.LogError(ex, "Failed to send password reset email to {Email}", request.Email); }
+                });
             }
             return result.Item1;
         }

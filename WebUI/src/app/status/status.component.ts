@@ -24,6 +24,7 @@ districtRates: DistrictRateDto[] = [];
   districtRateStatuses?: string[] = ['Pending', 'Approved', 'Rejected', 'UnderReview', 'Published'];
 filterDistrictId?: number | null = null;
 showCompleted: boolean = false;
+defaultWorkflowId: number = 1;
 
 
 
@@ -54,6 +55,22 @@ showCompleted: boolean = false;
 
   ngOnInit(): void {
     this.loadDistrictRates();
+    this.loadDefaultWorkflow();
+  }
+
+  loadDefaultWorkflow() {
+    // Get the first workflow from the API to use as default
+    this.api.getWorkflows().subscribe(
+      (workflows: any[]) => {
+        if (workflows && workflows.length > 0) {
+          this.defaultWorkflowId = workflows[0].id;
+        }
+      },
+      (error) => {
+        console.error('Error loading workflows:', error);
+        // Keep default workflowId = 1
+      }
+    );
   }
   loadDistricts() {
     this.api.all().subscribe((data:District[])=> {
@@ -158,14 +175,14 @@ applyFilter() {
     });
   }
   startWorkflow(districtId: number,districtRateId:any): void {
-    const workflowId = 5; // You can make this dynamic or select based on UI input
+    const workflowId = this.defaultWorkflowId;
 
-    this.api.startWorkflow({ districtId,districtRateId, workflowId}).subscribe(() => {
+    this.api.startWorkflow({ districtId, districtRateId, workflowId}).subscribe(() => {
       alert("Workflow started for district.");
       this.ngOnInit(); // Refresh the table
     });
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.isOperationalUser;
   }
 }

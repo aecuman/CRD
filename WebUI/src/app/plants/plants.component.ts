@@ -457,6 +457,34 @@ currentPage: number = 1;
   onItemSelect(item: any) {
     console.log(item);
   }
+
+  onItemDeselect(item: any) {
+    // Prompt user for confirmation before removing category
+    const categoryName = item.text || item.name;
+    const confirmed = confirm(
+      `Are you sure you want to remove "${categoryName}"? This will delete all options associated with this category.`
+    );
+
+    if (confirmed) {
+      // Find and remove the category from categoryInfos FormArray
+      const categoryInfoArray = this.CategoryInfo;
+      const index = categoryInfoArray.controls.findIndex(
+        (control) => control.get('categoryId')?.value === item.id
+      );
+
+      if (index !== -1) {
+        categoryInfoArray.removeAt(index);
+      }
+    } else {
+      // If user cancels, restore the category back to the selected list
+      const currentCats = this.PlantForm?.get('cats')?.value || [];
+      if (!currentCats.find((cat: any) => cat.id === item.id)) {
+        currentCats.push(item);
+        this.PlantForm?.get('cats')?.setValue([...currentCats]);
+      }
+    }
+  }
+
   onItemGroupSelect(event:any){
     console.log(event);
   }
@@ -727,7 +755,7 @@ group.growthStages?.forEach(gs=>{
     }
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.isAdmin;
   }
 
 /*     savePlant() {

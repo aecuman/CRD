@@ -183,8 +183,8 @@ namespace CRD.Application.PlantRates.Commands
 
                 upserts.Add(existing);
             }
-                // Use the async bulk insertion method
-                return await _repository.AddManyAsync(upserts);
+                // Save changes (handles both new items added with AddWithoutSaving and existing items modified in-place)
+                return await _repository.SaveAsync();
         }
     }
 }

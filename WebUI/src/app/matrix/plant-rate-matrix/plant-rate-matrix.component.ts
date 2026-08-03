@@ -92,17 +92,9 @@ for (let q of optionalQualities) {
   this.selectedQualities.push(this.fb.control(q));
 }*/
 
-// Auto-select all Category Info Options
+// DO NOT auto-select category info options - let user choose manually
+// This was causing unintended multi-selection behavior
 this.selectedCategoryInfos.clear();
-for (let cat of this.currentPlant?.infoCategories ?? []) {
-  (cat.info??[]).forEach((info, index) => {
-    this.selectedCategoryInfos.push(this.fb.control({
-      categoryId: cat.categoryId,
-      info,
-      categoryInfoId: index
-    }));
-  });
-}
 
     //this.getAllOptions();
   }
@@ -133,9 +125,11 @@ getCategoryNameById(id: number): string {
     return this.plantRateForm.get('selectedCategoryInfos') as FormArray;
   }
   
-  isCategoryInfoSelected(categoryId: number, categoryInfoId: number): boolean {
+  isCategoryInfoSelected(categoryId: number, categoryInfoId: number, categoryInfoIndex?: number): boolean {
     return this.selectedCategoryInfos.value.some((item: any) =>
-      item.categoryId === categoryId && item.categoryInfoId === categoryInfoId
+      item.categoryId === categoryId && 
+      item.categoryInfoId === categoryInfoId &&
+      (categoryInfoIndex === undefined || item.categoryInfoIndex === categoryInfoIndex)
     );
   }
   
@@ -261,29 +255,37 @@ isTabValid(categoryInfoIndex: number): boolean {
   return rows.length > 0 && rows.every(this.isRateRowValid);
 }
   generateMatrixForActiveTab() {
+    if (!this.activeCategoryInfo) return;
+
+    const { categoryInfoIndex } = this.activeCategoryInfo;
+
+    // ✅ If we have prefilled data (editing), just filter it instead of regenerating
+    if (this.allMatrixRows.length > 0 && this.existingRates && this.existingRates.length > 0) {
+      this.matrixRows = this.allMatrixRows.filter(r => r.categoryInfoOption === categoryInfoIndex);
+      this.groupedMatrix = this.groupByUnit(this.matrixRows);
+      return;
+    }
+
+    // Otherwise, generate new rows (for new creation)
     this.matrixRows = [];
   
     const growthStages = this.selectedGrowthStages.value;
     const units = this.selectedUnits.value;
-    const selectedCategoryInfos = this.selectedCategoryInfos.value;
     const districtRateId = this.plantRateForm.get('districtRateId')?.value;
-    const infoCategories = this.currentPlant?.infoCategories ?? [];
     const qualities = ['Good', ...(this.selectedQualities.value as any[]).filter(q => q !== 'Good')];
-  
-    if (!this.activeCategoryInfo) return;
-  
-    const { categoryId, info, categoryInfoId, categoryInfoIndex } = this.activeCategoryInfo;
+
+    const { categoryId, info, categoryInfoId } = this.activeCategoryInfo;
 
     const baseRows: PlantRateDto[] = [];
   
     for (let unit of units) {
       for (let growthStage of growthStages) {
         for (let quality of qualities) {
-        /**/  const row: PlantRateDto = {
+          const row: PlantRateDto = {
             districtRateId,
             growthStageId: growthStage,
             categoryId,
-            categoryInfoOption:categoryInfoIndex,
+            categoryInfoOption: categoryInfoIndex,
             categoryInfoOptionName: info,
             categoryInfoId,
             unit,
@@ -304,17 +306,17 @@ isTabValid(categoryInfoIndex: number): boolean {
             row.plantId = this.currentPlant?.id;
             row.plantType = this.currentPlant?.plantType ?? undefined;
           }
-        // Check if we already had this row in allMatrixRows
-        const existing = this.allMatrixRows.find(r =>
-          r.categoryId === categoryId &&
-          r.categoryInfoId === categoryInfoId &&
-          r.categoryInfoOption === categoryInfoIndex &&
-          r.growthStageId === growthStage &&
-          r.unit === unit &&
-          r.quality === quality
-        );
+          // Check if we already had this row in allMatrixRows
+          const existing = this.allMatrixRows.find(r =>
+            r.categoryId === categoryId &&
+            r.categoryInfoId === categoryInfoId &&
+            r.categoryInfoOption === categoryInfoIndex &&
+            r.growthStageId === growthStage &&
+            r.unit === unit &&
+            r.quality === quality
+          );
 
-        baseRows.push(existing ? { ...existing } : row);
+          baseRows.push(existing ? { ...existing } : row);
         }
       }
     }
@@ -569,13 +571,56 @@ toggleQuality(quality: string) {
     return plant?.plantType || '';
   }
   SaveMatrix(){    
-    console.log(this.matrixRows)
-  /**/  this.api.matrixPOST({rates:(this.selectedCategoryInfos.length>0?this.allMatrixRows: this.matrixRows as any),districtRateId:this.currentDistrict?.id}).subscribe({
-      next:()=>{
-        this.save.emit(this.matrixRows);
-//this.loadDistrictPlantRates();
+    console.log('Saving matrix rows:', this.matrixRows);
+    console.log('All matrix rows:', this.allMatrixRows);
+    
+    // ✅ When editing with wizard (multiple tabs), ensure all tab changes are included
+    if (this.selectedCategoryInfos.length > 0 && this.matrixRows.length > 0) {
+      // Update allMatrixRows with any changes from current tab
+      this.matrixRows.forEach(editedRow => {
+        const idx = this.allMatrixRows.findIndex(r => 
+          r.id === editedRow.id || 
+          (r.growthStageId === editedRow.growthStageId && 
+           r.categoryInfoOption === editedRow.categoryInfoOption &&
+           r.unit === editedRow.unit &&
+           r.quality === editedRow.quality)
+        );
+        if (idx !== -1) {
+          this.allMatrixRows[idx] = editedRow;
+        }
+      });
+    }
+
+    this.isSaving = true;
+    let ratesToSend = this.selectedCategoryInfos.length > 0 ? this.allMatrixRows : this.matrixRows;
+    
+    // ✅ For editing: Remove IDs from new rows (those without ID in original existingRates)
+    // Keep IDs only for rows that were already in the database
+    if (this.existingRates && this.existingRates.length > 0) {
+      const existingIds = new Set(this.existingRates.map((r: any) => r.id));
+      ratesToSend = ratesToSend.map((row: any) => {
+        // If this row has an ID but it wasn't in the existing rates, it's a new row - remove the ID
+        if (row.id && !existingIds.has(row.id)) {
+          const { id, ...rowWithoutId } = row;
+          return rowWithoutId;
+        }
+        return row;
+      });
+    }
+    
+    console.log('Sending rates to API:', ratesToSend);
+    
+    this.api.matrixPOST({rates: ratesToSend as any, districtRateId: this.currentDistrict?.id}).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.save.emit(this.allMatrixRows);
+      },
+      error: (err) => {
+        this.isSaving = false;
+        console.error('Error saving matrix:', err);
+        alert('Error saving rates: ' + (err?.error?.message || err?.message || 'Unknown error'));
       }
-    })
+    });
   }
   ngOnChanges() {
     if (this.existingRates && this.existingRates.length > 0) {
@@ -604,11 +649,28 @@ toggleQuality(quality: string) {
     this.existingRates.map(r => r.quality).filter(q => q !== null && q !== undefined)
   ));
 
-  const categoryInfos = Array.from(new Set(
-    this.existingRates
-      .filter((r) => r.categoryInfoId != null && r.categoryInfoId != null)
-      .map((r:any) => JSON.stringify({ categoryId: r.categoryId, info: r.category, categoryInfoId: r.categoryInfoId}))
-  )).map(item => JSON.parse(item));
+  // IMPORTANT: Preserve original categoryInfoIndex from existing rates
+  const categoryInfoMap = new Map<string, any>();
+  this.existingRates
+    .filter((r) => r.categoryInfoId != null)
+    .forEach((r: any) => {
+      // Use categoryInfoOption (the original index) as part of the key to keep varieties separate
+      const key = JSON.stringify({ 
+        categoryId: r.categoryId, 
+        categoryInfoId: r.categoryInfoId, 
+        categoryInfoOption: r.categoryInfoOption  // ✅ Include original index to prevent deduplication
+      });
+      if (!categoryInfoMap.has(key)) {
+        categoryInfoMap.set(key, {
+          categoryId: r.categoryId,
+          info: r.category,
+          categoryInfoId: r.categoryInfoId,
+          categoryInfoIndex: r.categoryInfoOption  // ✅ Use original index from rate
+        });
+      }
+    });
+
+  const categoryInfos = Array.from(categoryInfoMap.values());
 
   // 🧠 2. Reset form arrays
   this.selectedGrowthStages.clear();
@@ -622,12 +684,12 @@ toggleQuality(quality: string) {
   qualities.forEach(q => {
     if (q !== 'Good') this.selectedQualities.push(this.fb.control(q));
   });
-  categoryInfos.forEach((ci,i)=>
+  categoryInfos.forEach((ci) =>
     this.selectedCategoryInfos.push(this.fb.control({
       categoryId: ci.categoryId,
       info: ci.info,
       categoryInfoId: ci.categoryInfoId,
-      categoryInfoIndex: i
+      categoryInfoIndex: ci.categoryInfoIndex  // ✅ Preserve original index
     }))
   );
 
@@ -660,15 +722,18 @@ toggleQuality(quality: string) {
     groupedPlantId: rate.groupedPlantId,
     categoryId: rate.categoryId,
     categoryInfoId: rate.categoryInfoId,
-    categoryInfoIndex: rate.categoryInfoOption,
+    categoryInfoOption: rate.categoryInfoOption,  // ✅ Use categoryInfoOption for filtering by active tab
     categoryInfoOptionName: rate.category,/**/
   }));
 
   // ✅ 6. Set active tab to first available categoryInfo tab (if wizard)
   if (this.selectedCategoryInfos.length > 0) {
     this.activeTabIndex = 0;
-    this.activeCategoryInfo = this.selectedCategoryInfos.value[0]
-    this.matrixRows = [...this.allMatrixRows];
+    this.activeCategoryInfo = this.selectedCategoryInfos.value[0];
+    // ✅ Filter matrixRows to only show rows for the active tab by categoryInfoIndex
+    this.matrixRows = this.activeCategoryInfo 
+      ? this.allMatrixRows.filter(r => r.categoryInfoOption === this.activeCategoryInfo?.categoryInfoIndex)
+      : this.allMatrixRows;
     this.groupedMatrix = this.groupByUnit(this.matrixRows);
     console.log(this.groupedMatrix)
     this.isConfigured = true;
@@ -736,6 +801,6 @@ toggleQuality(quality: string) {
     }
   }
   get canManage(){
-    return this.auth.userValue?.roles?.includes('admin') || this.auth.userValue?.roles?.includes('superadmin');
+    return this.auth.isOperationalUser;
   }
 }

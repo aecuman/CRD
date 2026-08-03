@@ -47,6 +47,8 @@ namespace CRD.Persistence
 
             services.AddTransient<SeedUsers>();
             services.AddTransient<WorkflowSeeder>();
+            services.AddTransient<PlantSeeder>();
+            services.AddTransient<StructureTypeSeeder>();
             services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
             //.AddDefaultTokenProviders();
 
